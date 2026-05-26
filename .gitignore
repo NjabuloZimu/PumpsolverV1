@@ -3,6 +3,8 @@ __pycache__/
 .venv/
 venv/
 env/
+pumpsolveenv/
+.pytest_cache/
 .vscode/
 *.log
 .DS_Store
