@@ -68,7 +68,7 @@ class MyForm(QMainWindow):
             if self.ui.radioButtonInDesigner.isChecked() == True:
                 self.ui.labelDesignerStateIn.setText('Active')
                 self.ui.labelDesignerStateIn.setStyleSheet('color: green;')
-                self.ui.labelLossesIn_Units.setText("<html><head/><body><p>m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span></p></body></html>")
+                self.ui.labelLossesIn_Units.setText("m")
             elif self.ui.radioButtonInDesigner.isChecked() == False:
                 self.ui.labelDesignerStateIn.setText('Inactive')
                 self.ui.labelDesignerStateIn.setStyleSheet('color: red;')
@@ -77,7 +77,7 @@ class MyForm(QMainWindow):
             if self.ui.radioButtonOutDesigner.isChecked() == True:
                 self.ui.labelDesignerStateOut.setText('Active')
                 self.ui.labelDesignerStateOut.setStyleSheet('color: green;')
-                self.ui.labelLossesOut_Units.setText("<html><head/><body><p>m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span></p></body></html>")
+                self.ui.labelLossesOut_Units.setText("m")
             elif self.ui.radioButtonOutDesigner.isChecked() == False:
                 self.ui.labelDesignerStateOut.setText('Inactive')
                 self.ui.labelDesignerStateOut.setStyleSheet('color: red;')
@@ -167,7 +167,7 @@ class MyForm(QMainWindow):
             if data['designer'] == True:
                 self.ui.labelDesignerStateIn.setText('Active')
                 self.ui.labelDesignerStateIn.setStyleSheet('color: green;')
-                self.ui.labelLossesIn_Units.setText("<html><head/><body><p>m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span></p></body></html>")
+                self.ui.labelLossesIn_Units.setText("m")
                 self.ui.radioButtonInDesigner.setChecked(True)
             else:
                 self.ui.labelDesignerStateIn.setText('Inactive')
@@ -198,7 +198,7 @@ class MyForm(QMainWindow):
             if data['designer'] == True:
                 self.ui.labelDesignerStateOut.setText('Active')
                 self.ui.labelDesignerStateOut.setStyleSheet('color: green;')
-                self.ui.labelLossesOut_Units.setText("<html><head/><body><p>m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span></p></body></html>")
+                self.ui.labelLossesOut_Units.setText("m")
                 self.ui.radioButtonOutDesigner.setChecked(True)
 
             else:

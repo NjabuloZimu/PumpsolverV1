@@ -411,12 +411,12 @@ class Ui_LineLossesDesigner(object):
         self.label_13.setText(_translate("LineLossesDesigner", "m/s"))
         self.label_18.setText(_translate("LineLossesDesigner", "Minor Losses:"))
         self.label_19.setText(_translate("LineLossesDesigner", "Major Losses:"))
-        self.label_20.setText(_translate("LineLossesDesigner", "<html><head/><body><p>m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span></p></body></html>"))
-        self.label_21.setText(_translate("LineLossesDesigner", "<html><head/><body><p>m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span></p></body></html>"))
+        self.label_20.setText(_translate("LineLossesDesigner", "m"))
+        self.label_21.setText(_translate("LineLossesDesigner", "m"))
         self.label_22.setText(_translate("LineLossesDesigner", "(-)"))
         self.label_23.setText(_translate("LineLossesDesigner", "(-)"))
         self.groupBox_7.setTitle(_translate("LineLossesDesigner", "Overall Results"))
-        self.labelOverallSummary.setToolTip(_translate("LineLossesDesigner", "<html><head/><body><p>m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span></p></body></html>"))
+        self.labelOverallSummary.setToolTip(_translate("LineLossesDesigner", "m"))
         self.labelOverallSummary.setText(_translate("LineLossesDesigner", "<html><head/><body><p><br/></p></body></html>"))
 import buttons_rc
 

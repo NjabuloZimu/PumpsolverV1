@@ -218,11 +218,9 @@ class Properties(QDialog):
         self.ui.lineEditVol.setDisabled(status)
         self.ui.lineEditDia.setDisabled(status)
 
-        # Change the units to friction losses (from friction head loss)
-        if status:
-            self.ui.labelLossesUnits.setText("<html><head/><body><p>m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span></p></body></html>")
-        else:
-            self.ui.labelLossesUnits.setText("m")
+        # No longer toggling units based on status. Always meters.
+        self.ui.labelLossesUnits.setText("m")
+        if not status:
             self.ui.lineEditLosses.setText("0")
 
         # save new designer status in global variable

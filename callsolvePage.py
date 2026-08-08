@@ -107,22 +107,8 @@ class SolvePage(QDialog):
 
                 g = data['gravity']
 
-                if data['designer_status_out'] and data['designer_status_in']:
-                    ans = solve(p2/(de2*g) - p1/(de1*g) + ((q2/(pi*((d2)/2)**2))**2)/(2*g) - ((q1/(pi*((d1)/2)**2))**2)/(2*g) + (z2 - z1) - (n*wm) + (hL1/g + hL2/g) + hi, data[key])
-                    hL1_meters = hL1/g
-                    hL2_meters = hL2/g
-                    self.ui.labelLossesMeters.setText(f'Designer Active (Inlet and outlet): The total head losses {hL1_meters} m and {hL2_meters} m respectively.')
-                elif data['designer_status_in']:
-                    # divide friction loss by g to get friction head loss
-                    ans = solve(p2/(de2*g) - p1/(de1*g) + ((q2/(pi*((d2)/2)**2))**2)/(2*g) - ((q1/(pi*((d1)/2)**2))**2)/(2*g) + (z2 - z1) - (n*wm) + (hL1/g + hL2) + hi, data[key])
-                    hL1_meters = hL1/g
-                    self.ui.labelLossesMeters.setText(f'Designer Active (Inlet): The total head losses {hL1_meters} m.')
-                elif data['designer_status_out']:
-                    ans = solve(p2/(de2*g) - p1/(de1*g) + ((q2/(pi*((d2)/2)**2))**2)/(2*g) - ((q1/(pi*((d1)/2)**2))**2)/(2*g) + (z2 - z1) - (n*wm) + (hL1 + hL2/g) + hi, data[key])
-                    hL2_meters = hL2/g
-                    self.ui.labelLossesMeters.setText(f'Designer Active (Outlet): The total head losses {hL2_meters} m.')
-                else:
-                    ans = solve(p2/(de2*g) - p1/(de1*g) + ((q2/(pi*((d2)/2)**2))**2)/(2*g) - ((q1/(pi*((d1)/2)**2))**2)/(2*g) + (z2 - z1) - (n*wm) + (hL1 + hL2) + hi, data[key])
+                # Energy balance equation unified (all losses in meters)
+                ans = solve(p2/(de2*g) - p1/(de1*g) + ((q2/(pi*((d2)/2)**2))**2)/(2*g) - ((q1/(pi*((d1)/2)**2))**2)/(2*g) + (z2 - z1) - (n*wm) + (hL1 + hL2) + hi, data[key])
 
                 print(f'answer {ans}')
                 print(f'key {key}')
@@ -258,8 +244,8 @@ class SolvePage(QDialog):
             # NPSHa = (p1 / de*g + ve/(2*g) - pv/de*g)
             # NPSHa = (((p1 - pv) / de) * 10.2) + z1 - hL1 + (ve**2 / 2 * g)
             print(f'Print P1 cavitation to see if its a string:  {isinstance(p1, str)}')
-            print((p1 / de*g) - (pv/de*g) + (z1) - (hL1) - (hi))
-            NPSHa = (p1 / de*g) - (pv/de*g) + (z1) - (hL1) - (hi)
+            # Correct NPSHa formula (all terms in meters)
+            NPSHa = (p1 - pv) / (de * g) + z1 - hL1 - hi
 
 
             print(NPSHa)

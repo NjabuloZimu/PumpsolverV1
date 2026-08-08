@@ -8,7 +8,7 @@ from sympy import solve, Symbol, sqrt
 
 import scipy.optimize as opt
 import numpy as np
-from scipy.constants import pi
+from scipy.constants import pi, g
 
 class Calculation(QDialog):
     totalLosses = QtCore.pyqtSignal(float) # This is the subwindow signal sent to properties, pass back data to eventially store in main.
@@ -113,7 +113,7 @@ class Calculation(QDialog):
             try:
                 lineRoughness = float(dictionary['Segment Roughness']) / 1000 # mm to m
             except (TypeError, ValueError):
-                lineRoughness = dictionary['Segment Roughness']
+                lineRoughness = 0.0 if dictionary['Segment Roughness'] == "Smooth Pipe" else dictionary['Segment Roughness']
                 
             rR = self.relativeRoughness(lineRoughness, current_diameter)
             segment_length = dictionary['Segment Length (m)']
@@ -211,18 +211,18 @@ class Calculation(QDialog):
         if self.windowTitle().split(" ")[:1][0] == "Inlet":
             self.ui.labelOverallSummary.clear()
             self.ui.labelOverallSummary.setText(f'<html><head/><body><p>There are {int(self.num_contractions)} contractions and {int(self.num_expansions)} expasions. The total pipe length is {self.total_pipe_length:#.6g} m. The total minor losses are {self.total_minor:#.6g}\
-                                            m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span>\
-                                             and the total major losses are {self.total_major:#.6g} m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span>. \
-                                            Assuming the tank is infinitely larger than the pipe, the losses at the nose of the pipe, on suction, in the tank are {self.contraction_loss:#.6g} m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span>\
-                                            , the total losses are {self.total_losses_hf:#.6g} m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span></p></body></html>')
+                                            m\
+                                             and the total major losses are {self.total_major:#.6g} m. \
+                                            Assuming the tank is infinitely larger than the pipe, the losses at the nose of the pipe, on suction, in the tank are {self.contraction_loss:#.6g} m\
+                                            , the total losses are {self.total_losses_hf:#.6g} m</p></body></html>')
             
         elif self.windowTitle().split(" ")[:1][0] == "Outlet":
             self.ui.labelOverallSummary.clear()
             self.ui.labelOverallSummary.setText(f'<html><head/><body><p>There are {int(self.num_contractions)} contractions and {int(self.num_expansions)} expasions. The total pipe length is {self.total_pipe_length:#.6g} m. The total minor losses are {self.total_minor:#.6g}\
-                                            m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span>\
-                                             and the total major losses are {self.total_major:#.6g} m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span>. \
-                                            Assuming the tank is infinitely larger than the pipe, the losses at the nose of the pipe, on disharge, in the tank are {self.expansion_loss:#.6g} m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span>\
-                                            , the total losses are {self.total_losses_hf:#.6g} m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span></p></body></html>')
+                                            m\
+                                             and the total major losses are {self.total_major:#.6g} m. \
+                                            Assuming the tank is infinitely larger than the pipe, the losses at the nose of the pipe, on disharge, in the tank are {self.expansion_loss:#.6g} m\
+                                            , the total losses are {self.total_losses_hf:#.6g} m</p></body></html>')
     
     def updateEditboxText(self, darcy_friction_factor, rR, re, velocity, dictionary, darcy_loss, fittings_loss, lineRoughness):
         selected_indexes = self.ui.tableWidgetPipeSegment.selectionModel().selectedIndexes()
@@ -253,25 +253,25 @@ class Calculation(QDialog):
 
                 re_compare = self.region(rR)
 
-                if re < 2100 and lineRoughness == "Smooth Pipe": # Laminar Flow
+                if re < 2100 and lineRoughness == 0.0: # Laminar Flow
                     self.ui.lineEditFlowType.setText("Laminar flow, smooth pipe")
-                elif re > 4000 and lineRoughness == "Smooth Pipe":
+                elif re > 4000 and lineRoughness == 0.0:
                     self.ui.lineEditFlowType.setText("Turbulent flow, smooth pipe")
-                elif re >= 2100 and re <= 4000 and lineRoughness == "Smooth Pipe":
+                elif re >= 2100 and re <= 4000 and lineRoughness == 0.0:
                     self.ui.lineEditFlowType.setText("Transitional flow, smooth pipe")
-                elif re <= re_compare:
+                elif re_compare is not None and re <= re_compare:
                     self.ui.lineEditFlowType.setText('Transitional flow / Colebrook Equation')
-                elif re > re_compare:
+                elif re_compare is not None and re > re_compare:
                     self.ui.lineEditFlowType.setText('Turbulent flow')
                 else:
                     print("Friction Calculation Failed.")
 
     def con_exp_fit_loss(self, coeff, velocity):
-        loss = coeff * (velocity)**2 / 2
+        loss = coeff * (velocity)**2 / (2 * g)
         return loss
     
     def darcy_loss_cal(self, darcy_friction_factor, velocity, length, diameter):
-        darcy_loss = 4 * darcy_friction_factor * length / diameter * (velocity)**2 / 2
+        darcy_loss = darcy_friction_factor * length / diameter * (velocity)**2 / (2 * g)
         return darcy_loss
 
     def total_segment_loss(self, con_or_exp_loss, fittings_loss, darcy_friction_factor):
@@ -291,6 +291,8 @@ class Calculation(QDialog):
         return contraction_coeff
 
     def velocity(self, diameter, volumetric):
+        if diameter <= 0:
+            return 0.0
         print(f"Calculating the velocity. Diameter: {diameter}, volumetric flowrate: {volumetric}")
         cross_sectional_area = pi*(diameter/2)**2
         print(f"Calculating the velocity. Cross sectional area {cross_sectional_area}")
@@ -305,23 +307,23 @@ class Calculation(QDialog):
 
         # Check Flow type and calculate darcy's friction factor.
         print(f"the line roughness is {lineRoughness}, this should be true {lineRoughness == 'Smooth Pipe'}")
-        if re < 2100 and lineRoughness == "Smooth Pipe": # Laminar Flow
+        if re < 2100 and lineRoughness == 0.0: # Laminar Flow
             darcy_friction_factor = 64/re
             # self.ui.lineEditFlowType.setText("Laminar flow, smooth pipe")
             return darcy_friction_factor
-        elif re > 4000 and lineRoughness == "Smooth Pipe":
+        elif re > 4000 and lineRoughness == 0.0:
             darcy_friction_factor = 0.316 / (re)**(1/4) # Smooth Pipe Turbulent Flow
             # self.ui.lineEditFlowType.setText("Turbulent flow, smooth pipe")
             return darcy_friction_factor
-        elif re >= 2100 and re <= 4000 and lineRoughness == "Smooth Pipe":
+        elif re >= 2100 and re <= 4000 and lineRoughness == 0.0:
             darcy_friction_factor = self.solve_colebrook(0.0, re) # Transitional Flow / Colebrook Equation # 0 relative roughness because smooth
             # self.ui.lineEditFlowType.setText("Transitional flow, smooth pipe")
             return darcy_friction_factor
-        elif re <= re_compare:
+        elif re_compare is not None and re <= re_compare:
             darcy_friction_factor = self.solve_colebrook(rR, re) # Transitional Flow / Colebrook Equation
             # self.ui.lineEditFlowType.setText('Transitional flow / Colebrook Equation')
             return darcy_friction_factor
-        elif re > re_compare:
+        elif re_compare is not None and re > re_compare:
             darcy_friction_factor = (1.14 + 2 * np.log10(1/rR))**(-2) # Completely Turbulent Flow
             # self.ui.lineEditFlowType.setText('Turbulent flow')
             return darcy_friction_factor
@@ -333,16 +335,20 @@ class Calculation(QDialog):
         return 1.0 / np.sqrt(f) + 2.0 * np.log10((rR / 3.7) + (2.51 / (re * np.sqrt(f))))
     
     def solve_colebrook(self, Re, epsilon_D, initial_guess=0.02):
-        f_solution = opt.fsolve(self.colebrook_equation, initial_guess, args=(Re, epsilon_D))
+        f_solution = opt.fsolve(self.colebrook_equation, initial_guess, args=(epsilon_D, Re))
         print(f'These are the coolbrook equations {f_solution}')
         return f_solution[0]
 
     def reynolds(self, diameter, velocity, density):
+        if self.viscosity <= 0 or diameter <= 0:
+            return 0.0
         print(f"Calculating the Reynolds number, diameter: {diameter}, velocity: {velocity}, density: {density}, Viscosity: {self.viscosity} ")
         reynolds = diameter * velocity * density / self.viscosity
         return reynolds
     
     def relativeRoughness(self, lineRoughness, diameter):
+        if diameter <= 0:
+            return 0.0
         try:
         # Relative Pipe Roughness
             rR = lineRoughness / diameter
@@ -360,16 +366,16 @@ class Calculation(QDialog):
             # Moody
             try:
                 re_to_compare = 1600/ rR
-            except TypeError:
-                print("Region calculation, Pipe is classified as smooth, Relative Roughness is not Required")
+            except (TypeError, ZeroDivisionError):
+                print("Region calculation, Pipe is classified as smooth or rR is 0, Relative Roughness is not Required")
                 return None
             
         elif self.ui.comboBoxTransitionEquation.currentIndex() == 1:
             # R.J.S Pigott
             try:
                 re_to_compare = 3500 / rR
-            except TypeError:
-                print("Region calculation, Pipe is classified as smooth, Relative Roughness is not Required")
+            except (TypeError, ZeroDivisionError):
+                print("Region calculation, Pipe is classified as smooth or rR is 0, Relative Roughness is not Required")
                 return None
 
         return re_to_compare
