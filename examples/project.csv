@@ -13,7 +13,7 @@ parameters,,,,out_dens,1000,kg/m^3
 parameters,,,,out_press,101325,Pa
 parameters,,,,effi,80,%
 parameters,,,,power,Unspecified,m
-parameters,,,,safety,1.1,
+parameters,,,,safety,1.1,m
 parameters,,,,gravity,9.81,m/s^2
 parameters,,,,designer_status_in,False,
 parameters,,,,designer_status_out,True,

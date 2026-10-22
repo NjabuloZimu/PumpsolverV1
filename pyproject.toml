@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pumpsolver"
+dynamic = ["version"]
+description = "Desktop pump and pipe-loss calculations with editable CSV projects"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["PyQt5==5.15.11", "sympy==1.14.0"]
+
+[project.gui-scripts]
+pumpsolver = "pumpsolver.app:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+build = ["PyInstaller==6.22.3", "pyinstaller-hooks-contrib==2026.9"]
+
+[tool.setuptools.dynamic]
+version = {attr = "pumpsolver.version.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"pumpsolver.gui" = ["forms/*.ui", "forms/*.qrc", "assets/*", "assets/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "tests"]

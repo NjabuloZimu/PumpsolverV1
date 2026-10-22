@@ -10,3 +10,6 @@ pumpsolveenv/
 .DS_Store
 .artifacts/
 Thumbs.db
+build/
+dist/
+*.egg-info/

@@ -1,0 +1,5707 @@
+{
+  "ui_about_dialog": {
+    "class": "Ui_about",
+    "properties": {
+      "$root": [
+        "geometry",
+        "objectName",
+        "windowModality",
+        "windowTitle"
+      ],
+      "label": [
+        "font",
+        "font:bold",
+        "font:pointSize",
+        "font:weight",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "labelLink": [
+        "alignment",
+        "font",
+        "font:underline",
+        "geometry",
+        "objectName",
+        "openExternalLinks",
+        "text",
+        "textInteractionFlags",
+        "wordWrap"
+      ],
+      "label_2": [
+        "alignment",
+        "geometry",
+        "objectName",
+        "text",
+        "wordWrap"
+      ],
+      "label_3": [
+        "alignment",
+        "geometry",
+        "objectName",
+        "text",
+        "wordWrap"
+      ],
+      "label_4": [
+        "alignment",
+        "geometry",
+        "objectName",
+        "text",
+        "wordWrap"
+      ],
+      "label_5": [
+        "alignment",
+        "geometry",
+        "objectName",
+        "text",
+        "wordWrap"
+      ],
+      "label_6": [
+        "alignment",
+        "geometry",
+        "objectName",
+        "text",
+        "wordWrap"
+      ],
+      "label_7": [
+        "alignment",
+        "geometry",
+        "objectName",
+        "text",
+        "wordWrap"
+      ],
+      "label_9": [
+        "alignment",
+        "geometry",
+        "objectName",
+        "text",
+        "wordWrap"
+      ],
+      "pushButtonClose": [
+        "geometry",
+        "objectName",
+        "text"
+      ]
+    },
+    "widgets": {
+      "$root": {
+        "class": "QDialog",
+        "geometry": [
+          0,
+          0,
+          613,
+          283
+        ],
+        "name": "about",
+        "parent": "",
+        "state": {
+          "objectName": "about",
+          "windowModality": 2,
+          "windowTitle": "Form"
+        }
+      },
+      "label": {
+        "class": "QLabel",
+        "font": {
+          "bold": true,
+          "pointSize": 9.0,
+          "weight": 75
+        },
+        "geometry": [
+          20,
+          10,
+          241,
+          21
+        ],
+        "name": "label",
+        "parent": "about",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label",
+          "text": "Process Pump Calculator"
+        },
+        "text": "Process Pump Calculator"
+      },
+      "labelLink": {
+        "class": "QLabel",
+        "font": {
+          "underline": true
+        },
+        "geometry": [
+          150,
+          220,
+          271,
+          20
+        ],
+        "name": "labelLink",
+        "parent": "about",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 33,
+          "objectName": "labelLink",
+          "openExternalLinks": true,
+          "text": " https://www.linkedin.com/in/njabulo-zimu-07366b192",
+          "textInteractionFlags": 7,
+          "wordWrap": true
+        },
+        "text": " https://www.linkedin.com/in/njabulo-zimu-07366b192",
+        "wordWrap": true
+      },
+      "label_2": {
+        "class": "QLabel",
+        "geometry": [
+          20,
+          60,
+          521,
+          16
+        ],
+        "name": "label_2",
+        "parent": "about",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 33,
+          "objectName": "label_2",
+          "text": "Feature(s): ",
+          "wordWrap": true
+        },
+        "text": "Feature(s): ",
+        "wordWrap": true
+      },
+      "label_3": {
+        "class": "QLabel",
+        "geometry": [
+          20,
+          90,
+          521,
+          16
+        ],
+        "name": "label_3",
+        "parent": "about",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 33,
+          "objectName": "label_3",
+          "text": "1. Automate the calculation of the engineering 'head' form of the Bernoulli's equation.",
+          "wordWrap": true
+        },
+        "text": "1. Automate the calculation of the engineering 'head' form of the Bernoulli's equation.",
+        "wordWrap": true
+      },
+      "label_4": {
+        "class": "QLabel",
+        "geometry": [
+          20,
+          110,
+          551,
+          16
+        ],
+        "name": "label_4",
+        "parent": "about",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 33,
+          "objectName": "label_4",
+          "text": "2. Automate the calculation minor and major losses due to fittings, contraction, expansions and pipe Roughness.",
+          "wordWrap": true
+        },
+        "text": "2. Automate the calculation minor and major losses due to fittings, contraction, expansions and pipe Roughness.",
+        "wordWrap": true
+      },
+      "label_5": {
+        "class": "QLabel",
+        "geometry": [
+          20,
+          130,
+          551,
+          16
+        ],
+        "name": "label_5",
+        "parent": "about",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 33,
+          "objectName": "label_5",
+          "text": "3. Import and Export Data for easy external manipulation (e.g excel) to save time.",
+          "wordWrap": true
+        },
+        "text": "3. Import and Export Data for easy external manipulation (e.g excel) to save time.",
+        "wordWrap": true
+      },
+      "label_6": {
+        "class": "QLabel",
+        "geometry": [
+          20,
+          200,
+          551,
+          16
+        ],
+        "name": "label_6",
+        "parent": "about",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 33,
+          "objectName": "label_6",
+          "text": "Creator: Njabulo Zimu",
+          "wordWrap": true
+        },
+        "text": "Creator: Njabulo Zimu",
+        "wordWrap": true
+      },
+      "label_7": {
+        "class": "QLabel",
+        "geometry": [
+          20,
+          220,
+          101,
+          16
+        ],
+        "name": "label_7",
+        "parent": "about",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 33,
+          "objectName": "label_7",
+          "text": "Visit Creators LinkIn: ",
+          "wordWrap": true
+        },
+        "text": "Visit Creators LinkIn: ",
+        "wordWrap": true
+      },
+      "label_9": {
+        "class": "QLabel",
+        "geometry": [
+          20,
+          150,
+          551,
+          31
+        ],
+        "name": "label_9",
+        "parent": "about",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 33,
+          "objectName": "label_9",
+          "text": "4. Features coming soon... parametric studies, graph plotting, moody diagram plotting, solid-fluid particle phenomena and more..",
+          "wordWrap": true
+        },
+        "text": "4. Features coming soon... parametric studies, graph plotting, moody diagram plotting, solid-fluid particle phenomena and more..",
+        "wordWrap": true
+      },
+      "pushButtonClose": {
+        "class": "QPushButton",
+        "geometry": [
+          270,
+          250,
+          75,
+          23
+        ],
+        "name": "pushButtonClose",
+        "parent": "about",
+        "state": {
+          "objectName": "pushButtonClose",
+          "text": "Close"
+        },
+        "text": "Close"
+      }
+    }
+  },
+  "ui_help_dialog": {
+    "class": "Ui_Dialog",
+    "properties": {
+      "$root": [
+        "geometry",
+        "modal",
+        "objectName",
+        "windowModality",
+        "windowTitle"
+      ],
+      "label": [
+        "geometry",
+        "objectName",
+        "pixmap",
+        "scaledContents",
+        "text"
+      ],
+      "label_2": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "pushButtonClose": [
+        "geometry",
+        "objectName",
+        "text"
+      ]
+    },
+    "widgets": {
+      "$root": {
+        "class": "QDialog",
+        "geometry": [
+          0,
+          0,
+          873,
+          377
+        ],
+        "name": "Dialog",
+        "parent": "",
+        "state": {
+          "modal": true,
+          "objectName": "Dialog",
+          "windowModality": 2,
+          "windowTitle": "Dialog"
+        }
+      },
+      "label": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          40,
+          851,
+          291
+        ],
+        "name": "label",
+        "parent": "Dialog",
+        "pixmapSize": [
+          880,
+          306
+        ],
+        "state": {
+          "objectName": "label",
+          "scaledContents": true,
+          "text": ""
+        },
+        "text": ""
+      },
+      "label_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 11.0
+        },
+        "geometry": [
+          10,
+          10,
+          101,
+          16
+        ],
+        "name": "label_2",
+        "parent": "Dialog",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_2",
+          "text": "Study Notes:"
+        },
+        "text": "Study Notes:"
+      },
+      "pushButtonClose": {
+        "class": "QPushButton",
+        "geometry": [
+          770,
+          350,
+          75,
+          23
+        ],
+        "name": "pushButtonClose",
+        "parent": "Dialog",
+        "state": {
+          "objectName": "pushButtonClose",
+          "text": "Close"
+        },
+        "text": "Close"
+      }
+    }
+  },
+  "ui_info1": {
+    "class": "Ui_Dialog",
+    "properties": {
+      "$root": [
+        "geometry",
+        "modal",
+        "objectName",
+        "windowModality",
+        "windowTitle"
+      ],
+      "label": [
+        "geometry",
+        "objectName",
+        "pixmap",
+        "scaledContents",
+        "text"
+      ],
+      "label_2": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "pushButtonClose": [
+        "geometry",
+        "objectName",
+        "text"
+      ]
+    },
+    "widgets": {
+      "$root": {
+        "class": "QDialog",
+        "geometry": [
+          0,
+          0,
+          868,
+          666
+        ],
+        "name": "Dialog",
+        "parent": "",
+        "state": {
+          "modal": true,
+          "objectName": "Dialog",
+          "windowModality": 2,
+          "windowTitle": "Dialog"
+        }
+      },
+      "label": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          30,
+          851,
+          601
+        ],
+        "name": "label",
+        "parent": "Dialog",
+        "pixmapSize": [
+          1071,
+          611
+        ],
+        "state": {
+          "objectName": "label",
+          "scaledContents": true,
+          "text": ""
+        },
+        "text": ""
+      },
+      "label_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 11.0
+        },
+        "geometry": [
+          20,
+          10,
+          101,
+          16
+        ],
+        "name": "label_2",
+        "parent": "Dialog",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_2",
+          "text": "Study Notes:"
+        },
+        "text": "Study Notes:"
+      },
+      "pushButtonClose": {
+        "class": "QPushButton",
+        "geometry": [
+          780,
+          640,
+          75,
+          23
+        ],
+        "name": "pushButtonClose",
+        "parent": "Dialog",
+        "state": {
+          "objectName": "pushButtonClose",
+          "text": "Close"
+        },
+        "text": "Close"
+      }
+    }
+  },
+  "ui_info2": {
+    "class": "Ui_Dialog",
+    "properties": {
+      "$root": [
+        "geometry",
+        "modal",
+        "objectName",
+        "windowModality",
+        "windowTitle"
+      ],
+      "label": [
+        "geometry",
+        "objectName",
+        "pixmap",
+        "scaledContents",
+        "text"
+      ],
+      "label_2": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "pushButtonClose": [
+        "geometry",
+        "objectName",
+        "text"
+      ]
+    },
+    "widgets": {
+      "$root": {
+        "class": "QDialog",
+        "geometry": [
+          0,
+          0,
+          620,
+          684
+        ],
+        "name": "Dialog",
+        "parent": "",
+        "state": {
+          "modal": true,
+          "objectName": "Dialog",
+          "windowModality": 2,
+          "windowTitle": "Dialog"
+        }
+      },
+      "label": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          40,
+          591,
+          601
+        ],
+        "name": "label",
+        "parent": "Dialog",
+        "pixmapSize": [
+          628,
+          633
+        ],
+        "state": {
+          "objectName": "label",
+          "scaledContents": true,
+          "text": ""
+        },
+        "text": ""
+      },
+      "label_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 11.0
+        },
+        "geometry": [
+          20,
+          10,
+          101,
+          16
+        ],
+        "name": "label_2",
+        "parent": "Dialog",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_2",
+          "text": "Study Notes:"
+        },
+        "text": "Study Notes:"
+      },
+      "pushButtonClose": {
+        "class": "QPushButton",
+        "geometry": [
+          510,
+          660,
+          75,
+          23
+        ],
+        "name": "pushButtonClose",
+        "parent": "Dialog",
+        "state": {
+          "objectName": "pushButtonClose",
+          "text": "Close"
+        },
+        "text": "Close"
+      }
+    }
+  },
+  "ui_info3": {
+    "class": "Ui_Dialog",
+    "properties": {
+      "$root": [
+        "geometry",
+        "modal",
+        "objectName",
+        "windowModality",
+        "windowTitle"
+      ],
+      "label": [
+        "geometry",
+        "objectName",
+        "pixmap",
+        "scaledContents",
+        "text"
+      ],
+      "label_2": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "pushButtonClose": [
+        "geometry",
+        "objectName",
+        "text"
+      ]
+    },
+    "widgets": {
+      "$root": {
+        "class": "QDialog",
+        "geometry": [
+          0,
+          0,
+          870,
+          663
+        ],
+        "name": "Dialog",
+        "parent": "",
+        "state": {
+          "modal": true,
+          "objectName": "Dialog",
+          "windowModality": 2,
+          "windowTitle": "Dialog"
+        }
+      },
+      "label": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          30,
+          851,
+          601
+        ],
+        "name": "label",
+        "parent": "Dialog",
+        "pixmapSize": [
+          1348,
+          827
+        ],
+        "state": {
+          "objectName": "label",
+          "scaledContents": true,
+          "text": ""
+        },
+        "text": ""
+      },
+      "label_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 11.0
+        },
+        "geometry": [
+          10,
+          10,
+          101,
+          16
+        ],
+        "name": "label_2",
+        "parent": "Dialog",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_2",
+          "text": "Study Notes:"
+        },
+        "text": "Study Notes:"
+      },
+      "pushButtonClose": {
+        "class": "QPushButton",
+        "geometry": [
+          770,
+          640,
+          75,
+          23
+        ],
+        "name": "pushButtonClose",
+        "parent": "Dialog",
+        "state": {
+          "objectName": "pushButtonClose",
+          "text": "Close"
+        },
+        "text": "Close"
+      }
+    }
+  },
+  "ui_main_window": {
+    "class": "Ui_MainWindow",
+    "properties": {
+      "$root": [
+        "centralWidget",
+        "geometry",
+        "menuBar",
+        "objectName",
+        "statusBar",
+        "windowIcon",
+        "windowModality",
+        "windowTitle"
+      ],
+      "actionAuthor": [
+        "objectName",
+        "text"
+      ],
+      "actionExit": [
+        "objectName",
+        "text"
+      ],
+      "actionHelp": [
+        "objectName",
+        "shortcut",
+        "text"
+      ],
+      "actionImport": [
+        "objectName",
+        "text"
+      ],
+      "actionOpen": [
+        "objectName",
+        "shortcut",
+        "text"
+      ],
+      "actionParametric_Study": [
+        "objectName",
+        "text"
+      ],
+      "actionPlot_Study": [
+        "objectName",
+        "text"
+      ],
+      "actionSave": [
+        "objectName",
+        "shortcut",
+        "text"
+      ],
+      "centralwidget": [
+        "enabled",
+        "objectName"
+      ],
+      "gridLayoutInProp": [
+        "contentsMargins",
+        "objectName"
+      ],
+      "gridLayoutOutProp": [
+        "contentsMargins",
+        "objectName"
+      ],
+      "gridLayout_3": [
+        "contentsMargins",
+        "objectName"
+      ],
+      "groupBox": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "groupBoxInletProp": [
+        "checkable",
+        "flat",
+        "font",
+        "font:pointSize",
+        "geometry",
+        "mouseTracking",
+        "objectName",
+        "title"
+      ],
+      "groupBox_2": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "inletPushButton": [
+        "autoRepeat",
+        "checkable",
+        "cursor",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text"
+      ],
+      "label": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "labelAvHead": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelAvHead_2": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelAvHead_Units": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelDensityIn": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelDensityIn_2": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelDensityIn_3": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelDensityIn_Units": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelDensityOut": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelDensityOut_Units": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelDesignerStateIn": [
+        "alignment",
+        "font",
+        "font:bold",
+        "font:pointSize",
+        "font:weight",
+        "geometry",
+        "mouseTracking",
+        "objectName",
+        "text"
+      ],
+      "labelDesignerStateOut": [
+        "alignment",
+        "font",
+        "font:bold",
+        "font:pointSize",
+        "font:styleStrategy",
+        "font:weight",
+        "geometry",
+        "mouseTracking",
+        "objectName",
+        "text"
+      ],
+      "labelDiaIn": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelDiaIn_2": [
+        "font",
+        "font:pointSize",
+        "frameShadow",
+        "objectName",
+        "scaledContents",
+        "text",
+        "textFormat"
+      ],
+      "labelDiaIn_4": [
+        "font",
+        "font:pointSize",
+        "frameShadow",
+        "objectName",
+        "scaledContents",
+        "text",
+        "textFormat"
+      ],
+      "labelDiaIn_Units": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelDiaOut": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelDiaOut_Units": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelEff": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelEff_2": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelEff_Units": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelGravConst": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelHeadIn": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelHeadIn_2": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelHeadIn_4": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelHeadIn_Units": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelHeadOut": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelHeadOut_Units": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelInfo": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text",
+        "textInteractionFlags"
+      ],
+      "labelLossesIn": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelLossesIn_2": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelLossesIn_4": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelLossesIn_Units": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelLossesOut": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelLossesOut_Units": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelPressIn": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelPressIn_2": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelPressIn_3": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelPressIn_Units": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelPressOut": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelPressOut_Units": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelSafeF": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelSafeF_3": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelSafeF_4": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelSafeF_5": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelSafeF_6": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelVolIn": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelVolIn_2": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelVolIn_4": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelVolIn_Units": [
+        "enabled",
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "labelVolOut": [
+        "font",
+        "font:pointSize",
+        "objectName",
+        "scaledContents",
+        "text"
+      ],
+      "labelVolOut_Units": [
+        "enabled",
+        "font",
+        "font:pointSize",
+        "objectName",
+        "text"
+      ],
+      "label_3": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "layoutWidget": [
+        "geometry",
+        "objectName"
+      ],
+      "layoutWidget1": [
+        "geometry",
+        "objectName"
+      ],
+      "layoutWidget_2": [
+        "geometry",
+        "objectName"
+      ],
+      "menuAbout_2": [
+        "objectName",
+        "title"
+      ],
+      "menuFile": [
+        "objectName",
+        "title"
+      ],
+      "menubar": [
+        "geometry",
+        "objectName"
+      ],
+      "outletPushButton": [
+        "cursor",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text"
+      ],
+      "pumpPushButton": [
+        "cursor",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text"
+      ],
+      "pushButtonSolve": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "radioButtonInDesigner": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "radioButtonOutDesigner": [
+        "autoExclusive",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "statusbar": [
+        "objectName"
+      ]
+    },
+    "widgets": {
+      "$root": {
+        "class": "QMainWindow",
+        "geometry": [
+          0,
+          0,
+          1119,
+          669
+        ],
+        "name": "MainWindow",
+        "parent": "",
+        "state": {
+          "objectName": "MainWindow",
+          "windowIcon": true,
+          "windowModality": 0,
+          "windowTitle": "Process Pump Solver Tool"
+        }
+      },
+      "centralwidget": {
+        "class": "QWidget",
+        "name": "centralwidget",
+        "parent": "MainWindow",
+        "state": {
+          "enabled": true,
+          "objectName": "centralwidget"
+        }
+      },
+      "gridLayoutInProp": {
+        "class": "QGridLayout",
+        "name": "gridLayoutInProp",
+        "parent": "layoutWidget"
+      },
+      "gridLayoutOutProp": {
+        "class": "QGridLayout",
+        "name": "gridLayoutOutProp",
+        "parent": "layoutWidget_2"
+      },
+      "gridLayout_3": {
+        "class": "QGridLayout",
+        "name": "gridLayout_3",
+        "parent": "layoutWidget1"
+      },
+      "groupBox": {
+        "class": "QGroupBox",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          720,
+          160,
+          361,
+          251
+        ],
+        "name": "groupBox",
+        "parent": "centralwidget",
+        "state": {
+          "objectName": "groupBox",
+          "title": "Outlet Properties"
+        },
+        "title": "Outlet Properties"
+      },
+      "groupBoxInletProp": {
+        "class": "QGroupBox",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          20,
+          300,
+          351,
+          231
+        ],
+        "name": "groupBoxInletProp",
+        "parent": "centralwidget",
+        "state": {
+          "checkable": false,
+          "flat": false,
+          "mouseTracking": false,
+          "objectName": "groupBoxInletProp",
+          "title": "Inlet Properties"
+        },
+        "title": "Inlet Properties"
+      },
+      "groupBox_2": {
+        "class": "QGroupBox",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          400,
+          440,
+          331,
+          131
+        ],
+        "name": "groupBox_2",
+        "parent": "centralwidget",
+        "state": {
+          "objectName": "groupBox_2",
+          "title": "Pump Properties"
+        },
+        "title": "Pump Properties"
+      },
+      "inletPushButton": {
+        "class": "QPushButton",
+        "geometry": [
+          200,
+          140,
+          201,
+          171
+        ],
+        "iconSize": [
+          1024,
+          1024
+        ],
+        "name": "inletPushButton",
+        "parent": "centralwidget",
+        "state": {
+          "autoRepeat": false,
+          "checkable": false,
+          "cursor": 13,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            1024,
+            1024
+          ],
+          "objectName": "inletPushButton",
+          "text": ""
+        },
+        "text": ""
+      },
+      "label": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "geometry": [
+          10,
+          200,
+          171,
+          16
+        ],
+        "name": "label",
+        "parent": "groupBoxInletProp",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label",
+          "text": "Line Losses Designer:"
+        },
+        "text": "Line Losses Designer:"
+      },
+      "labelAvHead": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelAvHead",
+        "parent": "layoutWidget1",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelAvHead",
+          "scaledContents": true,
+          "text": "55"
+        },
+        "text": "55"
+      },
+      "labelAvHead_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelAvHead_2",
+        "parent": "layoutWidget1",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelAvHead_2",
+          "text": "Total Available Pump Head: "
+        },
+        "text": "Total Available Pump Head: "
+      },
+      "labelAvHead_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelAvHead_Units",
+        "parent": "layoutWidget1",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelAvHead_Units",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "labelDensityIn": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelDensityIn",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelDensityIn",
+          "scaledContents": true,
+          "text": "998"
+        },
+        "text": "998"
+      },
+      "labelDensityIn_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelDensityIn_2",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelDensityIn_2",
+          "text": "Liquid Density:"
+        },
+        "text": "Liquid Density:"
+      },
+      "labelDensityIn_3": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelDensityIn_3",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelDensityIn_3",
+          "text": "Liquid Density:"
+        },
+        "text": "Liquid Density:"
+      },
+      "labelDensityIn_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelDensityIn_Units",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelDensityIn_Units",
+          "text": "<html><head/><body><p>kg/m<span style=\" vertical-align:super;\">3</span></p></body></html>"
+        },
+        "text": "<html><head/><body><p>kg/m<span style=\" vertical-align:super;\">3</span></p></body></html>"
+      },
+      "labelDensityOut": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelDensityOut",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelDensityOut",
+          "scaledContents": true,
+          "text": "998"
+        },
+        "text": "998"
+      },
+      "labelDensityOut_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelDensityOut_Units",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelDensityOut_Units",
+          "text": "<html><head/><body><p>kg/m<span style=\" vertical-align:super;\">3</span></p></body></html>"
+        },
+        "text": "<html><head/><body><p>kg/m<span style=\" vertical-align:super;\">3</span></p></body></html>"
+      },
+      "labelDesignerStateIn": {
+        "class": "QLabel",
+        "font": {
+          "bold": false,
+          "pointSize": 10.0,
+          "weight": 50
+        },
+        "geometry": [
+          200,
+          200,
+          61,
+          16
+        ],
+        "name": "labelDesignerStateIn",
+        "parent": "groupBoxInletProp",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 132,
+          "mouseTracking": false,
+          "objectName": "labelDesignerStateIn",
+          "text": "Inactive"
+        },
+        "text": "Inactive"
+      },
+      "labelDesignerStateOut": {
+        "class": "QLabel",
+        "font": {
+          "bold": false,
+          "pointSize": 10.0,
+          "styleStrategy": 128,
+          "weight": 50
+        },
+        "geometry": [
+          910,
+          380,
+          61,
+          21
+        ],
+        "name": "labelDesignerStateOut",
+        "parent": "centralwidget",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 132,
+          "mouseTracking": false,
+          "objectName": "labelDesignerStateOut",
+          "text": "Inactive"
+        },
+        "text": "Inactive"
+      },
+      "labelDiaIn": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelDiaIn",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelDiaIn",
+          "scaledContents": true,
+          "text": "12"
+        },
+        "text": "12"
+      },
+      "labelDiaIn_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelDiaIn_2",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "frameShadow": 32,
+          "objectName": "labelDiaIn_2",
+          "scaledContents": true,
+          "text": "Pipe Internal Diameter:",
+          "textFormat": 2
+        },
+        "text": "Pipe Internal Diameter:"
+      },
+      "labelDiaIn_4": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelDiaIn_4",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "frameShadow": 32,
+          "objectName": "labelDiaIn_4",
+          "scaledContents": true,
+          "text": "Pipe Outlet Diameter:",
+          "textFormat": 2
+        },
+        "text": "Pipe Outlet Diameter:"
+      },
+      "labelDiaIn_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelDiaIn_Units",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelDiaIn_Units",
+          "text": "cm"
+        },
+        "text": "cm"
+      },
+      "labelDiaOut": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelDiaOut",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelDiaOut",
+          "scaledContents": true,
+          "text": "10"
+        },
+        "text": "10"
+      },
+      "labelDiaOut_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelDiaOut_Units",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelDiaOut_Units",
+          "text": "cm"
+        },
+        "text": "cm"
+      },
+      "labelEff": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelEff",
+        "parent": "layoutWidget1",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelEff",
+          "scaledContents": true,
+          "text": "100"
+        },
+        "text": "100"
+      },
+      "labelEff_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelEff_2",
+        "parent": "layoutWidget1",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelEff_2",
+          "text": "Pump Motor Efficiency: "
+        },
+        "text": "Pump Motor Efficiency: "
+      },
+      "labelEff_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelEff_Units",
+        "parent": "layoutWidget1",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelEff_Units",
+          "text": "%"
+        },
+        "text": "%"
+      },
+      "labelGravConst": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelGravConst",
+        "parent": "layoutWidget1",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelGravConst",
+          "scaledContents": true,
+          "text": "9.81"
+        },
+        "text": "9.81"
+      },
+      "labelHeadIn": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelHeadIn",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelHeadIn",
+          "scaledContents": true,
+          "text": "0"
+        },
+        "text": "0"
+      },
+      "labelHeadIn_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelHeadIn_2",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelHeadIn_2",
+          "text": "Static Suction Head:"
+        },
+        "text": "Static Suction Head:"
+      },
+      "labelHeadIn_4": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelHeadIn_4",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelHeadIn_4",
+          "text": "Static Discharge Head:"
+        },
+        "text": "Static Discharge Head:"
+      },
+      "labelHeadIn_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelHeadIn_Units",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelHeadIn_Units",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "labelHeadOut": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelHeadOut",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelHeadOut",
+          "scaledContents": true,
+          "text": "0"
+        },
+        "text": "0"
+      },
+      "labelHeadOut_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelHeadOut_Units",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelHeadOut_Units",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "labelInfo": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          440,
+          10,
+          291,
+          21
+        ],
+        "name": "labelInfo",
+        "parent": "centralwidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelInfo",
+          "text": "This tool solves for the unspecified variable. ",
+          "textInteractionFlags": 0
+        },
+        "text": "This tool solves for the unspecified variable. "
+      },
+      "labelLossesIn": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelLossesIn",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelLossesIn",
+          "scaledContents": true,
+          "text": "0"
+        },
+        "text": "0"
+      },
+      "labelLossesIn_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelLossesIn_2",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelLossesIn_2",
+          "text": "Pipe/Fittings Losses:"
+        },
+        "text": "Pipe/Fittings Losses:"
+      },
+      "labelLossesIn_4": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelLossesIn_4",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelLossesIn_4",
+          "text": "Pipe/Fittings Losses:"
+        },
+        "text": "Pipe/Fittings Losses:"
+      },
+      "labelLossesIn_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelLossesIn_Units",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelLossesIn_Units",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "labelLossesOut": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelLossesOut",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelLossesOut",
+          "scaledContents": true,
+          "text": "0"
+        },
+        "text": "0"
+      },
+      "labelLossesOut_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelLossesOut_Units",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelLossesOut_Units",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "labelPressIn": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelPressIn",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelPressIn",
+          "scaledContents": true,
+          "text": "101325"
+        },
+        "text": "101325"
+      },
+      "labelPressIn_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelPressIn_2",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelPressIn_2",
+          "text": "Suction Pressure:"
+        },
+        "text": "Suction Pressure:"
+      },
+      "labelPressIn_3": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelPressIn_3",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelPressIn_3",
+          "text": "Discharge Pressure:"
+        },
+        "text": "Discharge Pressure:"
+      },
+      "labelPressIn_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelPressIn_Units",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelPressIn_Units",
+          "text": "Pa"
+        },
+        "text": "Pa"
+      },
+      "labelPressOut": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelPressOut",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelPressOut",
+          "scaledContents": true,
+          "text": "101325"
+        },
+        "text": "101325"
+      },
+      "labelPressOut_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelPressOut_Units",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelPressOut_Units",
+          "text": "Pa"
+        },
+        "text": "Pa"
+      },
+      "labelSafeF": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelSafeF",
+        "parent": "layoutWidget1",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelSafeF",
+          "scaledContents": true,
+          "text": "0.6096"
+        },
+        "text": "0.6096"
+      },
+      "labelSafeF_3": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelSafeF_3",
+        "parent": "layoutWidget1",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelSafeF_3",
+          "text": "Safety Factor:"
+        },
+        "text": "Safety Factor:"
+      },
+      "labelSafeF_4": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelSafeF_4",
+        "parent": "layoutWidget1",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelSafeF_4",
+          "text": "Gravitational Constant:"
+        },
+        "text": "Gravitational Constant:"
+      },
+      "labelSafeF_5": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelSafeF_5",
+        "parent": "layoutWidget1",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelSafeF_5",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "labelSafeF_6": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelSafeF_6",
+        "parent": "layoutWidget1",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelSafeF_6",
+          "text": "<html><head/><body><p>m/s<span style=\" vertical-align:super;\">2</span></p></body></html>"
+        },
+        "text": "<html><head/><body><p>m/s<span style=\" vertical-align:super;\">2</span></p></body></html>"
+      },
+      "labelVolIn": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelVolIn",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelVolIn",
+          "scaledContents": true,
+          "text": "Unspecified"
+        },
+        "text": "Unspecified"
+      },
+      "labelVolIn_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelVolIn_2",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelVolIn_2",
+          "text": "Volumetric Flowrate:"
+        },
+        "text": "Volumetric Flowrate:"
+      },
+      "labelVolIn_4": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelVolIn_4",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelVolIn_4",
+          "text": "Volumetric Flowrate:"
+        },
+        "text": "Volumetric Flowrate:"
+      },
+      "labelVolIn_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelVolIn_Units",
+        "parent": "layoutWidget",
+        "pixmapSize": null,
+        "state": {
+          "enabled": true,
+          "objectName": "labelVolIn_Units",
+          "text": "<html><head/><body><p>m<span style=\" vertical-align:super;\">3</span>/h</p></body></html>"
+        },
+        "text": "<html><head/><body><p>m<span style=\" vertical-align:super;\">3</span>/h</p></body></html>"
+      },
+      "labelVolOut": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelVolOut",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelVolOut",
+          "scaledContents": true,
+          "text": "Unspecified"
+        },
+        "text": "Unspecified"
+      },
+      "labelVolOut_Units": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "name": "labelVolOut_Units",
+        "parent": "layoutWidget_2",
+        "pixmapSize": null,
+        "state": {
+          "enabled": true,
+          "objectName": "labelVolOut_Units",
+          "text": "<html><head/><body><p>m<span style=\" vertical-align:super;\">3</span>/h</p></body></html>"
+        },
+        "text": "<html><head/><body><p>m<span style=\" vertical-align:super;\">3</span>/h</p></body></html>"
+      },
+      "label_3": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 10.0
+        },
+        "geometry": [
+          730,
+          380,
+          171,
+          21
+        ],
+        "name": "label_3",
+        "parent": "centralwidget",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_3",
+          "text": "Line Losses Designer:"
+        },
+        "text": "Line Losses Designer:"
+      },
+      "layoutWidget": {
+        "class": "QWidget",
+        "geometry": [
+          10,
+          20,
+          331,
+          163
+        ],
+        "name": "layoutWidget",
+        "parent": "groupBoxInletProp",
+        "state": {
+          "objectName": "layoutWidget"
+        }
+      },
+      "layoutWidget1": {
+        "class": "QWidget",
+        "geometry": [
+          10,
+          20,
+          310,
+          107
+        ],
+        "name": "layoutWidget1",
+        "parent": "groupBox_2",
+        "state": {
+          "objectName": "layoutWidget1"
+        }
+      },
+      "layoutWidget_2": {
+        "class": "QWidget",
+        "geometry": [
+          10,
+          20,
+          341,
+          181
+        ],
+        "name": "layoutWidget_2",
+        "parent": "groupBox",
+        "state": {
+          "objectName": "layoutWidget_2"
+        }
+      },
+      "menuAbout_2": {
+        "class": "QMenu",
+        "name": "menuAbout_2",
+        "parent": "menubar",
+        "state": {
+          "objectName": "menuAbout_2",
+          "title": "About"
+        },
+        "title": "About"
+      },
+      "menuFile": {
+        "class": "QMenu",
+        "name": "menuFile",
+        "parent": "menubar",
+        "state": {
+          "objectName": "menuFile",
+          "title": "File"
+        },
+        "title": "File"
+      },
+      "menubar": {
+        "class": "QMenuBar",
+        "geometry": [
+          0,
+          0,
+          1119,
+          26
+        ],
+        "name": "menubar",
+        "parent": "MainWindow",
+        "state": {
+          "objectName": "menubar"
+        }
+      },
+      "outletPushButton": {
+        "class": "QPushButton",
+        "geometry": [
+          720,
+          50,
+          191,
+          111
+        ],
+        "iconSize": [
+          1024,
+          1024
+        ],
+        "name": "outletPushButton",
+        "parent": "centralwidget",
+        "state": {
+          "cursor": 13,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            1024,
+            1024
+          ],
+          "objectName": "outletPushButton",
+          "text": ""
+        },
+        "text": ""
+      },
+      "pumpPushButton": {
+        "class": "QPushButton",
+        "geometry": [
+          390,
+          40,
+          331,
+          421
+        ],
+        "iconSize": [
+          1024,
+          1024
+        ],
+        "name": "pumpPushButton",
+        "parent": "centralwidget",
+        "state": {
+          "cursor": 13,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            1024,
+            1024
+          ],
+          "objectName": "pumpPushButton",
+          "text": ""
+        },
+        "text": ""
+      },
+      "pushButtonSolve": {
+        "class": "QPushButton",
+        "geometry": [
+          540,
+          590,
+          75,
+          23
+        ],
+        "name": "pushButtonSolve",
+        "parent": "centralwidget",
+        "state": {
+          "objectName": "pushButtonSolve",
+          "text": "Solve"
+        },
+        "text": "Solve"
+      },
+      "radioButtonInDesigner": {
+        "class": "QRadioButton",
+        "geometry": [
+          290,
+          200,
+          16,
+          17
+        ],
+        "name": "radioButtonInDesigner",
+        "parent": "groupBoxInletProp",
+        "state": {
+          "objectName": "radioButtonInDesigner",
+          "text": ""
+        },
+        "text": ""
+      },
+      "radioButtonOutDesigner": {
+        "autoExclusive": false,
+        "class": "QRadioButton",
+        "geometry": [
+          1000,
+          380,
+          20,
+          20
+        ],
+        "name": "radioButtonOutDesigner",
+        "parent": "centralwidget",
+        "state": {
+          "autoExclusive": false,
+          "objectName": "radioButtonOutDesigner",
+          "text": ""
+        },
+        "text": ""
+      },
+      "statusbar": {
+        "class": "QStatusBar",
+        "name": "statusbar",
+        "parent": "MainWindow",
+        "state": {
+          "objectName": "statusbar"
+        }
+      }
+    }
+  },
+  "ui_motor_dialog": {
+    "class": "Ui_MotorProp",
+    "properties": {
+      "$root": [
+        "geometry",
+        "objectName",
+        "windowModality",
+        "windowTitle"
+      ],
+      "groupBox": [
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "horizontalLayout": [
+        "contentsMargins",
+        "objectName"
+      ],
+      "label": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_2": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_3": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_4": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_5": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_6": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_7": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_8": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "layoutWidget": [
+        "geometry",
+        "objectName"
+      ],
+      "lineEditEff": [
+        "clearButtonEnabled",
+        "cursorPosition",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditGravConst": [
+        "clearButtonEnabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditSF": [
+        "clearButtonEnabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditTPH": [
+        "clearButtonEnabled",
+        "geometry",
+        "objectName"
+      ],
+      "pushButtonApply": [
+        "objectName",
+        "text"
+      ],
+      "pushButtonClose": [
+        "objectName",
+        "text"
+      ],
+      "pushButtonOk": [
+        "objectName",
+        "text"
+      ]
+    },
+    "widgets": {
+      "$root": {
+        "class": "QDialog",
+        "geometry": [
+          0,
+          0,
+          470,
+          192
+        ],
+        "name": "MotorProp",
+        "parent": "",
+        "state": {
+          "objectName": "MotorProp",
+          "windowModality": 2,
+          "windowTitle": "Motor Pump"
+        }
+      },
+      "groupBox": {
+        "class": "QGroupBox",
+        "geometry": [
+          10,
+          10,
+          451,
+          141
+        ],
+        "name": "groupBox",
+        "parent": "MotorProp",
+        "state": {
+          "objectName": "groupBox",
+          "title": "GroupBox"
+        },
+        "title": "GroupBox"
+      },
+      "horizontalLayout": {
+        "class": "QHBoxLayout",
+        "name": "horizontalLayout",
+        "parent": "layoutWidget"
+      },
+      "label": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          10,
+          20,
+          261,
+          16
+        ],
+        "name": "label",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label",
+          "text": "Pump Motor Efficiency:"
+        },
+        "text": "Pump Motor Efficiency:"
+      },
+      "label_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          10,
+          50,
+          261,
+          16
+        ],
+        "name": "label_2",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_2",
+          "text": "Total Pump Head:"
+        },
+        "text": "Total Pump Head:"
+      },
+      "label_3": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          10,
+          80,
+          261,
+          16
+        ],
+        "name": "label_3",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_3",
+          "text": "Safety Factor (Loses in the eye of the impeller)"
+        },
+        "text": "Safety Factor (Loses in the eye of the impeller)"
+      },
+      "label_4": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          410,
+          20,
+          20,
+          16
+        ],
+        "name": "label_4",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_4",
+          "text": "%"
+        },
+        "text": "%"
+      },
+      "label_5": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          410,
+          50,
+          20,
+          16
+        ],
+        "name": "label_5",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_5",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "label_6": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          410,
+          80,
+          20,
+          16
+        ],
+        "name": "label_6",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_6",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "label_7": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          10,
+          110,
+          261,
+          16
+        ],
+        "name": "label_7",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_7",
+          "text": "Gravitational Acceleartion:"
+        },
+        "text": "Gravitational Acceleartion:"
+      },
+      "label_8": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          410,
+          110,
+          20,
+          16
+        ],
+        "name": "label_8",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_8",
+          "text": "<html><head/><body><p>m/s<span style=\" vertical-align:super;\">2</span></p></body></html>"
+        },
+        "text": "<html><head/><body><p>m/s<span style=\" vertical-align:super;\">2</span></p></body></html>"
+      },
+      "layoutWidget": {
+        "class": "QWidget",
+        "geometry": [
+          10,
+          160,
+          451,
+          25
+        ],
+        "name": "layoutWidget",
+        "parent": "MotorProp",
+        "state": {
+          "objectName": "layoutWidget"
+        }
+      },
+      "lineEditEff": {
+        "class": "QLineEdit",
+        "geometry": [
+          290,
+          20,
+          113,
+          20
+        ],
+        "name": "lineEditEff",
+        "parent": "groupBox",
+        "state": {
+          "clearButtonEnabled": true,
+          "cursorPosition": 0,
+          "objectName": "lineEditEff"
+        },
+        "text": ""
+      },
+      "lineEditGravConst": {
+        "class": "QLineEdit",
+        "geometry": [
+          290,
+          110,
+          113,
+          20
+        ],
+        "name": "lineEditGravConst",
+        "parent": "groupBox",
+        "state": {
+          "clearButtonEnabled": true,
+          "objectName": "lineEditGravConst"
+        },
+        "text": ""
+      },
+      "lineEditSF": {
+        "class": "QLineEdit",
+        "geometry": [
+          290,
+          80,
+          113,
+          20
+        ],
+        "name": "lineEditSF",
+        "parent": "groupBox",
+        "state": {
+          "clearButtonEnabled": true,
+          "objectName": "lineEditSF"
+        },
+        "text": ""
+      },
+      "lineEditTPH": {
+        "class": "QLineEdit",
+        "geometry": [
+          290,
+          50,
+          113,
+          20
+        ],
+        "name": "lineEditTPH",
+        "parent": "groupBox",
+        "state": {
+          "clearButtonEnabled": true,
+          "objectName": "lineEditTPH"
+        },
+        "text": ""
+      },
+      "pushButtonApply": {
+        "class": "QPushButton",
+        "name": "pushButtonApply",
+        "parent": "layoutWidget",
+        "state": {
+          "objectName": "pushButtonApply",
+          "text": "Apply"
+        },
+        "text": "Apply"
+      },
+      "pushButtonClose": {
+        "class": "QPushButton",
+        "name": "pushButtonClose",
+        "parent": "layoutWidget",
+        "state": {
+          "objectName": "pushButtonClose",
+          "text": "Close"
+        },
+        "text": "Close"
+      },
+      "pushButtonOk": {
+        "class": "QPushButton",
+        "name": "pushButtonOk",
+        "parent": "layoutWidget",
+        "state": {
+          "objectName": "pushButtonOk",
+          "text": "Ok"
+        },
+        "text": "Ok"
+      }
+    }
+  },
+  "ui_pipe_designer": {
+    "class": "Ui_LineLossesDesigner",
+    "properties": {
+      "$root": [
+        "geometry",
+        "modal",
+        "objectName",
+        "windowModality",
+        "windowTitle"
+      ],
+      "checkBoxLossesCal": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "comboBoxRoughness": [
+        "editable",
+        "enabled",
+        "geometry",
+        "itemText",
+        "modelColumn",
+        "objectName"
+      ],
+      "comboBoxTransitionEquation": [
+        "geometry",
+        "itemText",
+        "objectName"
+      ],
+      "groupBox": [
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "groupBox_2": [
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "groupBox_3": [
+        "enabled",
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "groupBox_4": [
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "groupBox_5": [
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "groupBox_6": [
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "groupBox_7": [
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "horizontalLayout": [
+        "contentsMargins",
+        "objectName"
+      ],
+      "labelBoundaryEquation": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "labelBoundaryEquation_2": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "labelOverallSummary": [
+        "alignment",
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text",
+        "toolTip",
+        "wordWrap"
+      ],
+      "label_10": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_11": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_12": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_13": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_14": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_15": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_16": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_17": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_18": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_19": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_20": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_21": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_22": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_23": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_3": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_4": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_5": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_6": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_7": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_8": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_9": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "labelinstructions": [
+        "alignment",
+        "geometry",
+        "objectName",
+        "text",
+        "wordWrap"
+      ],
+      "layoutWidget": [
+        "geometry",
+        "objectName"
+      ],
+      "lineEditDarcys": [
+        "clearButtonEnabled",
+        "enabled",
+        "frame",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditDensity": [
+        "enabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditFlowType": [
+        "enabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditFlowrate": [
+        "enabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditMajorLosses": [
+        "enabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditMinorLosses": [
+        "enabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditRelativeRough": [
+        "enabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditReynolds": [
+        "enabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditVelocity": [
+        "enabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditViscosity": [
+        "enabled",
+        "geometry",
+        "objectName"
+      ],
+      "pushButtonAddFitting": [
+        "cursor",
+        "enabled",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text"
+      ],
+      "pushButtonAddSegment": [
+        "cursor",
+        "enabled",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text"
+      ],
+      "pushButtonClose": [
+        "enabled",
+        "objectName",
+        "text"
+      ],
+      "pushButtonDeleteFitting": [
+        "cursor",
+        "enabled",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text"
+      ],
+      "pushButtonDeleteSegment": [
+        "cursor",
+        "enabled",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text"
+      ],
+      "pushButtonExportFittings": [
+        "cursor",
+        "enabled",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text",
+        "toolTip"
+      ],
+      "pushButtonExportLineRoughness": [
+        "cursor",
+        "enabled",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text",
+        "toolTip"
+      ],
+      "pushButtonExportSegment": [
+        "cursor",
+        "enabled",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text",
+        "toolTip"
+      ],
+      "pushButtonImportFittings": [
+        "cursor",
+        "enabled",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text",
+        "toolTip"
+      ],
+      "pushButtonImportLineRoughness": [
+        "cursor",
+        "enabled",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text",
+        "toolTip"
+      ],
+      "pushButtonImportSegment": [
+        "cursor",
+        "enabled",
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text",
+        "toolTip"
+      ],
+      "pushButtonInfo": [
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text"
+      ],
+      "pushButtonInfo2": [
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text"
+      ],
+      "pushButtonInfo3": [
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text"
+      ],
+      "tableWidgetFittings": [
+        "columnCount",
+        "enabled",
+        "geometry",
+        "horizontalHeaderItem",
+        "objectName",
+        "rowCount"
+      ],
+      "tableWidgetPipeSegment": [
+        "columnCount",
+        "enabled",
+        "frameShadow",
+        "geometry",
+        "horizontalHeaderItem",
+        "lineWidth",
+        "maximumSize",
+        "objectName",
+        "rowCount",
+        "selectionBehavior",
+        "sizeIncrement"
+      ],
+      "toolButtonHelp": [
+        "geometry",
+        "objectName",
+        "text"
+      ]
+    },
+    "widgets": {
+      "$root": {
+        "class": "QDialog",
+        "geometry": [
+          0,
+          0,
+          940,
+          778
+        ],
+        "name": "LineLossesDesigner",
+        "parent": "",
+        "state": {
+          "modal": true,
+          "objectName": "LineLossesDesigner",
+          "windowModality": 2,
+          "windowTitle": "Dialog"
+        }
+      },
+      "checkBoxLossesCal": {
+        "class": "QCheckBox",
+        "geometry": [
+          10,
+          10,
+          71,
+          17
+        ],
+        "name": "checkBoxLossesCal",
+        "parent": "LineLossesDesigner",
+        "state": {
+          "objectName": "checkBoxLossesCal",
+          "text": "Enabled"
+        },
+        "text": "Enabled"
+      },
+      "comboBoxRoughness": {
+        "class": "QComboBox",
+        "geometry": [
+          140,
+          31,
+          141,
+          20
+        ],
+        "items": [
+          "Specify Pipe Roughness",
+          "Smooth Pipe"
+        ],
+        "modelColumn": 0,
+        "name": "comboBoxRoughness",
+        "parent": "groupBox_3",
+        "state": {
+          "editable": true,
+          "enabled": false,
+          "modelColumn": 0,
+          "objectName": "comboBoxRoughness"
+        }
+      },
+      "comboBoxTransitionEquation": {
+        "class": "QComboBox",
+        "geometry": [
+          10,
+          40,
+          131,
+          22
+        ],
+        "items": [
+          "Moody",
+          "R.J.S Pigott"
+        ],
+        "name": "comboBoxTransitionEquation",
+        "parent": "groupBox_5",
+        "state": {
+          "objectName": "comboBoxTransitionEquation"
+        }
+      },
+      "groupBox": {
+        "class": "QGroupBox",
+        "geometry": [
+          10,
+          40,
+          461,
+          411
+        ],
+        "name": "groupBox",
+        "parent": "LineLossesDesigner",
+        "state": {
+          "objectName": "groupBox",
+          "title": "Pipe Expansions / Contractions"
+        },
+        "title": "Pipe Expansions / Contractions"
+      },
+      "groupBox_2": {
+        "class": "QGroupBox",
+        "geometry": [
+          10,
+          470,
+          461,
+          271
+        ],
+        "name": "groupBox_2",
+        "parent": "LineLossesDesigner",
+        "state": {
+          "objectName": "groupBox_2",
+          "title": "Pipe Segment Fittings"
+        },
+        "title": "Pipe Segment Fittings"
+      },
+      "groupBox_3": {
+        "class": "QGroupBox",
+        "geometry": [
+          490,
+          40,
+          441,
+          61
+        ],
+        "name": "groupBox_3",
+        "parent": "LineLossesDesigner",
+        "state": {
+          "enabled": true,
+          "objectName": "groupBox_3",
+          "title": "Pipe Segment Properties"
+        },
+        "title": "Pipe Segment Properties"
+      },
+      "groupBox_4": {
+        "class": "QGroupBox",
+        "geometry": [
+          490,
+          110,
+          441,
+          121
+        ],
+        "name": "groupBox_4",
+        "parent": "LineLossesDesigner",
+        "state": {
+          "objectName": "groupBox_4",
+          "title": "Fluid Properties"
+        },
+        "title": "Fluid Properties"
+      },
+      "groupBox_5": {
+        "class": "QGroupBox",
+        "geometry": [
+          490,
+          510,
+          441,
+          111
+        ],
+        "name": "groupBox_5",
+        "parent": "LineLossesDesigner",
+        "state": {
+          "objectName": "groupBox_5",
+          "title": "Transition / Complete Turbulence Boundary"
+        },
+        "title": "Transition / Complete Turbulence Boundary"
+      },
+      "groupBox_6": {
+        "class": "QGroupBox",
+        "geometry": [
+          490,
+          250,
+          441,
+          251
+        ],
+        "name": "groupBox_6",
+        "parent": "LineLossesDesigner",
+        "state": {
+          "objectName": "groupBox_6",
+          "title": "Segment Result Summary"
+        },
+        "title": "Segment Result Summary"
+      },
+      "groupBox_7": {
+        "class": "QGroupBox",
+        "geometry": [
+          490,
+          630,
+          441,
+          111
+        ],
+        "name": "groupBox_7",
+        "parent": "LineLossesDesigner",
+        "state": {
+          "objectName": "groupBox_7",
+          "title": "Overall Results"
+        },
+        "title": "Overall Results"
+      },
+      "horizontalLayout": {
+        "class": "QHBoxLayout",
+        "name": "horizontalLayout",
+        "parent": "layoutWidget"
+      },
+      "labelBoundaryEquation": {
+        "class": "QLabel",
+        "geometry": [
+          240,
+          20,
+          191,
+          81
+        ],
+        "name": "labelBoundaryEquation",
+        "parent": "groupBox_5",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelBoundaryEquation",
+          "text": "Transition Equation"
+        },
+        "text": "Transition Equation"
+      },
+      "labelBoundaryEquation_2": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          20,
+          91,
+          16
+        ],
+        "name": "labelBoundaryEquation_2",
+        "parent": "groupBox_5",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelBoundaryEquation_2",
+          "text": "Transition Equation"
+        },
+        "text": "Transition Equation"
+      },
+      "labelOverallSummary": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 8.0
+        },
+        "geometry": [
+          10,
+          20,
+          421,
+          81
+        ],
+        "name": "labelOverallSummary",
+        "parent": "groupBox_7",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 33,
+          "objectName": "labelOverallSummary",
+          "text": "<html><head/><body><p><br/></p></body></html>",
+          "toolTip": "m",
+          "wordWrap": true
+        },
+        "text": "<html><head/><body><p><br/></p></body></html>",
+        "wordWrap": true
+      },
+      "label_10": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          90,
+          131,
+          21
+        ],
+        "name": "label_10",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_10",
+          "text": "Reynold's Number:"
+        },
+        "text": "Reynold's Number:"
+      },
+      "label_11": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          120,
+          131,
+          21
+        ],
+        "name": "label_11",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_11",
+          "text": "Flow Type:"
+        },
+        "text": "Flow Type:"
+      },
+      "label_12": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          150,
+          131,
+          21
+        ],
+        "name": "label_12",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_12",
+          "text": "Cross Sectional Velocity:"
+        },
+        "text": "Cross Sectional Velocity:"
+      },
+      "label_13": {
+        "class": "QLabel",
+        "geometry": [
+          290,
+          150,
+          21,
+          16
+        ],
+        "name": "label_13",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_13",
+          "text": "m/s"
+        },
+        "text": "m/s"
+      },
+      "label_14": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 8.0
+        },
+        "geometry": [
+          280,
+          60,
+          41,
+          21
+        ],
+        "name": "label_14",
+        "parent": "groupBox_4",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_14",
+          "text": "<html><head/><body><p>Kg/m<span style=\" vertical-align:super;\">3</span></p></body></html>"
+        },
+        "text": "<html><head/><body><p>Kg/m<span style=\" vertical-align:super;\">3</span></p></body></html>"
+      },
+      "label_15": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          60,
+          47,
+          16
+        ],
+        "name": "label_15",
+        "parent": "groupBox_4",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_15",
+          "text": "Density:"
+        },
+        "text": "Density:"
+      },
+      "label_16": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          90,
+          101,
+          16
+        ],
+        "name": "label_16",
+        "parent": "groupBox_4",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_16",
+          "text": "Volumetric Flowrate:"
+        },
+        "text": "Volumetric Flowrate:"
+      },
+      "label_17": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 8.0
+        },
+        "geometry": [
+          280,
+          90,
+          41,
+          21
+        ],
+        "name": "label_17",
+        "parent": "groupBox_4",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_17",
+          "text": "<html><head/><body><p>m<span style=\" vertical-align:super;\">3</span>/h</p></body></html>"
+        },
+        "text": "<html><head/><body><p>m<span style=\" vertical-align:super;\">3</span>/h</p></body></html>"
+      },
+      "label_18": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          180,
+          131,
+          21
+        ],
+        "name": "label_18",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_18",
+          "text": "Minor Losses:"
+        },
+        "text": "Minor Losses:"
+      },
+      "label_19": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          210,
+          131,
+          21
+        ],
+        "name": "label_19",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_19",
+          "text": "Major Losses:"
+        },
+        "text": "Major Losses:"
+      },
+      "label_20": {
+        "class": "QLabel",
+        "geometry": [
+          290,
+          180,
+          31,
+          16
+        ],
+        "name": "label_20",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_20",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "label_21": {
+        "class": "QLabel",
+        "geometry": [
+          290,
+          210,
+          31,
+          16
+        ],
+        "name": "label_21",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_21",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "label_22": {
+        "class": "QLabel",
+        "geometry": [
+          290,
+          30,
+          21,
+          16
+        ],
+        "name": "label_22",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_22",
+          "text": "(-)"
+        },
+        "text": "(-)"
+      },
+      "label_23": {
+        "class": "QLabel",
+        "geometry": [
+          290,
+          90,
+          21,
+          16
+        ],
+        "name": "label_23",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_23",
+          "text": "(-)"
+        },
+        "text": "(-)"
+      },
+      "label_3": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          30,
+          51,
+          16
+        ],
+        "name": "label_3",
+        "parent": "groupBox_4",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_3",
+          "text": "Viscosity:"
+        },
+        "text": "Viscosity:"
+      },
+      "label_4": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          30,
+          121,
+          16
+        ],
+        "name": "label_4",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_4",
+          "text": "Darcy's Friction Factor:"
+        },
+        "text": "Darcy's Friction Factor:"
+      },
+      "label_5": {
+        "class": "QLabel",
+        "geometry": [
+          280,
+          30,
+          51,
+          16
+        ],
+        "name": "label_5",
+        "parent": "groupBox_4",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_5",
+          "text": "Centipoise"
+        },
+        "text": "Centipoise"
+      },
+      "label_6": {
+        "class": "QLabel",
+        "geometry": [
+          290,
+          30,
+          21,
+          16
+        ],
+        "name": "label_6",
+        "parent": "groupBox_3",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_6",
+          "text": "mm"
+        },
+        "text": "mm"
+      },
+      "label_7": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          60,
+          141,
+          21
+        ],
+        "name": "label_7",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_7",
+          "text": "Relative Pipe Roughness k/d:"
+        },
+        "text": "Relative Pipe Roughness k/d:"
+      },
+      "label_8": {
+        "class": "QLabel",
+        "geometry": [
+          290,
+          60,
+          21,
+          16
+        ],
+        "name": "label_8",
+        "parent": "groupBox_6",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_8",
+          "text": "(-)"
+        },
+        "text": "(-)"
+      },
+      "label_9": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          30,
+          131,
+          21
+        ],
+        "name": "label_9",
+        "parent": "groupBox_3",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_9",
+          "text": "Roughness Parameter,  k:"
+        },
+        "text": "Roughness Parameter,  k:"
+      },
+      "labelinstructions": {
+        "class": "QLabel",
+        "geometry": [
+          20,
+          20,
+          391,
+          51
+        ],
+        "name": "labelinstructions",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 33,
+          "objectName": "labelinstructions",
+          "text": "Specify pipe lengths where the diameter changes. ",
+          "wordWrap": true
+        },
+        "text": "Specify pipe lengths where the diameter changes. ",
+        "wordWrap": true
+      },
+      "layoutWidget": {
+        "class": "QWidget",
+        "geometry": [
+          330,
+          750,
+          321,
+          25
+        ],
+        "name": "layoutWidget",
+        "parent": "LineLossesDesigner",
+        "state": {
+          "objectName": "layoutWidget"
+        }
+      },
+      "lineEditDarcys": {
+        "class": "QLineEdit",
+        "geometry": [
+          170,
+          30,
+          113,
+          20
+        ],
+        "name": "lineEditDarcys",
+        "parent": "groupBox_6",
+        "state": {
+          "clearButtonEnabled": false,
+          "enabled": false,
+          "frame": true,
+          "objectName": "lineEditDarcys"
+        },
+        "text": ""
+      },
+      "lineEditDensity": {
+        "class": "QLineEdit",
+        "geometry": [
+          160,
+          60,
+          113,
+          20
+        ],
+        "name": "lineEditDensity",
+        "parent": "groupBox_4",
+        "state": {
+          "enabled": false,
+          "objectName": "lineEditDensity"
+        },
+        "text": ""
+      },
+      "lineEditFlowType": {
+        "class": "QLineEdit",
+        "geometry": [
+          170,
+          120,
+          241,
+          20
+        ],
+        "name": "lineEditFlowType",
+        "parent": "groupBox_6",
+        "state": {
+          "enabled": false,
+          "objectName": "lineEditFlowType"
+        },
+        "text": ""
+      },
+      "lineEditFlowrate": {
+        "class": "QLineEdit",
+        "geometry": [
+          160,
+          90,
+          113,
+          20
+        ],
+        "name": "lineEditFlowrate",
+        "parent": "groupBox_4",
+        "state": {
+          "enabled": false,
+          "objectName": "lineEditFlowrate"
+        },
+        "text": ""
+      },
+      "lineEditMajorLosses": {
+        "class": "QLineEdit",
+        "geometry": [
+          170,
+          210,
+          113,
+          20
+        ],
+        "name": "lineEditMajorLosses",
+        "parent": "groupBox_6",
+        "state": {
+          "enabled": false,
+          "objectName": "lineEditMajorLosses"
+        },
+        "text": ""
+      },
+      "lineEditMinorLosses": {
+        "class": "QLineEdit",
+        "geometry": [
+          170,
+          180,
+          113,
+          20
+        ],
+        "name": "lineEditMinorLosses",
+        "parent": "groupBox_6",
+        "state": {
+          "enabled": false,
+          "objectName": "lineEditMinorLosses"
+        },
+        "text": ""
+      },
+      "lineEditRelativeRough": {
+        "class": "QLineEdit",
+        "geometry": [
+          170,
+          60,
+          113,
+          20
+        ],
+        "name": "lineEditRelativeRough",
+        "parent": "groupBox_6",
+        "state": {
+          "enabled": false,
+          "objectName": "lineEditRelativeRough"
+        },
+        "text": ""
+      },
+      "lineEditReynolds": {
+        "class": "QLineEdit",
+        "geometry": [
+          170,
+          90,
+          113,
+          20
+        ],
+        "name": "lineEditReynolds",
+        "parent": "groupBox_6",
+        "state": {
+          "enabled": false,
+          "objectName": "lineEditReynolds"
+        },
+        "text": ""
+      },
+      "lineEditVelocity": {
+        "class": "QLineEdit",
+        "geometry": [
+          170,
+          150,
+          113,
+          20
+        ],
+        "name": "lineEditVelocity",
+        "parent": "groupBox_6",
+        "state": {
+          "enabled": false,
+          "objectName": "lineEditVelocity"
+        },
+        "text": ""
+      },
+      "lineEditViscosity": {
+        "class": "QLineEdit",
+        "geometry": [
+          160,
+          30,
+          113,
+          20
+        ],
+        "name": "lineEditViscosity",
+        "parent": "groupBox_4",
+        "state": {
+          "enabled": false,
+          "objectName": "lineEditViscosity"
+        },
+        "text": ""
+      },
+      "pushButtonAddFitting": {
+        "class": "QPushButton",
+        "geometry": [
+          340,
+          20,
+          41,
+          31
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonAddFitting",
+        "parent": "groupBox_2",
+        "state": {
+          "cursor": 13,
+          "enabled": false,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonAddFitting",
+          "text": ""
+        },
+        "text": ""
+      },
+      "pushButtonAddSegment": {
+        "class": "QPushButton",
+        "geometry": [
+          420,
+          80,
+          41,
+          31
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonAddSegment",
+        "parent": "groupBox",
+        "state": {
+          "cursor": 13,
+          "enabled": false,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonAddSegment",
+          "text": ""
+        },
+        "text": ""
+      },
+      "pushButtonClose": {
+        "class": "QPushButton",
+        "name": "pushButtonClose",
+        "parent": "layoutWidget",
+        "state": {
+          "enabled": true,
+          "objectName": "pushButtonClose",
+          "text": "Close"
+        },
+        "text": "Close"
+      },
+      "pushButtonDeleteFitting": {
+        "class": "QPushButton",
+        "geometry": [
+          340,
+          80,
+          41,
+          41
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonDeleteFitting",
+        "parent": "groupBox_2",
+        "state": {
+          "cursor": 13,
+          "enabled": false,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonDeleteFitting",
+          "text": ""
+        },
+        "text": ""
+      },
+      "pushButtonDeleteSegment": {
+        "class": "QPushButton",
+        "geometry": [
+          420,
+          130,
+          41,
+          41
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonDeleteSegment",
+        "parent": "groupBox",
+        "state": {
+          "cursor": 13,
+          "enabled": false,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonDeleteSegment",
+          "text": ""
+        },
+        "text": ""
+      },
+      "pushButtonExportFittings": {
+        "class": "QPushButton",
+        "geometry": [
+          340,
+          200,
+          41,
+          41
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonExportFittings",
+        "parent": "groupBox_2",
+        "state": {
+          "cursor": 13,
+          "enabled": false,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonExportFittings",
+          "text": "",
+          "toolTip": "Export Segment data for all segments"
+        },
+        "text": ""
+      },
+      "pushButtonExportLineRoughness": {
+        "class": "QPushButton",
+        "geometry": [
+          320,
+          20,
+          41,
+          41
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonExportLineRoughness",
+        "parent": "groupBox_3",
+        "state": {
+          "cursor": 13,
+          "enabled": false,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonExportLineRoughness",
+          "text": "",
+          "toolTip": "Export Roughness Data"
+        },
+        "text": ""
+      },
+      "pushButtonExportSegment": {
+        "class": "QPushButton",
+        "geometry": [
+          420,
+          250,
+          41,
+          41
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonExportSegment",
+        "parent": "groupBox",
+        "state": {
+          "cursor": 13,
+          "enabled": false,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonExportSegment",
+          "text": "",
+          "toolTip": "Export Segments"
+        },
+        "text": ""
+      },
+      "pushButtonImportFittings": {
+        "class": "QPushButton",
+        "geometry": [
+          340,
+          140,
+          41,
+          41
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonImportFittings",
+        "parent": "groupBox_2",
+        "state": {
+          "cursor": 13,
+          "enabled": false,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonImportFittings",
+          "text": "",
+          "toolTip": "Import fittings for all Segments"
+        },
+        "text": ""
+      },
+      "pushButtonImportLineRoughness": {
+        "class": "QPushButton",
+        "geometry": [
+          360,
+          20,
+          41,
+          41
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonImportLineRoughness",
+        "parent": "groupBox_3",
+        "state": {
+          "cursor": 13,
+          "enabled": false,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonImportLineRoughness",
+          "text": "",
+          "toolTip": "Import Roughness Data"
+        },
+        "text": ""
+      },
+      "pushButtonImportSegment": {
+        "class": "QPushButton",
+        "geometry": [
+          420,
+          190,
+          41,
+          41
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonImportSegment",
+        "parent": "groupBox",
+        "state": {
+          "cursor": 13,
+          "enabled": false,
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonImportSegment",
+          "text": "",
+          "toolTip": "Import Segments"
+        },
+        "text": ""
+      },
+      "pushButtonInfo": {
+        "class": "QPushButton",
+        "geometry": [
+          420,
+          10,
+          31,
+          31
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonInfo",
+        "parent": "groupBox",
+        "state": {
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonInfo",
+          "text": ""
+        },
+        "text": ""
+      },
+      "pushButtonInfo2": {
+        "class": "QPushButton",
+        "geometry": [
+          400,
+          20,
+          31,
+          31
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonInfo2",
+        "parent": "groupBox_2",
+        "state": {
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonInfo2",
+          "text": ""
+        },
+        "text": ""
+      },
+      "pushButtonInfo3": {
+        "class": "QPushButton",
+        "geometry": [
+          400,
+          10,
+          31,
+          31
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonInfo3",
+        "parent": "groupBox_3",
+        "state": {
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonInfo3",
+          "text": ""
+        },
+        "text": ""
+      },
+      "tableWidgetFittings": {
+        "class": "QTableWidget",
+        "geometry": [
+          10,
+          20,
+          321,
+          241
+        ],
+        "name": "tableWidgetFittings",
+        "parent": "groupBox_2",
+        "state": {
+          "columnCount": 2,
+          "enabled": false,
+          "objectName": "tableWidgetFittings",
+          "rowCount": 0
+        },
+        "table": {
+          "columns": 2,
+          "headerDefault": 100,
+          "headerMinimum": 39,
+          "headers": [
+            "Fitting Type",
+            "Loss Factor"
+          ],
+          "rows": 0
+        }
+      },
+      "tableWidgetPipeSegment": {
+        "class": "QTableWidget",
+        "geometry": [
+          20,
+          80,
+          391,
+          321
+        ],
+        "name": "tableWidgetPipeSegment",
+        "parent": "groupBox",
+        "selectionBehavior": 1,
+        "state": {
+          "columnCount": 2,
+          "enabled": false,
+          "frameShadow": 48,
+          "lineWidth": 1,
+          "maximumSize": [
+            16777215,
+            16777215
+          ],
+          "objectName": "tableWidgetPipeSegment",
+          "rowCount": 0,
+          "selectionBehavior": 1,
+          "sizeIncrement": [
+            0,
+            0
+          ]
+        },
+        "table": {
+          "columns": 2,
+          "headerDefault": 147,
+          "headerMinimum": 49,
+          "headers": [
+            "Segment Length (m)",
+            "Segment Diameter (cm)"
+          ],
+          "rows": 0
+        }
+      },
+      "toolButtonHelp": {
+        "class": "QToolButton",
+        "geometry": [
+          390,
+          60,
+          25,
+          19
+        ],
+        "name": "toolButtonHelp",
+        "parent": "groupBox",
+        "state": {
+          "objectName": "toolButtonHelp",
+          "text": "..."
+        },
+        "text": "..."
+      }
+    }
+  },
+  "ui_properties_dialog": {
+    "class": "Ui_propertiesDialog",
+    "properties": {
+      "$root": [
+        "geometry",
+        "modal",
+        "objectName",
+        "sizeGripEnabled",
+        "tabOrder",
+        "windowIcon",
+        "windowModality",
+        "windowTitle"
+      ],
+      "Dens": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "groupBox": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "groupBox_2": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "title",
+        "toolTipDuration"
+      ],
+      "horizontalLayout": [
+        "contentsMargins",
+        "objectName"
+      ],
+      "label": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "labelDia": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "labelInfo": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text",
+        "textInteractionFlags"
+      ],
+      "labelLosses": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "labelLossesUnits": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "labelSuc": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_2": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_4": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_5": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_6": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_Press": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_Vol": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "layoutWidget": [
+        "geometry",
+        "objectName"
+      ],
+      "lineEditDensity": [
+        "clearButtonEnabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditDia": [
+        "clearButtonEnabled",
+        "cursor",
+        "focusPolicy",
+        "geometry",
+        "inputMethodHints",
+        "objectName"
+      ],
+      "lineEditHead": [
+        "clearButtonEnabled",
+        "focusPolicy",
+        "frame",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditLosses": [
+        "clearButtonEnabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditPressure": [
+        "clearButtonEnabled",
+        "geometry",
+        "objectName"
+      ],
+      "lineEditVol": [
+        "clearButtonEnabled",
+        "geometry",
+        "objectName"
+      ],
+      "pushButtonApply": [
+        "enabled",
+        "objectName",
+        "text"
+      ],
+      "pushButtonCancel": [
+        "objectName",
+        "text"
+      ],
+      "pushButtonOpenDesigner": [
+        "autoDefault",
+        "autoFillBackground",
+        "cursor",
+        "default",
+        "flat",
+        "focusPolicy",
+        "geometry",
+        "icon",
+        "iconSize",
+        "objectName",
+        "text",
+        "toolTip"
+      ],
+      "pushButtonSubmit": [
+        "objectName",
+        "text"
+      ]
+    },
+    "widgets": {
+      "$root": {
+        "class": "QDialog",
+        "geometry": [
+          0,
+          0,
+          463,
+          370
+        ],
+        "name": "propertiesDialog",
+        "parent": "",
+        "state": {
+          "modal": true,
+          "objectName": "propertiesDialog",
+          "sizeGripEnabled": false,
+          "windowIcon": true,
+          "windowModality": 2,
+          "windowTitle": "Properties"
+        }
+      },
+      "Dens": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          11,
+          61,
+          131,
+          18
+        ],
+        "name": "Dens",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "Dens",
+          "text": "Density:"
+        },
+        "text": "Density:"
+      },
+      "groupBox": {
+        "class": "QGroupBox",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          10,
+          30,
+          441,
+          131
+        ],
+        "name": "groupBox",
+        "parent": "propertiesDialog",
+        "state": {
+          "objectName": "groupBox",
+          "title": "{inlet} Pipe Properties"
+        },
+        "title": "{inlet} Pipe Properties"
+      },
+      "groupBox_2": {
+        "class": "QGroupBox",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          10,
+          180,
+          441,
+          131
+        ],
+        "name": "groupBox_2",
+        "parent": "propertiesDialog",
+        "state": {
+          "objectName": "groupBox_2",
+          "title": "{inlet} Fluid Properties",
+          "toolTipDuration": 3
+        },
+        "title": "{inlet} Fluid Properties"
+      },
+      "horizontalLayout": {
+        "class": "QHBoxLayout",
+        "name": "horizontalLayout",
+        "parent": "layoutWidget"
+      },
+      "label": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          350,
+          20,
+          21,
+          16
+        ],
+        "name": "label",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label",
+          "text": "cm"
+        },
+        "text": "cm"
+      },
+      "labelDia": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          9,
+          21,
+          141,
+          21
+        ],
+        "name": "labelDia",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelDia",
+          "text": "Internal Diameter:"
+        },
+        "text": "Internal Diameter:"
+      },
+      "labelInfo": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          130,
+          0,
+          201,
+          21
+        ],
+        "name": "labelInfo",
+        "parent": "propertiesDialog",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelInfo",
+          "text": "Leave Editbox Empty to Solve for it.",
+          "textInteractionFlags": 0
+        },
+        "text": "Leave Editbox Empty to Solve for it."
+      },
+      "labelLosses": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          9,
+          90,
+          141,
+          21
+        ],
+        "name": "labelLosses",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelLosses",
+          "text": "Pipe/Fittings Losses:"
+        },
+        "text": "Pipe/Fittings Losses:"
+      },
+      "labelLossesUnits": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          350,
+          90,
+          31,
+          16
+        ],
+        "name": "labelLossesUnits",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelLossesUnits",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "labelSuc": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          9,
+          51,
+          141,
+          21
+        ],
+        "name": "labelSuc",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelSuc",
+          "text": "{Inlet} Suction Height:"
+        },
+        "text": "{Inlet} Suction Height:"
+      },
+      "label_2": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          350,
+          60,
+          21,
+          16
+        ],
+        "name": "label_2",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_2",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "label_4": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          350,
+          30,
+          31,
+          16
+        ],
+        "name": "label_4",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_4",
+          "text": "<html><head/><body><p>m<span style=\" vertical-align:super;\">3</span>/h</p></body></html>"
+        },
+        "text": "<html><head/><body><p>m<span style=\" vertical-align:super;\">3</span>/h</p></body></html>"
+      },
+      "label_5": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          350,
+          60,
+          41,
+          21
+        ],
+        "name": "label_5",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_5",
+          "text": "<html><head/><body><p>Kg/m<span style=\" vertical-align:super;\">3</span></p></body></html>"
+        },
+        "text": "<html><head/><body><p>Kg/m<span style=\" vertical-align:super;\">3</span></p></body></html>"
+      },
+      "label_6": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          350,
+          100,
+          21,
+          16
+        ],
+        "name": "label_6",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_6",
+          "text": "Pa"
+        },
+        "text": "Pa"
+      },
+      "label_Press": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          11,
+          91,
+          131,
+          18
+        ],
+        "name": "label_Press",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_Press",
+          "text": "Pressure:"
+        },
+        "text": "Pressure:"
+      },
+      "label_Vol": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          11,
+          31,
+          131,
+          18
+        ],
+        "name": "label_Vol",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_Vol",
+          "text": "Volumetric Flowrate:"
+        },
+        "text": "Volumetric Flowrate:"
+      },
+      "layoutWidget": {
+        "class": "QWidget",
+        "geometry": [
+          14,
+          330,
+          441,
+          25
+        ],
+        "name": "layoutWidget",
+        "parent": "propertiesDialog",
+        "state": {
+          "objectName": "layoutWidget"
+        }
+      },
+      "lineEditDensity": {
+        "class": "QLineEdit",
+        "geometry": [
+          180,
+          65,
+          152,
+          20
+        ],
+        "name": "lineEditDensity",
+        "parent": "groupBox_2",
+        "state": {
+          "clearButtonEnabled": true,
+          "objectName": "lineEditDensity"
+        },
+        "text": ""
+      },
+      "lineEditDia": {
+        "class": "QLineEdit",
+        "geometry": [
+          180,
+          21,
+          155,
+          21
+        ],
+        "name": "lineEditDia",
+        "parent": "groupBox",
+        "state": {
+          "clearButtonEnabled": true,
+          "cursor": 0,
+          "focusPolicy": 11,
+          "inputMethodHints": 8,
+          "objectName": "lineEditDia"
+        },
+        "text": ""
+      },
+      "lineEditHead": {
+        "class": "QLineEdit",
+        "geometry": [
+          180,
+          51,
+          155,
+          21
+        ],
+        "name": "lineEditHead",
+        "parent": "groupBox",
+        "state": {
+          "clearButtonEnabled": true,
+          "focusPolicy": 11,
+          "frame": true,
+          "objectName": "lineEditHead"
+        },
+        "text": ""
+      },
+      "lineEditLosses": {
+        "class": "QLineEdit",
+        "geometry": [
+          180,
+          89,
+          155,
+          21
+        ],
+        "name": "lineEditLosses",
+        "parent": "groupBox",
+        "state": {
+          "clearButtonEnabled": true,
+          "objectName": "lineEditLosses"
+        },
+        "text": ""
+      },
+      "lineEditPressure": {
+        "class": "QLineEdit",
+        "geometry": [
+          180,
+          95,
+          152,
+          20
+        ],
+        "name": "lineEditPressure",
+        "parent": "groupBox_2",
+        "state": {
+          "clearButtonEnabled": true,
+          "objectName": "lineEditPressure"
+        },
+        "text": ""
+      },
+      "lineEditVol": {
+        "class": "QLineEdit",
+        "geometry": [
+          180,
+          34,
+          152,
+          21
+        ],
+        "name": "lineEditVol",
+        "parent": "groupBox_2",
+        "state": {
+          "clearButtonEnabled": true,
+          "objectName": "lineEditVol"
+        },
+        "text": ""
+      },
+      "pushButtonApply": {
+        "class": "QPushButton",
+        "name": "pushButtonApply",
+        "parent": "layoutWidget",
+        "state": {
+          "enabled": true,
+          "objectName": "pushButtonApply",
+          "text": "Apply"
+        },
+        "text": "Apply"
+      },
+      "pushButtonCancel": {
+        "class": "QPushButton",
+        "name": "pushButtonCancel",
+        "parent": "layoutWidget",
+        "state": {
+          "objectName": "pushButtonCancel",
+          "text": "Close"
+        },
+        "text": "Close"
+      },
+      "pushButtonOpenDesigner": {
+        "autoDefault": true,
+        "class": "QPushButton",
+        "geometry": [
+          400,
+          90,
+          31,
+          31
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonOpenDesigner",
+        "parent": "groupBox",
+        "state": {
+          "autoDefault": true,
+          "autoFillBackground": false,
+          "cursor": 13,
+          "default": false,
+          "flat": false,
+          "focusPolicy": 0,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "objectName": "pushButtonOpenDesigner",
+          "text": "",
+          "toolTip": "Pipe Fittings Losses Designer"
+        },
+        "text": ""
+      },
+      "pushButtonSubmit": {
+        "class": "QPushButton",
+        "name": "pushButtonSubmit",
+        "parent": "layoutWidget",
+        "state": {
+          "objectName": "pushButtonSubmit",
+          "text": "Ok"
+        },
+        "text": "Ok"
+      }
+    }
+  },
+  "ui_results_dialog": {
+    "class": "Ui_SolvePage",
+    "properties": {
+      "$root": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "objectName",
+        "windowModality",
+        "windowTitle"
+      ],
+      "groupBox": [
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "groupBox_2": [
+        "geometry",
+        "objectName",
+        "title"
+      ],
+      "labelLossesMeters": [
+        "alignment",
+        "geometry",
+        "objectName",
+        "text",
+        "textInteractionFlags",
+        "wordWrap"
+      ],
+      "labelMissingVar": [
+        "alignment",
+        "geometry",
+        "objectName",
+        "text",
+        "textInteractionFlags",
+        "wordWrap"
+      ],
+      "labelNPSHDiff": [
+        "geometry",
+        "objectName",
+        "text",
+        "textInteractionFlags"
+      ],
+      "labelNPSHRatio": [
+        "geometry",
+        "objectName",
+        "text",
+        "textInteractionFlags"
+      ],
+      "label_NPSHa": [
+        "geometry",
+        "objectName",
+        "text",
+        "textInteractionFlags",
+        "wordWrap"
+      ],
+      "label_NPSHa_2": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_NPSHa_3": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_NPSHa_4": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "label_NPSHa_5": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "lineEditHeadRequired": [
+        "clearButtonEnabled",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "lineEditVapourPress": [
+        "clearButtonEnabled",
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "pushButtonClose": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "variableMissing": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "variableMissing_10": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "variableMissing_11": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "variableMissing_12": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "variableMissing_7": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "variableMissing_8": [
+        "geometry",
+        "objectName",
+        "text"
+      ],
+      "variableMissing_9": [
+        "geometry",
+        "objectName",
+        "text"
+      ]
+    },
+    "widgets": {
+      "$root": {
+        "class": "QDialog",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          0,
+          0,
+          551,
+          417
+        ],
+        "name": "SolvePage",
+        "parent": "",
+        "state": {
+          "objectName": "SolvePage",
+          "windowModality": 2,
+          "windowTitle": "Results Summary"
+        }
+      },
+      "groupBox": {
+        "class": "QGroupBox",
+        "geometry": [
+          20,
+          10,
+          511,
+          151
+        ],
+        "name": "groupBox",
+        "parent": "SolvePage",
+        "state": {
+          "objectName": "groupBox",
+          "title": "Missing Variable:"
+        },
+        "title": "Missing Variable:"
+      },
+      "groupBox_2": {
+        "class": "QGroupBox",
+        "geometry": [
+          20,
+          180,
+          511,
+          201
+        ],
+        "name": "groupBox_2",
+        "parent": "SolvePage",
+        "state": {
+          "objectName": "groupBox_2",
+          "title": "Cavitation"
+        },
+        "title": "Cavitation"
+      },
+      "labelLossesMeters": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          110,
+          491,
+          41
+        ],
+        "name": "labelLossesMeters",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 33,
+          "objectName": "labelLossesMeters",
+          "text": "Designer Active: The Total Head Losses in meters is {}.",
+          "textInteractionFlags": 5,
+          "wordWrap": true
+        },
+        "text": "Designer Active: The Total Head Losses in meters is {}.",
+        "wordWrap": true
+      },
+      "labelMissingVar": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          60,
+          491,
+          41
+        ],
+        "name": "labelMissingVar",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "alignment": 33,
+          "objectName": "labelMissingVar",
+          "text": "Value",
+          "textInteractionFlags": 5,
+          "wordWrap": true
+        },
+        "text": "Value",
+        "wordWrap": true
+      },
+      "labelNPSHDiff": {
+        "class": "QLabel",
+        "geometry": [
+          220,
+          160,
+          71,
+          16
+        ],
+        "name": "labelNPSHDiff",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelNPSHDiff",
+          "text": "Value",
+          "textInteractionFlags": 5
+        },
+        "text": "Value"
+      },
+      "labelNPSHRatio": {
+        "class": "QLabel",
+        "geometry": [
+          220,
+          130,
+          71,
+          16
+        ],
+        "name": "labelNPSHRatio",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "labelNPSHRatio",
+          "text": "Value",
+          "textInteractionFlags": 5
+        },
+        "text": "Value"
+      },
+      "label_NPSHa": {
+        "class": "QLabel",
+        "geometry": [
+          220,
+          70,
+          131,
+          16
+        ],
+        "name": "label_NPSHa",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_NPSHa",
+          "text": "Value",
+          "textInteractionFlags": 5,
+          "wordWrap": true
+        },
+        "text": "Value",
+        "wordWrap": true
+      },
+      "label_NPSHa_2": {
+        "class": "QLabel",
+        "geometry": [
+          360,
+          70,
+          21,
+          16
+        ],
+        "name": "label_NPSHa_2",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_NPSHa_2",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "label_NPSHa_3": {
+        "class": "QLabel",
+        "geometry": [
+          360,
+          100,
+          21,
+          16
+        ],
+        "name": "label_NPSHa_3",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_NPSHa_3",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "label_NPSHa_4": {
+        "class": "QLabel",
+        "geometry": [
+          360,
+          160,
+          21,
+          16
+        ],
+        "name": "label_NPSHa_4",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_NPSHa_4",
+          "text": "m"
+        },
+        "text": "m"
+      },
+      "label_NPSHa_5": {
+        "class": "QLabel",
+        "geometry": [
+          360,
+          130,
+          21,
+          16
+        ],
+        "name": "label_NPSHa_5",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "label_NPSHa_5",
+          "text": "(-)"
+        },
+        "text": "(-)"
+      },
+      "lineEditHeadRequired": {
+        "class": "QLineEdit",
+        "geometry": [
+          220,
+          100,
+          113,
+          21
+        ],
+        "name": "lineEditHeadRequired",
+        "parent": "groupBox_2",
+        "state": {
+          "clearButtonEnabled": true,
+          "objectName": "lineEditHeadRequired",
+          "text": ""
+        },
+        "text": ""
+      },
+      "lineEditVapourPress": {
+        "class": "QLineEdit",
+        "geometry": [
+          160,
+          30,
+          113,
+          21
+        ],
+        "name": "lineEditVapourPress",
+        "parent": "groupBox_2",
+        "state": {
+          "clearButtonEnabled": true,
+          "objectName": "lineEditVapourPress",
+          "text": "23.8"
+        },
+        "text": "23.8"
+      },
+      "pushButtonClose": {
+        "class": "QPushButton",
+        "geometry": [
+          240,
+          390,
+          75,
+          23
+        ],
+        "name": "pushButtonClose",
+        "parent": "SolvePage",
+        "state": {
+          "objectName": "pushButtonClose",
+          "text": "Close"
+        },
+        "text": "Close"
+      },
+      "variableMissing": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          30,
+          101,
+          16
+        ],
+        "name": "variableMissing",
+        "parent": "groupBox",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "variableMissing",
+          "text": "Missing Variable:"
+        },
+        "text": "Missing Variable:"
+      },
+      "variableMissing_10": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          30,
+          151,
+          21
+        ],
+        "name": "variableMissing_10",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "variableMissing_10",
+          "text": "Vapour Pressure of Liquid: "
+        },
+        "text": "Vapour Pressure of Liquid: "
+      },
+      "variableMissing_11": {
+        "class": "QLabel",
+        "geometry": [
+          280,
+          30,
+          41,
+          20
+        ],
+        "name": "variableMissing_11",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "variableMissing_11",
+          "text": "mmHg"
+        },
+        "text": "mmHg"
+      },
+      "variableMissing_12": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          160,
+          201,
+          16
+        ],
+        "name": "variableMissing_12",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "variableMissing_12",
+          "text": "Difference of NPSH-A to NPSH-R:"
+        },
+        "text": "Difference of NPSH-A to NPSH-R:"
+      },
+      "variableMissing_7": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          70,
+          201,
+          16
+        ],
+        "name": "variableMissing_7",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "variableMissing_7",
+          "text": "Net Positive Suction  Head Available:"
+        },
+        "text": "Net Positive Suction  Head Available:"
+      },
+      "variableMissing_8": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          100,
+          201,
+          16
+        ],
+        "name": "variableMissing_8",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "variableMissing_8",
+          "text": "Net Positive Suction Head Required:"
+        },
+        "text": "Net Positive Suction Head Required:"
+      },
+      "variableMissing_9": {
+        "class": "QLabel",
+        "geometry": [
+          10,
+          130,
+          201,
+          16
+        ],
+        "name": "variableMissing_9",
+        "parent": "groupBox_2",
+        "pixmapSize": null,
+        "state": {
+          "objectName": "variableMissing_9",
+          "text": "Ratio of NPSH-A to NPSH-R:"
+        },
+        "text": "Ratio of NPSH-A to NPSH-R:"
+      }
+    }
+  }
+}

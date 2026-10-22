@@ -35,11 +35,13 @@ The `parameters` section requires these fields:
 | `in_press`, `out_press` | Inlet/outlet pressure | Pa |
 | `effi` | Pump efficiency | % |
 | `power` | Total available pump head (existing internal field name) | m |
-| `safety` | Safety factor | dimensionless (empty unit) |
+| `safety` | Safety head allowance | m |
 | `gravity` | Gravitational acceleration | m/s^2 |
 | `designer_status_in`, `designer_status_out` | Designer enabled state | `True` or `False`, empty unit |
 
 Main numeric values may be `Unspecified` or blank; blanks restore as `Unspecified`. Designer numeric values may be blank for an unfinished design. Numbers must be finite. Boolean text accepts `True`/`False` in any letter case. The two sides retain their own viscosity (`cP`) and transition equation (`Moody` or `R.J.S Pigott`); omitted settings default to blank viscosity and `Moody`. Empty designs are represented by the absence of their segment, fitting, and roughness rows.
+
+The `safety` value is an additive head allowance in metres in the pump and NPSH equations. Earlier project CSV files with an empty `Unit` cell for `safety` remain readable; new exports write `m` without changing the value. All other unit requirements remain strict.
 
 ## Pipe segments
 

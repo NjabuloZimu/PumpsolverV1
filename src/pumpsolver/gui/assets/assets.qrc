@@ -1,0 +1,32 @@
+<RCC>
+ <qresource prefix="/">
+  <file alias="Buttons/Export.png">Export.png</file>
+  <file alias="Buttons/Info.png">Info.png</file>
+  <file alias="Buttons/add.png">add.png</file>
+  <file alias="Buttons/delete.png">delete.png</file>
+  <file alias="Buttons/import.png">import.png</file>
+  <file alias="Info/LossCoeff.png">LossCoeff.png</file>
+  <file alias="Info/contraction.png">contraction.png</file>
+  <file alias="Info/moody.png">moody.png</file>
+  <file alias="Tools/Tool.png">Tool.png</file>
+  <file alias="WindowIcons/pumpSoftware.svg">pumpSoftware.svg</file>
+  <file alias="inlet/inlet2.png">inlet2.png</file>
+  <file alias="outlet/outlet.png">outlet.png</file>
+  <file alias="pump/pump1.png">pump1.png</file>
+  <file alias="assets/add.png">add.png</file>
+  <file alias="assets/contraction.png">contraction.png</file>
+  <file alias="assets/delete.png">delete.png</file>
+  <file alias="assets/Export.png">Export.png</file>
+  <file alias="assets/import.png">import.png</file>
+  <file alias="assets/Info.png">Info.png</file>
+  <file alias="assets/inlet2.png">inlet2.png</file>
+  <file alias="assets/LossCoeff.png">LossCoeff.png</file>
+  <file alias="assets/moody.png">moody.png</file>
+  <file alias="assets/moodyEq.png">moodyEq.png</file>
+  <file alias="assets/outlet.png">outlet.png</file>
+  <file alias="assets/pump1.png">pump1.png</file>
+  <file alias="assets/RJSPigott.png">RJSPigott.png</file>
+  <file alias="assets/segments.png">segments.png</file>
+  <file alias="assets/Tool.png">Tool.png</file>
+ </qresource>
+</RCC>

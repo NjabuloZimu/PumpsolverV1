@@ -1,0 +1,197 @@
+"""Numerical reference cases for the extracted, GUI-independent domain layer."""
+
+from copy import deepcopy
+from math import pi
+
+import pytest
+
+from pumpsolver.calculations.pipe_losses import (
+    CalculationError, GRAVITY, PipeLossCalculator,
+)
+from pumpsolver.calculations.pump import calculate_npsha, compare_npsh, solve_pump
+
+
+def pipe_inputs(diameters=(10,), lengths=None, roughness='Smooth Pipe'):
+    lengths = lengths or [10] * len(diameters)
+    segments = {}
+    for index, (diameter, length) in enumerate(zip(diameters, lengths), 1):
+        segments[f'Line Segment {index}, Segment Length (m)'] = str(length)
+        segments[f'Line Segment {index}, Segment Diameter (cm)'] = str(diameter)
+    return segments, [], [{'Line Segment': index, 'Segment Roughness': roughness}
+                          for index in range(1, len(diameters) + 1)]
+
+
+def pump_inputs():
+    return {
+        'in_dia': '10', 'in_head': '2', 'in_loss': '0.5', 'in_flow': '36',
+        'in_dens': '1000', 'in_press': '101325', 'out_dia': '10', 'out_head': '20',
+        'out_loss': '0.7', 'out_flow': '36', 'out_dens': '1000', 'out_press': '101325',
+        'effi': '80', 'power': 'Unspecified', 'safety': '1', 'gravity': '9.81',
+        'designer_status_in': False, 'designer_status_out': False,
+    }
+
+
+@pytest.mark.parametrize('side,boundary_coefficient', [('inlet', 0.1), ('outlet', 1.0)])
+def test_one_laminar_pipe_uses_explicit_tank_boundary(side, boundary_coefficient):
+    calculator = PipeLossCalculator(side=side)
+    inputs = pipe_inputs()
+    before = deepcopy(inputs)
+    result = calculator.calculate(*inputs, viscosity=1000, density=1000, volumetric=36)
+    velocity = 0.01 / (pi * 0.1 ** 2 / 4)
+    reynolds = 1000 * velocity * 0.1 / 1.0
+    expected_major = (64 / reynolds) * (10 / 0.1) * velocity ** 2 / (2 * GRAVITY)
+    expected_boundary = boundary_coefficient * velocity ** 2 / (2 * GRAVITY)
+    assert result.major_loss == pytest.approx(expected_major)
+    assert result.boundary_loss == pytest.approx(expected_boundary)
+    assert result.total_loss == pytest.approx(expected_major + expected_boundary)
+    assert result.contractions == result.expansions == 0
+    assert inputs == before
+    assert calculator.viscosity == 0.001
+
+
+def test_outlet_first_segment_has_no_fictitious_last_to_first_transition():
+    result = PipeLossCalculator(side='outlet').calculate(
+        *pipe_inputs((10, 20), (0, 0)), viscosity=1, density=1000, volumetric=36)
+    first, second = result.segments
+    expected_expansion = (1 - 0.1 / 0.2) ** 2 * first.velocity ** 2 / (2 * GRAVITY)
+    expected_exit = second.velocity ** 2 / (2 * GRAVITY)
+    assert first.transition_loss == first.boundary_loss == 0
+    assert second.transition_loss == pytest.approx(expected_expansion)
+    assert result.boundary_loss == pytest.approx(expected_exit)
+    assert result.total_loss == pytest.approx(expected_expansion + expected_exit)
+    assert result.expansions == 1 and result.contractions == 0
+
+
+def test_equal_diameters_have_no_laminar_contraction_penalty():
+    result = PipeLossCalculator().calculate(
+        *pipe_inputs((10, 10)), viscosity=1000, density=1000, volumetric=36)
+    assert result.transition_loss == 0
+    assert result.contractions == result.expansions == 0
+
+
+def test_rough_laminar_friction_uses_reynolds_without_roughness_penalty():
+    calculator = PipeLossCalculator()
+    assert calculator.darcy_friction_factor(1000, 0.001, 0.0001) == pytest.approx(0.064)
+
+
+def test_colebrook_rough_pipe_keeps_reynolds_and_roughness_arguments_in_order():
+    calculator = PipeLossCalculator()
+    friction = calculator.darcy_friction_factor(100000, 0.001, 0.0001)
+    assert friction == pytest.approx(0.0221745359445, rel=1e-10)
+    assert calculator.colebrook_equation(friction, 0.001, 100000) == pytest.approx(0, abs=1e-10)
+    smooth_transition = calculator.darcy_friction_factor(3000, 0, 0)
+    assert calculator.colebrook_equation(smooth_transition, 0, 3000) == pytest.approx(0, abs=1e-10)
+
+
+@pytest.mark.parametrize('reynolds,relative_roughness,expected', [
+    (4000, 0, 0.03990701405563489),
+    (4000, 0.05, 0.07698683488922486),
+    (100000, 0.001, 0.02217453594451508),
+    (1000000, 0, 0.011645040997991622),
+    (1000000, 0.01, 0.037964741876160064),
+    (100000000, 0, 0.0059404663516367615),
+    (100000000, 0.000001, 0.006432556519692281),
+    (100000000, 0.05, 0.07155090409108326),
+])
+def test_colebrook_matches_independent_scipy_reference_roots(reynolds, relative_roughness, expected):
+    # Golden values: scipy.optimize.fsolve on 1/sqrt(f) +
+    # 2*log10(epsilon_D/3.7 + 2.51/(Re*sqrt(f))) = 0, with correct argument
+    # order and Haaland initial guesses. No SciPy dependency at test/runtime.
+    # Re=4000 is the boundary case of the correlation, not a new regime model.
+    actual = PipeLossCalculator.solve_colebrook(reynolds, relative_roughness)
+    assert actual == pytest.approx(expected, rel=1e-12, abs=5e-15)
+
+
+def test_transition_equation_is_explicit_and_changes_only_selected_threshold():
+    calculator = PipeLossCalculator()
+    moody = calculator.darcy_friction_factor(200000, 0.01, 0.001, 'Moody')
+    pigott = calculator.darcy_friction_factor(200000, 0.01, 0.001, 'R.J.S Pigott')
+    assert moody == pytest.approx((1.14 + 2 * 2) ** -2)
+    assert pigott == pytest.approx(calculator.solve_colebrook(200000, 0.01))
+    assert moody != pytest.approx(pigott)
+    assert calculator.transition_equation == 'Moody'
+
+
+def test_zero_flow_has_zero_losses_instead_of_dividing_by_reynolds():
+    result = PipeLossCalculator().calculate(
+        *pipe_inputs(), viscosity=1, density=1000, volumetric=0)
+    assert result.total_loss == 0
+    assert result.segments[0].flow_type == 'No flow'
+
+
+@pytest.mark.parametrize('change', ['viscosity', 'diameter', 'roughness', 'fitting'])
+def test_invalid_pipe_inputs_do_not_mutate_data_or_calculator(change):
+    segments, fittings, roughness = pipe_inputs()
+    viscosity = '1'
+    if change == 'viscosity':
+        viscosity = '0'
+    elif change == 'diameter':
+        segments['Line Segment 1, Segment Diameter (cm)'] = ''
+    elif change == 'roughness':
+        roughness.clear()
+    else:
+        fittings.append({'Line Segment': 1, 'Fitting 1, Loss Factor': ''})
+    before = deepcopy((segments, fittings, roughness))
+    calculator = PipeLossCalculator()
+    with pytest.raises(CalculationError):
+        calculator.calculate(segments, fittings, roughness, viscosity, 1000, 36)
+    assert (segments, fittings, roughness) == before
+    assert calculator.viscosity == 0.001
+
+
+def test_pump_head_matches_energy_balance_and_preserves_gui_units():
+    parameters = pump_inputs()
+    before = deepcopy(parameters)
+    result = solve_pump(parameters)
+    assert result.solved_key == 'power'
+    assert result.solved_value == pytest.approx(25.25)
+    assert result.unit == 'm'
+    assert parameters == before
+    assert result.values['in_dia'] == '10'
+    assert result.values['in_flow'] == '36'
+    assert result.values['effi'] == '80'
+
+
+@pytest.mark.parametrize('unknown,expected', [('out_head', 20), ('effi', 80), ('in_press', 101325)])
+def test_pump_linear_unknowns_match_known_balance(unknown, expected):
+    parameters = pump_inputs()
+    parameters['power'] = '25.25'
+    parameters[unknown] = 'Unspecified'
+    assert solve_pump(parameters).solved_value == pytest.approx(expected)
+
+
+@pytest.mark.parametrize('unknown', ['in_flow', 'out_dia'])
+def test_pump_nonlinear_unknown_selects_positive_real_root(unknown):
+    parameters = pump_inputs()
+    parameters['out_dia'] = '8'
+    velocity_in = 0.01 / (pi * 0.1 ** 2 / 4)
+    velocity_out = 0.01 / (pi * 0.08 ** 2 / 4)
+    parameters['power'] = str((20.2 + (velocity_out ** 2 - velocity_in ** 2) / (2 * 9.81)) / 0.8)
+    parameters[unknown] = 'Unspecified'
+    expected = 36 if unknown == 'in_flow' else 8
+    result = solve_pump(parameters)
+    assert result.solved_value == pytest.approx(expected)
+    if unknown == 'in_flow':
+        assert float(result.values['out_flow']) == pytest.approx(expected)
+
+
+def test_no_solution_does_not_leak_unit_conversions_into_input():
+    parameters = pump_inputs()
+    parameters['effi'] = '0'
+    before = deepcopy(parameters)
+    with pytest.raises(CalculationError):
+        solve_pump(parameters)
+    assert parameters == before
+
+
+def test_npsh_matches_existing_pressure_head_basis_and_updates_comparison():
+    parameters = pump_inputs()
+    before = deepcopy(parameters)
+    available = calculate_npsha(parameters, '23.8')
+    expected = (101325 - 23.8 * 133.322) / (1000 * 9.81) + 2 - 0.5 - 1
+    assert available == pytest.approx(expected)
+    comparison = compare_npsh(available, 4)
+    assert comparison.ratio == pytest.approx(expected / 4)
+    assert comparison.difference == pytest.approx(expected - 4)
+    assert compare_npsh(available, 0).ratio is None
+    assert parameters == before
