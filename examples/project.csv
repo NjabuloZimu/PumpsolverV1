@@ -1,0 +1,38 @@
+﻿Section,Side,Line Segment,Fitting,Parameter,Value,Unit
+parameters,,,,in_dia,10,cm
+parameters,,,,in_head,-2.5,m
+parameters,,,,in_loss,0.1,m
+parameters,,,,in_flow,36,m^3/h
+parameters,,,,in_dens,1000,kg/m^3
+parameters,,,,in_press,101325,Pa
+parameters,,,,out_dia,8,cm
+parameters,,,,out_head,20,m
+parameters,,,,out_loss,1.2,m
+parameters,,,,out_flow,36,m^3/h
+parameters,,,,out_dens,1000,kg/m^3
+parameters,,,,out_press,101325,Pa
+parameters,,,,effi,80,%
+parameters,,,,power,Unspecified,m
+parameters,,,,safety,1.1,
+parameters,,,,gravity,9.81,m/s^2
+parameters,,,,designer_status_in,False,
+parameters,,,,designer_status_out,True,
+settings,inlet,,,viscosity,1.005,cP
+settings,inlet,,,transition_equation,R.J.S Pigott,
+segments,inlet,1,,Segment Length (m),2.5,m
+segments,inlet,1,,Segment Diameter (cm),10,cm
+segments,inlet,2,,Segment Length (m),3,m
+segments,inlet,2,,Segment Diameter (cm),8,cm
+fittings,inlet,1,1,Fitting Type,"Valve, open",
+fittings,inlet,1,1,Loss Factor,0.15,
+fittings,inlet,1,2,Fitting Type,Bend,
+fittings,inlet,1,2,Loss Factor,0.3,
+fittings,inlet,2,1,Fitting Type,Elbow,
+fittings,inlet,2,1,Loss Factor,0.5,
+roughness,inlet,1,,Segment Roughness,Smooth Pipe,mm
+roughness,inlet,2,,Segment Roughness,0.045,mm
+settings,outlet,,,viscosity,1.005,cP
+settings,outlet,,,transition_equation,Moody,
+segments,outlet,1,,Segment Length (m),20,m
+segments,outlet,1,,Segment Diameter (cm),8,cm
+roughness,outlet,1,,Segment Roughness,0.045,mm

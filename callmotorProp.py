@@ -1,3 +1,4 @@
+from centered_canvas import center_window_contents
 import sys
 from PyQt5.QtWidgets import QDialog, QApplication, QMessageBox
 from motorProp import *
@@ -13,6 +14,7 @@ class MotorProp(QDialog):
         super().__init__()
         self.ui = Ui_MotorProp()
         self.ui.setupUi(self)
+        center_window_contents(self)
 
         self.ui.pushButtonOk.clicked.connect(self.saveandclose)
         self.ui.pushButtonApply.clicked.connect(self.save)

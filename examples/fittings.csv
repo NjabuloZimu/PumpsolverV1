@@ -1,0 +1,4 @@
+﻿Line Segment,Fitting,Fitting Type,Loss Factor
+1,1,"Valve, open",0.15
+1,2,Bend,0.3
+2,1,Elbow,0.5

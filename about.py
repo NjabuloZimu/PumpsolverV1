@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from version import __version__
 
 
 class Ui_about(object):
@@ -79,7 +80,7 @@ class Ui_about(object):
     def retranslateUi(self, about):
         _translate = QtCore.QCoreApplication.translate
         about.setWindowTitle(_translate("about", "Form"))
-        self.label.setText(_translate("about", "Process Pump Calculator Version 2.0.0"))
+        self.label.setText(_translate("about", f"Process Pump Calculator Version {__version__}"))
         self.label_2.setText(_translate("about", "Feature(s): "))
         self.label_3.setText(_translate("about", "1. Automate the calculation of the engineering \'head\' form of the Bernoulli\'s equation."))
         self.label_4.setText(_translate("about", "2. Automate the calculation minor and major losses due to fittings, contraction, expansions and pipe Roughness."))

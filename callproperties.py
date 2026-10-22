@@ -1,4 +1,6 @@
+from centered_canvas import center_window_contents
 import sys
+from copy import deepcopy
 from PyQt5.QtWidgets import QDialog, QApplication, QMessageBox
 
 from properties import *
@@ -10,13 +12,14 @@ from callLossesCal import LossesCal
 
 
 class Properties(QDialog):
-    submitClicked = QtCore.pyqtSignal(dict, str, dict, list, list) # This is the subwindow signal sent to main 
+    submitClicked = QtCore.pyqtSignal(dict, str, dict, list, list, str, str)
                                     # data, identifier, self.stored_segments, self.list_fittings_by_segment, self.lineRoughnessList, self.total_losses_hf
     
     def __init__(self, diaLogName, designerStatus): # Need to pass in a the name to identify window by changing its name
         super().__init__()
         self.ui = Ui_propertiesDialog()
         self.ui.setupUi(self)
+        center_window_contents(self)
 
         # Updata the status of designer if there are any changes
         self.designerStatus = designerStatus
@@ -69,6 +72,7 @@ class Properties(QDialog):
         self.list_fittings_by_segment = []
         self.lineRoughnessList = []
         self.viscosity = ''
+        self.transition_equation = 'Moody'
 
     def stored_segments_f(self):
         # Feature: on startup modify segment data to set the dictionary to the initial diameter 
@@ -121,9 +125,10 @@ class Properties(QDialog):
         self.sub_window_designer.ui.lineEditDensity.setText(self.ui.lineEditDensity.text())
         self.sub_window_designer.ui.lineEditFlowrate.setText(self.ui.lineEditVol.text())
         self.sub_window_designer.ui.lineEditViscosity.setText(self.viscosity)
+        self.sub_window_designer.ui.comboBoxTransitionEquation.setCurrentText(self.transition_equation)
 
         # Call setter
-        self.sub_window_designer.previously_stored_data(self.stored_segments, self.list_fittings_by_segment, self.lineRoughnessList)
+        self.sub_window_designer.previously_stored_data(deepcopy(self.stored_segments), deepcopy(self.list_fittings_by_segment), deepcopy(self.lineRoughnessList))
         
         # signals
         self.sub_window_designer.densityChanged.connect(self.update_density)
@@ -145,6 +150,8 @@ class Properties(QDialog):
         self.list_fittings_by_segment = list_fittings_by_segment
         self.lineRoughnessList = lineRoughnessList
         self.viscosity = viscosity
+        if hasattr(self, 'sub_window_designer'):
+            self.transition_equation = self.sub_window_designer.ui.comboBoxTransitionEquation.currentText()
 
     def update_dia(self, diameterValue):
         print('Signal to set diameter of the properties diameter recieved')
@@ -179,7 +186,7 @@ class Properties(QDialog):
                     print('outlet')
 
         # signal is emitted Here, and the data is passed back, use window name to identify window and use if statement to fill in texts
-        self.submitClicked.emit(data, self.windowTitle(), self.stored_segments, self.list_fittings_by_segment, self.lineRoughnessList) 
+        self.submitClicked.emit(data, self.windowTitle(), self.stored_segments, self.list_fittings_by_segment, self.lineRoughnessList, self.viscosity, self.transition_equation)
         
         # Initiate disabling the save button.
         self.disablesave(data) 
@@ -220,8 +227,6 @@ class Properties(QDialog):
 
         # No longer toggling units based on status. Always meters.
         self.ui.labelLossesUnits.setText("m")
-        if not status:
-            self.ui.lineEditLosses.setText("0")
 
         # save new designer status in global variable
         self.designerStatus = status

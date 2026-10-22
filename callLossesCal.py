@@ -1,7 +1,11 @@
+from centered_canvas import center_window_contents
 import sys
 import csv
 import inspect
 import re
+from contextlib import contextmanager
+from csv_io import (ensure_csv_path, read_segments, write_segments, read_fittings,
+                    write_fittings, read_roughness, write_roughness)
 from PyQt5.QtWidgets import QMainWindow, QApplication, QAction, QFileDialog, QMessageBox, QStyledItemDelegate, QLineEdit, QTableWidgetItem, QComboBox
 from PyQt5.QtGui import QRegExpValidator, QPixmap
 from PyQt5.QtCore import Qt, QRegExp, QEvent
@@ -51,6 +55,7 @@ class LossesCal(Calculation):
         super().__init__()
         self.ui = Ui_LineLossesDesigner()
         self.ui.setupUi(self)
+        center_window_contents(self)
         self.setWindowTitle(instanceName)
 
         # Set the instructions
@@ -173,193 +178,109 @@ class LossesCal(Calculation):
 
         self.calculate_answer()
 
+    @contextmanager
+    def _blocked_widgets(self, *widgets):
+        previous = [widget.blockSignals(True) for widget in widgets]
+        try:
+            yield
+        finally:
+            for widget, blocked in zip(widgets, previous):
+                widget.blockSignals(blocked)
+
+    def _capture_fittings(self, segment):
+        """Read the visible fitting table without triggering calculations."""
+        if segment is None:
+            return
+        table = self.ui.tableWidgetFittings
+        entry = {'Line Segment': segment}
+        for row in range(table.rowCount()):
+            for column, name in enumerate(('Fitting Type', 'Loss Factor')):
+                item = table.item(row, column)
+                entry[f'Fitting {row + 1}, {name}'] = item.text() if item else ''
+        self.list_fittings_by_segment = [
+            item for item in self.list_fittings_by_segment
+            if item.get('Line Segment') != segment
+        ]
+        if table.rowCount():
+            self.list_fittings_by_segment.append(entry)
+        self.list_fittings_by_segment.sort(key=lambda item: item['Line Segment'])
+
+    def _capture_segments(self):
+        table = self.ui.tableWidgetPipeSegment
+        self.stored_segments = {
+            f'Line Segment {row + 1}, {table.horizontalHeaderItem(column).text()}':
+            table.item(row, column).text() if table.item(row, column) else ''
+            for row in range(table.rowCount())
+            for column in range(table.columnCount())
+        }
+
+    def _capture_current_tables(self):
+        focused = self.focusWidget()
+        if focused:
+            focused.clearFocus()
+        self._capture_segments()
+        selected = self.ui.tableWidgetPipeSegment.selectedIndexes()
+        if selected:
+            self._capture_fittings(selected[0].row() + 1)
+        self.storeViscosity = self.ui.lineEditViscosity.text()
+
     def export_data(self, identifier):
-        fileName, _ = QFileDialog.getSaveFileName(self, "Save CSV", "", "CSV Files (*.csv);;All Files (*)")
-        if identifier == 'segment':
-            # first save the data
-            self.save_table_data_Segment()
-            # Get a file name from the user
-
-            if fileName:
-                with open(fileName, 'w', newline='') as csvfile:
-                    csvwriter = csv.writer(csvfile)
-
-                    # Write header
-                    csvwriter.writerow(['Key', 'Value'])
-                    self.data_dict = self.stored_segments
-                    # Write data
-                    for key, value in self.data_dict.items():
-                        csvwriter.writerow([key, value])
-
-                print(f'Data exported to {fileName}')
-
-        elif identifier == 'fittings':
-            headers = set().union(*[d.keys() for d in self.list_fittings_by_segment])
-
-            if fileName:
-                with open(fileName, 'w', newline='') as csv_file:
-                    # Create a CSV writer
-                    csv_writer = csv.DictWriter(csv_file, fieldnames=headers)
-
-                    # Write the header
-                    csv_writer.writeheader()
-
-                    # Write the data
-                    csv_writer.writerows(self.list_fittings_by_segment)
-
-        elif identifier == "roughness":
-            # Extract column headers from the first dictionary
-            headers = set().union(*[d.keys() for d in self.lineRoughnessList])
-
-            if fileName:
-                with open(fileName, 'w', newline='') as csv_file:
-                    # Create a CSV writer
-                    csv_writer = csv.DictWriter(csv_file, fieldnames=headers)
-
-                    # Write the header
-                    csv_writer.writeheader()
-
-                    # Write the data
-                    csv_writer.writerows(self.lineRoughnessList)
+        file_name, _ = QFileDialog.getSaveFileName(
+            self, 'Export CSV', '', 'CSV Files (*.csv)'
+        )
+        if not file_name:
+            return
+        try:
+            self._capture_current_tables()
+            writer, data = {
+                'segment': (write_segments, self.stored_segments),
+                'fittings': (write_fittings, self.list_fittings_by_segment),
+                'roughness': (write_roughness, self.lineRoughnessList),
+            }[identifier]
+            writer(ensure_csv_path(file_name), data)
+        except (OSError, ValueError, csv.Error, UnicodeError) as error:
+            QMessageBox.critical(self, 'CSV Export Failed', str(error))
 
     def import_data(self, identifier):
-        # Get a file name from the user
-        fileName, _ = QFileDialog.getOpenFileName(self, "Open CSV", "", "CSV Files (*.csv);;All Files (*)")
+        file_name, _ = QFileDialog.getOpenFileName(
+            self, 'Import CSV', '', 'CSV Files (*.csv)'
+        )
+        if not file_name:
+            return
+        try:
+            reader = {
+                'segment': read_segments,
+                'fittings': read_fittings,
+                'roughness': read_roughness,
+            }[identifier]
+            imported = reader(file_name)
+            # Complete validation before replacing any existing designer data.
+            if identifier != 'segment':
+                valid_segments = set(range(1, self.ui.tableWidgetPipeSegment.rowCount() + 1))
+                missing = {item['Line Segment'] for item in imported} - valid_segments
+                if missing:
+                    raise ValueError('Import the corresponding pipe segments first. '
+                                     f'Unknown Line Segment: {sorted(missing)}')
+        except (OSError, ValueError, csv.Error, UnicodeError) as error:
+            QMessageBox.critical(self, 'CSV Import Failed', str(error))
+            return
 
         if identifier == 'segment':
-            if fileName:
-                with open(fileName, 'r') as csvfile:
-                    csvreader = csv.reader(csvfile)
-
-                    # Skip header
-                    next(csvreader)
-
-                    # Read data into a dictionary
-                    imported_data = {row[0]: row[1] for row in csvreader}
-                    
-                    try:
-                        for key, value in imported_data.items():
-                            float(value)
-                    except ValueError:
-                        msg = QMessageBox()
-                        msg.setIcon(QMessageBox.Critical)
-                        msg.setWindowTitle("Error: Import Failed")
-                        msg.setText(f"Corrupt/Invalid data at '{key}':'{value}'.")
-                        msg.exec_()
-                    else:
-                        self.stored_segments = imported_data
-                        print(f"imported segment {imported_data}")
-                        self.restore_table_data_segments()
-                        
-
-                print(f'Data imported from {fileName}: {imported_data}')
-
+            self.stored_segments = imported
+            valid_segments = {int(key.split(', ')[0].split()[-1]) for key in imported}
+            self.list_fittings_by_segment = [item for item in self.list_fittings_by_segment
+                                            if item.get('Line Segment') in valid_segments]
+            self.lineRoughnessList = [item for item in self.lineRoughnessList
+                                      if item.get('Line Segment') in valid_segments]
+            self.restore_table_data_segments()
+            self.save_diameter()
         elif identifier == 'fittings':
-            print('import data fittings')
-            if fileName:
-                print('import data fittings checkpoint 2')
-                with open(fileName, 'r', newline='') as csv_file:
-                    print('import data fittings checkpoint 3')
-                    # Create a CSV reader
-                    csv_reader = csv.DictReader(csv_file)
-                    print(f'import data fittings checkpoint 3.5, {csv_reader}')
-
-                    # Iterate over each row in the CSV file
-                    for row in csv_reader:
-                        print('import data fittings checkpoint 4')
-                        # Check if a dictionary with the same 'Name' already exists
-                        print(f'Nonetype check, print {row}')
-                        try:
-                            for key, value in row.items():
-                                if 'Fitting Type' not in key and value != '':
-                                    float(value)  # Try to convert value to float
-                        except (ValueError, TypeError) :
-                            msg = QMessageBox()
-                            msg.setIcon(QMessageBox.Critical)
-                            msg.setWindowTitle("Error: Import Failed")
-                            msg.setText(f"Corrupt/Invalid data at '{key}':'{value}'.")
-                            msg.exec_()
-                            print(f"Skipping row: {row} - Not all values can be converted to floats.")
-                        else:
-                            print('import data fittings checkpoint 6')
-                            for key, value in row.items():
-                                if 'Line Segment' in key:
-                                    row[key] = int(value)  # Try to convert value to float
-
-                            found = False
-                            for item in self.list_fittings_by_segment:
-                                if item['Line Segment'] == row['Line Segment']:
-                                    item.update(row)
-                                    found = True
-
-                            if not found:
-                                # If no existing dictionary, append the new row
-                                print(f'Apprently list of fittings is a dictionary check {self.list_fittings_by_segment}')
-                                self.list_fittings_by_segment.append(row)
-                                print('import data fittings checkpoint 7')  
-
-                print(f'The imported fittings list. {self.list_fittings_by_segment}')
-                            # self.ui.tableWidgetPipeSegment.clearSelection()
-                self.ui.tableWidgetFittings.itemSelectionChanged.disconnect(self.save_table_data_fittings)
-                self.ui.tableWidgetFittings.itemActivated.disconnect(self.save_table_data_fittings)
-                self.restore_table_data_fittings()
-                self.ui.tableWidgetFittings.itemActivated.connect(self.save_table_data_fittings)
-                self.ui.tableWidgetFittings.itemSelectionChanged.connect(self.save_table_data_fittings)
-
-
-        elif identifier == 'roughness':
-            print('import data roughness')
-            if fileName:
-                print('import data roughness checkpoint 2')
-                with open(fileName, 'r', newline='') as csv_file:
-                    print('import data roughness checkpoint 3')
-                    # Create a CSV reader
-                    csv_reader = csv.DictReader(csv_file)
-                    print(f'import data roughness checkpoint 3.5, {csv_reader}')
-
-                    # Iterate over each row in the CSV file
-                    for row in csv_reader:
-                        print('import data roughness checkpoint 4')
-                        # Check if a dictionary with the same 'Name' already exists
-                        print(f'Nonetype check, print {row}')
-                        try:
-                            for key, value in row.items():
-                                if row['Segment Roughness'] != 'Smooth Pipe' and value != '':
-                                    float(value)  # Convert to integer
-                        except (ValueError, TypeError) :
-                            msg = QMessageBox()
-                            msg.setIcon(QMessageBox.Critical)
-                            msg.setWindowTitle("Error: Import Failed")
-                            msg.setText(f"Corrupt/Invalid data at '{key}':'{value}'.")
-                            msg.exec_()
-                            print(f"Skipping row: {row} - Not all values can be converted to floats.")
-                        else:
-                            print('import data roughness checkpoint 6')
-                            for key, value in row.items():
-                                if 'Line Segment' in key:
-                                    row[key] = int(value)  # Convert to integer
-
-                            found = False
-                            for item in self.lineRoughnessList:
-                                if item['Line Segment'] == row['Line Segment']:
-                                    item.update(row)
-                                    found = True
-
-                            if not found:
-                                # If no existing dictionary, append the new row
-                                print(f'Apprently list of fittings is a dictionary check {self.lineRoughnessList}')
-                                self.lineRoughnessList.append(row)
-                                print('import data fittings checkpoint 7')  
-
-                print(f'The imported roughness list. {self.lineRoughnessList}')
-                            # self.ui.tableWidgetPipeSegment.clearSelection()
-                self.ui.tableWidgetFittings.itemSelectionChanged.disconnect(self.save_table_data_fittings)
-                self.ui.tableWidgetFittings.itemActivated.disconnect(self.save_table_data_fittings)
-                self.restore_lineRoughness()
-                self.ui.tableWidgetFittings.itemActivated.connect(self.save_table_data_fittings)
-                self.ui.tableWidgetFittings.itemSelectionChanged.connect(self.save_table_data_fittings)
-
-
+            self.list_fittings_by_segment = imported
+            self.restore_table_data_fittings()
+        else:
+            self.lineRoughnessList = imported
+            self.restore_lineRoughness()
+        self.calculate_answer()
 
     def label_instructions(self):
         if self.windowTitle().split(" ")[:1][0] == "Inlet":
@@ -418,43 +339,27 @@ class LossesCal(Calculation):
         self.restore_table_data_segments()
 
     def restore_table_data_segments(self):
-        # Iterate through the stored_lines dictionary and restore data
+        table = self.ui.tableWidgetPipeSegment
+        selected = table.selectedIndexes()
+        selected_row = selected[0].row() if selected else None
+        cells = []
+        columns = {table.horizontalHeaderItem(index).text(): index
+                   for index in range(table.columnCount())}
         for key, value in self.stored_segments.items():
-            try:
-                row_header, column_name = key.split(', ')
-            except ValueError:
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Critical)
-                msg.setWindowTitle("Error: Import Failed")
-                msg.setText(f"Invalid import CSV structure, import Segment CSV files only.")
-                msg.exec_()
-                print(f"Wrong input form")
-                return
-
-            # Ensure the table has enough rows
-            row = int(row_header.split()[-1]) - 1
-            if row >= self.ui.tableWidgetPipeSegment.rowCount():
-                self.ui.tableWidgetPipeSegment.setRowCount(row + 1)
-            
-            # Get the column index based on the header text
-            col = -1
-            for i in range(self.ui.tableWidgetPipeSegment.columnCount()):
-                if self.ui.tableWidgetPipeSegment.horizontalHeaderItem(i).text() == column_name:
-                    col = i
-                    break
-
-            # Ensure the table has enough columns
-            if col >= self.ui.tableWidgetPipeSegment.columnCount():
-                self.ui.tableWidgetPipeSegment.setColumnCount(col + 1)
-
-            item = QTableWidgetItem(value)
-            print(f"the row is {row}, the column is {col} and the item is {item}")
-            self.ui.tableWidgetPipeSegment.setItem(row, col, item)
-
-            self.ui.tableWidgetPipeSegment.cellChanged.disconnect(self.save_table_data_Segment)
-            self.renameVerticalHeader('TablePipeSegment', True) # pass in true for restoration
-            self.ui.tableWidgetPipeSegment.cellChanged.connect(self.save_table_data_Segment)
-        print('Restore table data segment ended, got into restoration code')
+            row_header, column_name = key.split(', ', 1)
+            cells.append((int(row_header.split()[-1]) - 1, columns[column_name], value))
+        row_count = max((row for row, _, _ in cells), default=-1) + 1
+        with self._blocked_widgets(table):
+            table.clearSelection()
+            table.setRowCount(0)
+            table.setRowCount(row_count)
+            for row, column, value in cells:
+                table.setItem(row, column, QTableWidgetItem(str(value)))
+            self.renameVerticalHeader('TablePipeSegment', True)
+            if selected_row is not None and row_count:
+                table.selectRow(min(selected_row, row_count - 1))
+        self.previous_row = None
+        self._refresh_selection()
 
     def save_density(self):
         self.storeDensity = self.ui.lineEditDensity.text()
@@ -555,11 +460,9 @@ class LossesCal(Calculation):
 
         selected_indexes = self.ui.tableWidgetPipeSegment.selectionModel().selectedIndexes()
 
+        if not selected_indexes:
+            return
         selected_row = selected_indexes[0].row() + 1
-
-        if not selected_indexes and selected_row:
-            print('not saved as user did not selecte a row. (Should not be possible)')
-            return  # No selection (user made no selection)
 
         for dictionary in self.lineRoughnessList:
             if dictionary['Line Segment'] == selected_row:
@@ -595,37 +498,17 @@ class LossesCal(Calculation):
 
                 
     def restore_lineRoughness(self):
-        # clear the textbox to add data
-        self.ui.comboBoxRoughness.setCurrentIndex(0)
-        
-        selected_indexes = self.ui.tableWidgetPipeSegment.selectionModel().selectedIndexes()
-        print(f"Restoring Roughness Started {self.lineRoughnessList}")
+        combo = self.ui.comboBoxRoughness
+        selected = self.ui.tableWidgetPipeSegment.selectedIndexes()
+        segment = selected[0].row() + 1 if selected else None
+        value = next((item['Segment Roughness'] for item in self.lineRoughnessList
+                      if item.get('Line Segment') == segment), '')
+        with self._blocked_widgets(combo, combo.lineEdit()):
+            if value:
+                combo.setCurrentText(str(value))
+            else:
+                combo.setCurrentIndex(0)
 
-        try:
-            selected_row = selected_indexes[0].row() + 1
-            print(f"The selected Segment is {selected_row}")
-        except IndexError:
-            print("User selected empty an empty space, Nothing was restored. Restoration has ended")
-            return
-        else:
-            # clear data before restoration (but this causes a save because text change detected -- not desired)
-            # self.ui.comboBoxRoughness.clearEditText()
-            for dictionary in self.lineRoughnessList:
-                print(f"Roughness dictionary currently evaluating {dictionary}")
-                if dictionary['Line Segment'] == selected_row:
-                    print(f'Found roughness dictionary to restore {dictionary}')
-                    text = dictionary["Segment Roughness"]
-                    if text != '':
-                        self.ui.comboBoxRoughness.setCurrentText(text)
-                    else:
-                        print("User previouse selection was default, reset to default")
-                        self.ui.comboBoxRoughness.setCurrentIndex(0)
-                    return
-                else:
-                    print('Did not find roughness to restore, restoring combobox to default. Restoration has ended')
-                    self.ui.comboBoxRoughness.setCurrentIndex(0)
-        print(f"Restoring Roughness Ended {self.lineRoughnessList}")
-        
     def save_viscosity(self):
         self.storeViscosity = self.ui.lineEditViscosity.text()
         self.save_table_data_Segment()
@@ -702,6 +585,7 @@ class LossesCal(Calculation):
             self.close()
 
     def save(self):
+        self._capture_current_tables()
         self.callLossesData.emit(self.stored_segments, self.list_fittings_by_segment, self.lineRoughnessList, self.storeViscosity)
 
     def tableLineSegmentEnable(self):
@@ -714,58 +598,25 @@ class LossesCal(Calculation):
             self.ui.pushButtonExportSegment.setEnabled(True)
 
     def handle_selection_change(self):
-        selected_Indexes = self.ui.tableWidgetPipeSegment.selectedIndexes()
-
-        # print(selected_items)
-        if selected_Indexes:
-            # print("Got in to activate")
-            self.ui.tableWidgetFittings.setDisabled(False)
-            self.ui.comboBoxRoughness.setDisabled(False)
-            self.ui.lineEditViscosity.setDisabled(False)
-            self.ui.pushButtonAddFitting.setDisabled(False)
-            self.ui.pushButtonDeleteFitting.setDisabled(False)
-            # self.ui.pushButtonImportFittings.setDisabled(False)
-            # self.ui.pushButtonExportFittings.setDisabled(False)
-            self.ui.lineEditDensity.setDisabled(False)
-            self.ui.lineEditFlowrate.setDisabled(False)
-        else:
-            # print("Got in to disable")
-            self.ui.tableWidgetFittings.setDisabled(True)
-            self.ui.comboBoxRoughness.setDisabled(True)
-            self.ui.lineEditViscosity.setDisabled(True)
-            self.ui.pushButtonAddFitting.setDisabled(True)
-            self.ui.pushButtonDeleteFitting.setDisabled(True)
-            # self.ui.pushButtonImportFittings.setDisabled(True)
-            # self.ui.pushButtonExportFittings.setDisabled(True)
-            self.ui.lineEditDensity.setDisabled(True)
-            self.ui.lineEditFlowrate.setDisabled(True)
-
-        # clear the table for data thats going to displayed
-        self.ui.tableWidgetFittings.setRowCount(0)
-
-        # show the next data belonging to current selection
-        self.restore_table_data_fittings()
-
-        # Disconnect the signal before programmatically changing the index'
-        # try:
-        #     self.ui.comboBoxRoughness.currentIndexChanged.disconnect(self.save_LineRoughness)
-        #     self.ui.comboBoxRoughness.lineEdit().editingFinished.disconnect(self.save_LineRoughness)
-        # except TypeError:
-        #     pass
-
-        # restore previously saved
-        # Programmatically change the selected index of the combo box (signal disconnected)
-        self.ui.comboBoxRoughness.currentIndexChanged.disconnect(self.save_LineRoughness)
-        self.restore_lineRoughness()
-        self.ui.comboBoxRoughness.currentIndexChanged.connect(self.save_LineRoughness)
-
-        # # Reconnect the signal after making the change
-        # self.ui.comboBoxRoughness.currentIndexChanged.connect(self.save_LineRoughness)
-        # self.ui.comboBoxRoughness.lineEdit().editingFinished.connect(self.save_LineRoughness)
-
-        # run calculations
+        selected = self.ui.tableWidgetPipeSegment.selectedIndexes()
+        current = selected[0].row() + 1 if selected else None
+        previous = getattr(self, 'previous_row', None)
+        if previous is not None and previous != current:
+            self._capture_fittings(previous)
+        self._refresh_selection()
         self.calculate_answer()
 
+    def _refresh_selection(self):
+        selected = self.ui.tableWidgetPipeSegment.selectedIndexes()
+        active = bool(selected) and self.ui.checkBoxLossesCal.isChecked()
+        for widget in (self.ui.tableWidgetFittings, self.ui.comboBoxRoughness,
+                       self.ui.lineEditViscosity, self.ui.pushButtonAddFitting,
+                       self.ui.pushButtonDeleteFitting, self.ui.lineEditDensity,
+                       self.ui.lineEditFlowrate):
+            widget.setEnabled(active)
+        self.previous_row = selected[0].row() + 1 if selected else None
+        self.restore_table_data_fittings()
+        self.restore_lineRoughness()
 
     def save_table_data_Segment(self):
         caller_frame = inspect.stack()[1]
@@ -807,245 +658,97 @@ class LossesCal(Calculation):
         self.calculate_answer()
 
     def save_table_data_fittings(self):
-        caller_frame = inspect.stack()[1]
-        caller_function = caller_frame.function
-        caller_module = inspect.getmodule(caller_frame[0]).__name__
-    
-        print(f'This function save_table_data_fitting was called by {caller_module}.{caller_function}')
-        sender = self.sender()
-        if sender:
-            print(f'Save save_table_data_fittings was activated by {sender}')
-        print(f'Saving save_table_data_fittings Started (Before SAVE): {self.lineRoughnessList}')
-        # Identify the selected row
-        selected_indexes = self.ui.tableWidgetPipeSegment.selectionModel().selectedIndexes()
-
-        if not selected_indexes:
-            return  # No selection
-        
-        selected_row = selected_indexes[0].row() + 1
-        # print(selected_row + 1)
-
-        self.store_fittings = {}
-
-        for row in range(self.ui.tableWidgetFittings.rowCount()):
-            try:
-                row_header = self.ui.tableWidgetFittings.verticalHeaderItem(row).text()
-            except AttributeError:
-                # No input selected, Do not execute saving the table_data, cellchanged signal is activiated (thus handle_sel... then save_table..)
-                # due to clearselection method in add_row or delete_row")
-                print("Row added, do not save.")
-            else:
-                self.store_fittings['Line Segment'] = selected_row
-                for col in range(self.ui.tableWidgetFittings.columnCount()):
-                    item = self.ui.tableWidgetFittings.item(row, col)
-                    if item is not None:
-                        column_name = self.ui.tableWidgetFittings.horizontalHeaderItem(col).text()
-                        key = f'{row_header}, {column_name}'
-                        self.store_fittings[key] = item.text()
-
-        try:
-            # Remove dictionaries with 'Line Segment' value of the row selected to avoid duplication of dictionaries with the same row.
-            filtered_data = [d for d in self.list_fittings_by_segment if d.get('Line Segment') != selected_row]
-            self.list_fittings_by_segment = filtered_data
-            print(f'\n Data after removal and replacement {self.list_fittings_by_segment}')
-        except IndexError:
-            # There is no need to remove first, insert the store fittings table
-            self.list_fittings_by_segment.insert(selected_row, self.store_fittings)
-        else:
-            # Now insert the stored fittings table
-            self.list_fittings_by_segment.insert(selected_row, self.store_fittings)
-        
+        selected = self.ui.tableWidgetPipeSegment.selectedIndexes()
+        if not selected:
+            return
+        self._capture_fittings(selected[0].row() + 1)
         self.enableSegmentTable()
         self.calculate_answer()
-        print(f'Saved data {self.list_fittings_by_segment}')
 
     def restore_table_data_fittings(self):
-        # Restore must check if there is data already existing.
-        selected_indexes = self.ui.tableWidgetPipeSegment.selectionModel().selectedIndexes()
-
-        try:
-            selected_row = selected_indexes[0].row() + 1
-        except IndexError:
-            print("user is adding or deleting a row or there is no previous data associated with the pipesegment, there is nothing to restore")
-            return
-        else:
-            print(f'restore the following segment row {selected_row}')
-            print(f'Restoring stored table data fittings: {self.list_fittings_by_segment}.')
-
-            self.list_fittings_by_segment = sorted(self.list_fittings_by_segment, key=lambda x: x['Line Segment'])
-
-            for dictionary in self.list_fittings_by_segment:
-                print(f"Started looping to restore table fittings. {dictionary}, {dictionary['Line Segment'] == selected_row}")
-                # Look for and select the appropriate dictionary
-                if dictionary['Line Segment'] == selected_row:
-                    print(f'found dictionary {dictionary}')
-                    
-                    for key, value in dictionary.items():
-                        if key != 'Line Segment':
-                            match = re.search(r'Fitting (\d+)', key)
-                            print(f'This is the key to match {key}, and this is the value {value}')
-                            row = int(match.group(1)) - 1
-                            print(f'This is the row to insert at {row}')
-                            row_count = self.ui.tableWidgetFittings.rowCount()
-
-                            if 'Fitting Type' in key:
-                                while self.ui.tableWidgetFittings.rowCount() <= row:
-                                    self.ui.tableWidgetFittings.insertRow(row)
-                                fitting_type_item = QTableWidgetItem(value)
-                                self.ui.tableWidgetFittings.setItem(row, 0, fitting_type_item)
-
-                            elif 'Loss Factor' in key:
-                                while self.ui.tableWidgetFittings.rowCount() <= row:
-                                    self.ui.tableWidgetFittings.insertRow(row)
-                                loss_factor_item = QTableWidgetItem(value)
-                                self.ui.tableWidgetFittings.setItem(row, 1, loss_factor_item)
-                    break
-
-
-        # Get row count and rename vertical headers after deletion
-        self.renameVerticalHeader('TableFittings',True)
+        table = self.ui.tableWidgetFittings
+        selected = self.ui.tableWidgetPipeSegment.selectedIndexes()
+        segment = selected[0].row() + 1 if selected else None
+        entry = next((item for item in self.list_fittings_by_segment
+                      if item.get('Line Segment') == segment), {})
+        cells = []
+        for key, value in entry.items():
+            if key == 'Line Segment':
+                continue
+            match = re.fullmatch(r'Fitting (\d+), (Fitting Type|Loss Factor)', key)
+            if match:
+                cells.append((int(match.group(1)) - 1,
+                              0 if match.group(2) == 'Fitting Type' else 1, value))
+        with self._blocked_widgets(table):
+            table.clearSelection()
+            table.setRowCount(0)
+            table.setRowCount(max((row for row, _, _ in cells), default=-1) + 1)
+            for row, column, value in cells:
+                table.setItem(row, column, QTableWidgetItem(str(value)))
+            self.renameVerticalHeader('TableFittings', True)
 
     def addRow(self, identifier):
-        caller_frame = inspect.stack()[1]
-        caller_function = caller_frame.function
-        caller_module = inspect.getmodule(caller_frame[0]).__name__
-    
-        print(f'This function AddRow was called by {caller_module}.{caller_function}')
-        sender = self.sender()
-        if sender:
-            print(f'Addrow was activated by {sender.text()}')
-
-        self.ui.tableWidgetPipeSegment.itemSelectionChanged.disconnect(self.handle_selection_change)
-        self.ui.tableWidgetPipeSegment.itemActivated.disconnect(self.handle_selection_change)
-        self.ui.tableWidgetPipeSegment.cellChanged.disconnect(self.save_table_data_Segment)
-
-
+        self._capture_current_tables()
         if identifier == 'TablePipeSegment':
-            row = self.ui.tableWidgetPipeSegment.currentRow()
-            print(f'the added row index is {row}')
-            
-            if row != -1 and self.ui.tableWidgetPipeSegment.selectedIndexes():
-                self.ui.tableWidgetPipeSegment.insertRow(row)
-                row = row + 1 # Match the dictionary storage method, there is no row 0 
-                added_dict = {'Line Segment': row, 'Segment Roughness': ''}
-                # Update 'segment' values for existing dictionaries
-                for item in self.lineRoughnessList:
-                    if item['Line Segment'] >= added_dict['Line Segment']:
-                        item['Line Segment'] += 1
-
-                # Add the new dictionary to the list
-                self.lineRoughnessList.append(added_dict)
-                self.lineRoughnessList = sorted(self.lineRoughnessList, key=lambda x: x['Line Segment'])
-
-                # Print the updated list
-                print(f'Rougness list after the addition of a row {self.lineRoughnessList}')
-
-                # Whenever there is a change in the segment table in the fittings table there should be an equivalent change in the 
-                # dictionary that stores the fittings.
-                added_dict = {'Line Segment': row, f'Fitting {row}, Fitting Type': '', f'Fitting {row}, Loss Factor': ''}
-                # Update 'segment' values for existing dictionaries
-                for item in self.list_fittings_by_segment:
-                    if item['Line Segment'] >= added_dict['Line Segment']:
-                        item['Line Segment'] += 1
-
-                # Add the new dictionary to the list
-                # self.list_fittings_by_segment.append(added_dict)
-                self.list_fittings_by_segment = sorted(self.list_fittings_by_segment, key=lambda x: x['Line Segment'])
-
-                # Print the updated list
-                print(f'list fittings list after the addition of a row {self.list_fittings_by_segment}')
-
-            else:
-                row = self.ui.tableWidgetPipeSegment.rowCount()
-                self.ui.tableWidgetPipeSegment.insertRow(row)
-            # self.ui.tableWidgetPipeSegment.clearSelection()
-
-            print(f'The segment dictionary after addition of PipeSegement {self.list_fittings_by_segment}')
-            print(f'Line roughness dictionary after the addition of PipeSegment {self.lineRoughnessList}')
-
+            table = self.ui.tableWidgetPipeSegment
+            row = table.currentRow() if table.selectedIndexes() else table.rowCount()
+            segment = row + 1
+            with self._blocked_widgets(table):
+                table.insertRow(row)
+                for entry in self.lineRoughnessList + self.list_fittings_by_segment:
+                    if entry['Line Segment'] >= segment:
+                        entry['Line Segment'] += 1
+                self.lineRoughnessList.append({'Line Segment': segment, 'Segment Roughness': ''})
+                self.lineRoughnessList.sort(key=lambda entry: entry['Line Segment'])
+                self.renameVerticalHeader(identifier, True)
+                table.selectRow(row)
+            self._capture_segments()
+            self.previous_row = None
+            self._refresh_selection()
+        else:
+            table = self.ui.tableWidgetFittings
+            row = table.currentRow() if table.selectedIndexes() else table.rowCount()
+            with self._blocked_widgets(table):
+                table.insertRow(row)
+                self.renameVerticalHeader(identifier, True)
+                table.selectRow(row)
+            selected = self.ui.tableWidgetPipeSegment.selectedIndexes()
+            if selected:
+                self._capture_fittings(selected[0].row() + 1)
         self.ui.pushButtonClose.setEnabled(False)
-
-        print(f'The segment dictionary after addition of PipeSegement {self.list_fittings_by_segment}')
-
-        if identifier == 'TableFittings':
-            row = self.ui.tableWidgetFittings.currentRow()
-            print(f'TableFittings: the added row index is {row}')
-            
-            if row != -1 and self.ui.tableWidgetFittings.selectedIndexes():
-                self.ui.tableWidgetFittings.insertRow(row)
-                # Print the updated list
-                print(f'Rougness List after the addition of a row in TableFittings {self.lineRoughnessList}')
-
-            else:
-                row = self.ui.tableWidgetFittings.rowCount()
-                self.ui.tableWidgetFittings.insertRow(row)
-            # self.ui.tableWidgetFittings.clearSelection()
-
-        # Get row count and rename vertical headers after delection
-        self.renameVerticalHeader(identifier)
-
-        self.ui.tableWidgetPipeSegment.itemSelectionChanged.connect(self.handle_selection_change)
-        self.ui.tableWidgetPipeSegment.itemActivated.connect(self.handle_selection_change)
-        self.ui.tableWidgetPipeSegment.cellChanged.connect(self.save_table_data_Segment)
-        
+        self.save_diameter()
+        self.calculate_answer()
 
     def deleteRow(self, identifier):
-        print(f'Deleted row and this is the identfier {identifier}')
-
+        self._capture_current_tables()
+        table = (self.ui.tableWidgetPipeSegment if identifier == 'TablePipeSegment'
+                 else self.ui.tableWidgetFittings)
+        if not table.rowCount():
+            return
+        row = table.currentRow() if table.selectedIndexes() else table.rowCount() - 1
+        with self._blocked_widgets(table):
+            table.removeRow(row)
+            self.renameVerticalHeader(identifier, True)
+            if table.rowCount():
+                table.selectRow(min(row, table.rowCount() - 1))
         if identifier == 'TablePipeSegment':
-            # Get the current row
-            row = self.ui.tableWidgetPipeSegment.currentRow()
-            print(f'The row that was deleted is {row}')
-            if row != -1 and self.ui.tableWidgetPipeSegment.selectedIndexes():
-                self.ui.tableWidgetPipeSegment.removeRow(row)
-
-                row = row + 1 # Update the value of the row to match entries in the dicatioaries (i.e. there is no row 0 saved in dictionary)
-                for item in self.lineRoughnessList:
-                    if item['Line Segment'] == row:
-                        self.lineRoughnessList.remove(item)
-                        break
-
-                for item in self.lineRoughnessList:
-                    # Update the 'queue' values sequentially
-                    if item['Line Segment'] > row:
-                        item['Line Segment'] = item['Line Segment'] - 1
-                    # Print the updated list
-                    print(f'Deleted a row, Fittings list after row deletion {self.lineRoughnessList}')
-                # Whenever there is a change in the segment table in the fittings table there should be an equivalent change in the 
-                # dictionary that stores the fittings.
-                for item in self.list_fittings_by_segment:
-                    if item['Line Segment'] == row:
-                        self.list_fittings_by_segment.remove(item)
-                        break
-
-                for item in self.list_fittings_by_segment:
-                    # Update the 'queue' values sequentially
-                    if item['Line Segment'] > row:
-                        item['Line Segment'] = item['Line Segment'] - 1
-                    # Print the updated list
-                    print(f'Deleted a row, Fittings list after segment row deletion {self.list_fittings_by_segment}')
-
-            else: # or else remove the last row if user has not selected a row
-                row = self.ui.tableWidgetPipeSegment.rowCount() 
-                self.ui.tableWidgetPipeSegment.removeRow(row)
-
-            # Trigger a selection change to save the data (pipe segment data i.e. stored data)
-            # self.ui.tableWidgetPipeSegment.clearSelection()
-
-        if identifier == 'TableFittings':
-            # Get the current row
-            row = self.ui.tableWidgetFittings.currentRow()
-            print(f'TableFittings: The row that was deleted is {row}')
-            if row != -1 and self.ui.tableWidgetFittings.selectedIndexes():
-                self.ui.tableWidgetFittings.removeRow(row)
-                print(f"TableFittings data after deletion of fitting {self.list_fittings_by_segment}")
-            else:
-                row = self.ui.tableWidgetFittings.rowCount()
-                self.ui.tableWidgetFittings.removeRow(row)
-            
-        # Get row count and rename vertical headers after deletion
-        self.renameVerticalHeader(identifier)
-
+            segment = row + 1
+            self.list_fittings_by_segment = [entry for entry in self.list_fittings_by_segment
+                                            if entry['Line Segment'] != segment]
+            self.lineRoughnessList = [entry for entry in self.lineRoughnessList
+                                      if entry['Line Segment'] != segment]
+            for entry in self.list_fittings_by_segment + self.lineRoughnessList:
+                if entry['Line Segment'] > segment:
+                    entry['Line Segment'] -= 1
+            self._capture_segments()
+            self.previous_row = None
+            self._refresh_selection()
+        else:
+            selected = self.ui.tableWidgetPipeSegment.selectedIndexes()
+            if selected:
+                self._capture_fittings(selected[0].row() + 1)
+        self.save_diameter()
+        self.calculate_answer()
 
     def renameVerticalHeader(self, identifier, restore=False):
 

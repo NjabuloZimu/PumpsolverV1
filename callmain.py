@@ -1,5 +1,6 @@
 import sys
 import csv
+from copy import deepcopy
 from PyQt5.QtWidgets import QMainWindow, QApplication, QAction, QFileDialog, QMessageBox
 from main import *
 
@@ -8,6 +9,9 @@ from callproperties import Properties
 from callmotorProp import MotorProp
 from callsolvePage import SolvePage
 from callabout import About
+from csv_io import ensure_csv_path, read_project, write_project, validate_parameters
+from version import __version__
+from centered_canvas import center_window_contents
 
 class MyForm(QMainWindow):
     # class variable to store references to open windows
@@ -16,6 +20,9 @@ class MyForm(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        center_window_contents(self)
+        self.setWindowTitle(f"Process Pump Solver Tool {__version__}")
+        QApplication.instance().setApplicationVersion(__version__)
 
         # Detect user interaction with button graphics.
         self.ui.pushButtonSolve.clicked.connect(self.dof)
@@ -45,7 +52,10 @@ class MyForm(QMainWindow):
         self.lineRoughnessList_in = []
         # self.total_losses_hf_in = 0.0
         
-        self.viscosity = ''
+        self.viscosity_in = ''
+        self.viscosity_out = ''
+        self.transition_equation_in = 'Moody'
+        self.transition_equation_out = 'Moody'
 
         self.ui.actionSave.triggered.connect(self.exportCSV)
         self.ui.actionOpen.triggered.connect(self.importCSV)
@@ -101,7 +111,8 @@ class MyForm(QMainWindow):
             self.sub_window.ui.labelSuc.setText(f"{identifier} Suction Height")
 
             # Update global variable in submwindow
-            self.sub_window.lossesData(self.stored_segments_in, self.list_fittings_by_segment_in, self.lineRoughnessList_in, self.viscosity)
+            self.sub_window.lossesData(deepcopy(self.stored_segments_in), deepcopy(self.list_fittings_by_segment_in), deepcopy(self.lineRoughnessList_in), self.viscosity_in)
+            self.sub_window.transition_equation = self.transition_equation_in
 
             # Based on the designer status change the display units, from head loss to 'total friction loss' and vice versa
             self.change_loss_units(designerStatus)
@@ -121,7 +132,8 @@ class MyForm(QMainWindow):
             self.sub_window.ui.labelSuc.setText(f"{identifier} Discharge Height")
 
             # Update global variable in submwindow
-            self.sub_window.lossesData(self.stored_segments_out, self.list_fittings_by_segment_out, self.lineRoughnessList_out, self.viscosity)
+            self.sub_window.lossesData(deepcopy(self.stored_segments_out), deepcopy(self.list_fittings_by_segment_out), deepcopy(self.lineRoughnessList_out), self.viscosity_out)
+            self.sub_window.transition_equation = self.transition_equation_out
             
             # Based on the designer status change the display units, from head loss to 'total friction loss' and vice versa
             self.change_loss_units(designerStatus)
@@ -133,13 +145,10 @@ class MyForm(QMainWindow):
         self.sub_window.exec_()
 
     def change_loss_units(self, designerStatus):
-        if designerStatus:
-            self.sub_window.ui.labelLossesUnits.setText("<html><head/><body><p>m<span style=\" vertical-align:super;\">2</span>/s<span style=\" vertical-align:super;\">2</span></p></body></html>")
-        else:
-            self.sub_window.ui.labelLossesUnits.setText("m")   
+        self.sub_window.ui.labelLossesUnits.setText("m")
 
     
-    def on_sub_window_confirm(self, data, identifier, stored_segments, list_fittings_by_segment, lineRoughnessList):  # <-- This is the main window's slot
+    def on_sub_window_confirm(self, data, identifier, stored_segments, list_fittings_by_segment, lineRoughnessList, viscosity=None, transition_equation=None):
         if identifier == 'Inlet Properties':
             self.ui.labelDiaIn.setText(data['dia'])
             self.ui.labelHeadIn.setText(data['head'])
@@ -155,12 +164,16 @@ class MyForm(QMainWindow):
             self.ui.labelDensityOut.setText(data['dens'])
 
             # Always save designer information regardless of status
-            if stored_segments != None:
+            if stored_segments is not None:
                 self.stored_segments_in = stored_segments
-            elif list_fittings_by_segment != None:
+            if list_fittings_by_segment is not None:
                 self.list_fittings_by_segment_in = list_fittings_by_segment
-            elif lineRoughnessList != None:
+            if lineRoughnessList is not None:
                 self.lineRoughnessList_in = lineRoughnessList
+            if viscosity is not None:
+                self.viscosity_in = viscosity
+            if transition_equation is not None:
+                self.transition_equation_in = transition_equation
             # self.total_losses_hf_in = total_losses_hf
 
             # Save the designer state
@@ -193,6 +206,10 @@ class MyForm(QMainWindow):
             self.stored_segments_out = stored_segments
             self.list_fittings_by_segment_out = list_fittings_by_segment
             self.lineRoughnessList_out = lineRoughnessList
+            if viscosity is not None:
+                self.viscosity_out = viscosity
+            if transition_equation is not None:
+                self.transition_equation_out = transition_equation
             # self.total_losses_hf_in = total_losses_hf
             # Save the designer state
             if data['designer'] == True:
@@ -244,94 +261,58 @@ class MyForm(QMainWindow):
 
         return output_dict
 
-    def datafunction(self, saved_data={}):
-        data = {
-                'in_dia': self.ui.labelDiaIn.text(),
-                'in_head': self.ui.labelHeadIn.text(), 
-                'in_loss': self.ui.labelLossesIn.text(), 
-                'in_flow': self.ui.labelVolIn.text(), 
-                'in_dens': self.ui.labelDensityIn.text(), 
-                'in_press':self.ui.labelPressIn.text(),
+    PARAMETER_WIDGETS = {
+        'in_dia': 'labelDiaIn', 'in_head': 'labelHeadIn',
+        'in_loss': 'labelLossesIn', 'in_flow': 'labelVolIn',
+        'in_dens': 'labelDensityIn', 'in_press': 'labelPressIn',
+        'out_dia': 'labelDiaOut', 'out_head': 'labelHeadOut',
+        'out_loss': 'labelLossesOut', 'out_flow': 'labelVolOut',
+        'out_dens': 'labelDensityOut', 'out_press': 'labelPressOut',
+        'effi': 'labelEff', 'power': 'labelAvHead',
+        'safety': 'labelSafeF', 'gravity': 'labelGravConst',
+    }
 
-                'out_dia': self.ui.labelDiaOut.text(),
-                'out_head': self.ui.labelHeadOut.text(), 
-                'out_loss': self.ui.labelLossesOut.text(),
-                'out_flow': self.ui.labelVolOut.text(),
-                'out_dens': self.ui.labelDensityIn.text(),
-                'out_press':self.ui.labelPressOut.text(),
-
-                'effi': self.ui.labelEff.text(),
-                'power': self.ui.labelAvHead.text(), 
-                'safety': self.ui.labelSafeF.text(), 
-                # Density removed to avoid double count
-                # Flow removed to avoid double count
-                'gravity':self.ui.labelGravConst.text(),
-                # Pass in designer status
-                'designer_status_in': self.ui.radioButtonInDesigner.isChecked(),
-                'designer_status_out': self.ui.radioButtonOutDesigner.isChecked()
-            }
-        print(f'this is what is sent callsovlve {data}')
-        if saved_data != {}:
+    def datafunction(self, saved_data=None):
+        if saved_data is not None:
             self.dataRestore(saved_data)
-        
+        data = {key: getattr(self.ui, widget).text()
+                for key, widget in self.PARAMETER_WIDGETS.items()}
+        data['designer_status_in'] = self.ui.radioButtonInDesigner.isChecked()
+        data['designer_status_out'] = self.ui.radioButtonOutDesigner.isChecked()
         return data
-    
+
     def dataRestore(self, data):
-        flag = False
-        for key, value in data.items():
-            if key == 'designer_status_in'or key == 'designer_status_out':
-                try:
-                    bool(value)
-                except ValueError:
-                    msg = QMessageBox()
-                    msg.setIcon(QMessageBox.Critical)
-                    msg.setWindowTitle("Error: Import Failed")
-                    msg.setText(f"Corrupt/Invalid data at '{key}':'{value}'.")
-                    msg.exec_()
-                    return
-            elif value == 'Unspecified':
-                continue
-            else:
-                try:
-                    float(value)
-                except ValueError:
-                    msg = QMessageBox()
-                    msg.setIcon(QMessageBox.Critical)
-                    msg.setWindowTitle("Error: Import Failed")
-                    msg.setText(f"Corrupt/Invalid data at '{key}':'{value}'.")
-                    msg.exec_()
-                    return
-                else:
-                    flag = True
-                
-        if flag:  
-            self.ui.labelDiaIn.setText(data['in_dia'])
-            self.ui.labelHeadIn.setText(data['in_head'])
-            self.ui.labelLossesIn.setText(data['in_loss'])
-            self.ui.labelVolIn.setText(data['in_flow'])
-            self.ui.labelDensityIn.setText(data['in_dens'])
-            self.ui.labelPressIn.setText(data['in_press'])
+        # Validate the entire import before changing any displayed value.
+        data = validate_parameters(data)
+        for key, widget in self.PARAMETER_WIDGETS.items():
+            getattr(self.ui, widget).setText(data[key])
+        self.ui.radioButtonInDesigner.setChecked(data['designer_status_in'])
+        self.ui.radioButtonOutDesigner.setChecked(data['designer_status_out'])
+        self.set_designer_text('In')
+        self.set_designer_text('Out')
 
-            self.ui.labelDiaOut.setText(data['out_dia'])
-            self.ui.labelHeadOut.setText(data['out_head'])
-            self.ui.labelLossesOut.setText(data['out_loss'])
-            self.ui.labelVolOut.setText(data['out_flow'])
-            self.ui.labelDensityIn.setText(data['out_dens'])
-            self.ui.labelPressOut.setText(data['out_press'])
+    def project_state(self):
+        state = {'parameters': self.datafunction()}
+        for side, suffix in (('inlet', 'in'), ('outlet', 'out')):
+            state[side] = {
+                'segments': deepcopy(getattr(self, f'stored_segments_{suffix}')),
+                'fittings': deepcopy(getattr(self, f'list_fittings_by_segment_{suffix}')),
+                'roughness': deepcopy(getattr(self, f'lineRoughnessList_{suffix}')),
+                'viscosity': getattr(self, f'viscosity_{suffix}'),
+                'transition_equation': getattr(self, f'transition_equation_{suffix}'),
+            }
+        return state
 
-            self.ui.labelEff.setText(data['effi'])
-            self.ui.labelAvHead.setText(data['power'])
-            self.ui.labelSafeF.setText(data['safety'])
+    def restore_project(self, state):
+        self.dataRestore(state['parameters'])
+        for side, suffix in (('inlet', 'in'), ('outlet', 'out')):
+            design = state[side]
+            setattr(self, f'stored_segments_{suffix}', deepcopy(design['segments']))
+            setattr(self, f'list_fittings_by_segment_{suffix}', deepcopy(design['fittings']))
+            setattr(self, f'lineRoughnessList_{suffix}', deepcopy(design['roughness']))
+            setattr(self, f'viscosity_{suffix}', design['viscosity'])
+            setattr(self, f'transition_equation_{suffix}', design['transition_equation'])
 
-            # Density removed to avoid double count
-            # Flow removed to avoid double count
-            self.ui.labelGravConst.setText(data['gravity'])
-
-            # Pass in designer status
-            self.ui.radioButtonInDesigner.setChecked(bool(data['designer_status_in']))
-            self.ui.radioButtonOutDesigner.setChecked(bool(data['designer_status_out']))
-
-        
     def dof(self): # Determine the degrees of freedom
         data = self.datafunction()
         
@@ -404,38 +385,26 @@ class MyForm(QMainWindow):
             return designerStatusOutlet
         
     def exportCSV(self):
-        # Get a file name from the user
-        fileName, _ = QFileDialog.getSaveFileName(self, "Save CSV", "", "CSV Files (*.csv);;All Files (*)")
-
-        if fileName:
-            with open(fileName, 'w', newline='') as csvfile:
-                csvwriter = csv.writer(csvfile)
-
-                # Write header
-                csvwriter.writerow(['Key', 'Value'])
-                self.data_dict = self.datafunction()
-                # Write data
-                for key, value in self.data_dict.items():
-                    csvwriter.writerow([key, value])
-
-            print(f'Data exported to {fileName}')
+        file_name, _ = QFileDialog.getSaveFileName(
+            self, "Save Project CSV", "project.csv", "CSV Files (*.csv)")
+        if not file_name:
+            return
+        try:
+            write_project(ensure_csv_path(file_name), self.project_state())
+        except (OSError, ValueError, csv.Error) as error:
+            QMessageBox.critical(self, "CSV Export Failed", str(error))
 
     def importCSV(self):
-        # Get a file name from the user
-        fileName, _ = QFileDialog.getOpenFileName(self, "Open CSV", "", "CSV Files (*.csv);;All Files (*)")
-
-        if fileName:
-            with open(fileName, 'r') as csvfile:
-                csvreader = csv.reader(csvfile)
-
-                # Skip header
-                next(csvreader)
-
-                # Read data into a dictionary
-                imported_data = {row[0]: row[1] for row in csvreader}
-                self.datafunction(imported_data)
-
-            print(f'Data imported from {fileName}: {imported_data}')
+        file_name, _ = QFileDialog.getOpenFileName(
+            self, "Open Project CSV", "", "CSV Files (*.csv)")
+        if not file_name:
+            return
+        try:
+            state = read_project(file_name)
+        except (OSError, ValueError, csv.Error) as error:
+            QMessageBox.critical(self, "CSV Import Failed", str(error))
+            return
+        self.restore_project(state)
 
     def for_testing(self):
         return print('hello, this is to test because pyqt cant be pytested')

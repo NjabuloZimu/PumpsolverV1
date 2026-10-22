@@ -8,4 +8,5 @@ pumpsolveenv/
 .vscode/
 *.log
 .DS_Store
+.artifacts/
 Thumbs.db

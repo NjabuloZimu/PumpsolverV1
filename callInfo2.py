@@ -1,3 +1,4 @@
+from centered_canvas import center_window_contents
 import sys
 from PyQt5.QtWidgets import QDialog, QApplication, QMessageBox, QMainWindow, QApplication, QAction, QFileDialog, QMessageBox
 from PyQt5.QtGui import QDesktopServices
@@ -13,6 +14,7 @@ class Info2(QDialog):
         super().__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
+        center_window_contents(self)
 
         self.ui.pushButtonClose.clicked.connect(self.close)
 
