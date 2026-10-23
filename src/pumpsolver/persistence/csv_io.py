@@ -11,6 +11,8 @@ import math
 import re
 from collections import defaultdict
 
+from pumpsolver.models import BOUNDARY_BOOLEAN_FIELDS, BOUNDARY_COEFFICIENT_FIELDS, PipeDesign
+
 
 SEGMENT_FIELDS = ("Line Segment", "Segment Length (m)", "Segment Diameter (cm)")
 FITTING_FIELDS = ("Line Segment", "Fitting", "Fitting Type", "Loss Factor")
@@ -25,6 +27,7 @@ PARAMETER_UNITS = {
 }
 BOOLEAN_FIELDS = {"designer_status_in", "designer_status_out"}
 TRANSITION_EQUATIONS = ("Moody", "R.J.S Pigott")
+BOUNDARY_SETTINGS = ("entrance_enabled", "entrance_coefficient", "exit_enabled", "exit_coefficient")
 _SEGMENT_KEY = re.compile(r"Line Segment ([1-9][0-9]*), (Segment Length \(m\)|Segment Diameter \(cm\))\Z")
 _FITTING_KEY = re.compile(r"Fitting ([1-9][0-9]*), (Fitting Type|Loss Factor)\Z")
 
@@ -58,6 +61,13 @@ def _number(value, context, unspecified=False):
     if not math.isfinite(numeric):
         _error(context, "number must be finite")
     return value
+
+
+def _coefficient(value, context):
+    text = _number(value, context)
+    if text == "" or float(text) < 0:
+        _error(context, "expected a finite nonnegative boundary loss coefficient")
+    return text
 
 
 def _boolean(value, context):
@@ -358,8 +368,8 @@ def validate_parameters(data):
     return _parameters(data)
 
 
-def _empty_side():
-    return {"segments": {}, "fittings": [], "roughness": [], "viscosity": "", "transition_equation": "Moody"}
+def _empty_side(side="inlet"):
+    return PipeDesign.for_side(side).to_legacy()
 
 
 def _project_row(section, side="", segment="", fitting="", parameter="", value="", unit=""):
@@ -374,15 +384,20 @@ def _project_rows(state):
             for key, unit in PARAMETER_UNITS.items()]
     for side in ("inlet", "outlet"):
         data = state[side]
-        if not isinstance(data, dict) or set(data) - set(_empty_side()):
+        if not isinstance(data, dict) or set(data) - set(_empty_side(side)):
             _error(side, "unknown designer settings")
-        data = {**_empty_side(), **data}
+        data = {**_empty_side(side), **data}
         viscosity = _number(data["viscosity"], f"{side} viscosity")
         transition = _text(data["transition_equation"], f"{side} transition equation")
         if transition not in TRANSITION_EQUATIONS:
             _error(side, f"unknown transition equation {transition!r}")
         rows.extend((_project_row("settings", side, parameter="viscosity", value=viscosity, unit="cP"),
                      _project_row("settings", side, parameter="transition_equation", value=transition)))
+        for parameter in BOUNDARY_SETTINGS:
+            value = (_boolean(data[parameter], f"{side} {parameter}")
+                     if parameter in BOUNDARY_BOOLEAN_FIELDS
+                     else _coefficient(data[parameter], f"{side} {parameter}"))
+            rows.append(_project_row("settings", side, parameter=parameter, value=value))
         segment_rows = _segment_rows(data["segments"])
         known_segments = {row["Line Segment"] for row in segment_rows}
         for row in segment_rows:
@@ -416,9 +431,9 @@ def read_project(path):
                 _error(context, f"unknown parameter {key!r}")
             parameters[key] = (_boolean(row["Value"], context) if key in BOOLEAN_FIELDS
                                else _number(row["Value"], context, unspecified=True))
-        return {"parameters": _parameters(parameters), "inlet": _empty_side(), "outlet": _empty_side()}
+        return {"parameters": _parameters(parameters), "inlet": _empty_side("inlet"), "outlet": _empty_side("outlet")}
     _header(header, PROJECT_FIELDS)
-    state = {"parameters": {}, "inlet": _empty_side(), "outlet": _empty_side()}
+    state = {"parameters": {}, "inlet": _empty_side("inlet"), "outlet": _empty_side("outlet")}
     fitting_groups = {side: defaultdict(dict) for side in ("inlet", "outlet")}
     seen = set()
     for line, row in rows:
@@ -440,11 +455,15 @@ def read_project(path):
                 _error(context, "side must be inlet or outlet")
             data = state[side]
             if section == "settings":
-                if segment_text or fitting_text or parameter not in ("viscosity", "transition_equation"):
+                if segment_text or fitting_text or parameter not in ("viscosity", "transition_equation", *BOUNDARY_SETTINGS):
                     _error(context, "invalid designer setting row")
                 expected_unit = "cP" if parameter == "viscosity" else ""
                 if parameter == "viscosity":
                     data[parameter] = _number(value, context)
+                elif parameter in BOUNDARY_BOOLEAN_FIELDS:
+                    data[parameter] = _boolean(value, context)
+                elif parameter in BOUNDARY_COEFFICIENT_FIELDS:
+                    data[parameter] = _coefficient(value, context)
                 elif value not in TRANSITION_EQUATIONS:
                     _error(context, f"unknown transition equation {value!r}")
                 else:

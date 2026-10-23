@@ -31,7 +31,7 @@ def pump_inputs():
     }
 
 
-@pytest.mark.parametrize('side,boundary_coefficient', [('inlet', 0.1), ('outlet', 1.0)])
+@pytest.mark.parametrize('side,boundary_coefficient', [('inlet', 0.5), ('outlet', 1.0)])
 def test_one_laminar_pipe_uses_explicit_tank_boundary(side, boundary_coefficient):
     calculator = PipeLossCalculator(side=side)
     inputs = pipe_inputs()
@@ -120,11 +120,12 @@ def test_zero_flow_has_zero_losses_instead_of_dividing_by_reynolds():
     assert result.segments[0].flow_type == 'No flow'
 
 
-def test_screenshot_single_pipe_minor_includes_entrance_and_reconciles_total():
-    # User's one-metre, 12-cm inlet: existing smooth-pipe correlation and
-    # infinitely-large-tank entrance coefficient K=0.4 remain unchanged.
+def test_legacy_screenshot_with_explicit_entrance_k_point_four_reconciles_total():
+    # Reproduce the original screenshot with its historical K=0.4 selected
+    # explicitly; the new editable entrance default is K=0.5.
     result = PipeLossCalculator(side='inlet').calculate(
-        *pipe_inputs((12,), (1,)), viscosity=0.89, density=998, volumetric=1283.64298)
+        *pipe_inputs((12,), (1,)), viscosity=0.89, density=998, volumetric=1283.64298,
+        entrance_coefficient=0.4)
     segment = result.segments[0]
     assert segment.major_loss == pytest.approx(2.9405673301426964, rel=1e-12)
     assert segment.fittings_loss == segment.transition_loss == 0
@@ -133,6 +134,102 @@ def test_screenshot_single_pipe_minor_includes_entrance_and_reconciles_total():
     assert segment.total_loss == pytest.approx(23.212169368608663, rel=1e-12)
     assert result.minor_loss == segment.minor_loss
     assert result.total_loss == pytest.approx(result.major_loss + result.minor_loss)
+
+
+def test_screenshot_with_new_default_entrance_coefficient_point_five():
+    result = PipeLossCalculator(side='inlet').calculate(
+        *pipe_inputs((12,), (1,)), viscosity=0.89, density=998, volumetric=1283.64298)
+    assert result.major_loss == pytest.approx(2.9405673301426964, rel=1e-12)
+    assert result.entrance_loss == pytest.approx(25.33950254808246, rel=1e-12)
+    assert result.exit_loss == 0
+    assert result.minor_loss == result.entrance_loss
+    assert result.total_loss == pytest.approx(28.28006987822516, rel=1e-12)
+
+
+@pytest.mark.parametrize('entrance,exit', [(False, False), (True, False), (False, True), (True, True)])
+@pytest.mark.parametrize('flow', [0, 36])
+def test_editable_boundaries_use_first_and_last_velocity_once_without_mutating_inputs(entrance, exit, flow):
+    inputs = pipe_inputs((10, 20, 15), (3, 5, 7))
+    before = deepcopy(inputs)
+    settings = {'entrance_enabled': entrance, 'entrance_coefficient': 0.25,
+                'exit_enabled': exit, 'exit_coefficient': 1.7}
+    before_settings = deepcopy(settings)
+    calculator = PipeLossCalculator(side='outlet')
+    before_calculator = dict(vars(calculator))
+    result = calculator.calculate(*inputs, viscosity=1, density=1000, volumetric=flow, **settings)
+    entrance_head = (flow / 3600 / (pi * 0.1 ** 2 / 4)) ** 2 / (2 * GRAVITY)
+    exit_head = (flow / 3600 / (pi * 0.15 ** 2 / 4)) ** 2 / (2 * GRAVITY)
+    expected_entrance = 0.25 * entrance_head if entrance else 0
+    expected_exit = 1.7 * exit_head if exit else 0
+    assert [item.entrance_loss for item in result.segments] == pytest.approx([expected_entrance, 0, 0])
+    assert [item.exit_loss for item in result.segments] == pytest.approx([0, 0, expected_exit])
+    assert result.entrance_loss == pytest.approx(expected_entrance)
+    assert result.exit_loss == pytest.approx(expected_exit)
+    assert result.boundary_loss == pytest.approx(expected_entrance + expected_exit)
+    assert result.minor_loss == pytest.approx(
+        result.fittings_loss + result.transition_loss + expected_entrance + expected_exit)
+    assert result.total_loss == pytest.approx(result.major_loss + result.minor_loss)
+    # Boundary toggles must leave internal diameter-change correlations alone.
+    without_boundaries = calculator.calculate(
+        *inputs, viscosity=1, density=1000, volumetric=flow, entrance_enabled=False, exit_enabled=False)
+    assert result.transition_loss == without_boundaries.transition_loss
+    assert result.major_loss == without_boundaries.major_loss
+    assert inputs == before
+    assert settings == before_settings
+    assert vars(calculator) == before_calculator
+
+
+def test_single_segment_can_include_both_entrance_and_exit_without_double_counting():
+    segments, _, roughness = pipe_inputs((10,), (0,))
+    fittings = [{'Line Segment': 1, 'Fitting 1, Fitting Type': 'Valve', 'Fitting 1, Loss Factor': '0.2'}]
+    result = PipeLossCalculator().calculate(
+        segments, fittings, roughness, viscosity=1, density=1000, volumetric=36,
+        entrance_enabled=True, entrance_coefficient=0.3, exit_enabled=True, exit_coefficient=1.2)
+    velocity_head = (0.01 / (pi * 0.1 ** 2 / 4)) ** 2 / (2 * GRAVITY)
+    segment = result.segments[0]
+    assert segment.entrance_loss == pytest.approx(0.3 * velocity_head)
+    assert segment.exit_loss == pytest.approx(1.2 * velocity_head)
+    assert segment.boundary_loss == pytest.approx(1.5 * velocity_head)
+    assert segment.minor_loss == pytest.approx(1.7 * velocity_head)
+    assert result.total_loss == pytest.approx(1.7 * velocity_head)
+
+
+def test_enabled_zero_coefficients_produce_no_boundary_loss():
+    result = PipeLossCalculator().calculate(
+        *pipe_inputs(), viscosity=1, density=1000, volumetric=36,
+        entrance_enabled=True, entrance_coefficient=0, exit_enabled=True, exit_coefficient=0)
+    assert result.entrance_loss == result.exit_loss == result.boundary_loss == 0
+    assert result.total_loss == result.major_loss
+
+
+def test_boundary_defaults_follow_effective_side_override():
+    calculator = PipeLossCalculator(side='inlet')
+    result = calculator.calculate(
+        *pipe_inputs(), viscosity=1000, density=1000, volumetric=36, side='outlet')
+    velocity_head = result.segments[0].velocity ** 2 / (2 * GRAVITY)
+    assert result.entrance_loss == 0
+    assert result.exit_loss == pytest.approx(velocity_head)
+    assert calculator.side == 'inlet'
+
+
+@pytest.mark.parametrize('field,value', [
+    ('entrance_enabled', 1), ('entrance_enabled', 0), ('entrance_enabled', 'True'),
+    ('entrance_enabled', []), ('exit_enabled', 1), ('exit_enabled', 'False'),
+    ('entrance_coefficient', -0.1), ('entrance_coefficient', float('nan')),
+    ('entrance_coefficient', float('inf')), ('entrance_coefficient', '.'),
+    ('entrance_coefficient', None), ('exit_coefficient', -1),
+    ('exit_coefficient', float('nan')), ('exit_coefficient', float('inf')),
+    ('exit_coefficient', None),
+])
+def test_invalid_boundary_settings_rejected_even_when_losses_disabled(field, value):
+    inputs = pipe_inputs()
+    before = deepcopy(inputs)
+    settings = {'entrance_enabled': False, 'exit_enabled': False, field: value}
+    calculator = PipeLossCalculator()
+    with pytest.raises(CalculationError):
+        calculator.calculate(*inputs, viscosity=1, density=1000, volumetric=36, **settings)
+    assert inputs == before
+    assert calculator.side == 'inlet' and calculator.viscosity == 0.001
 
 
 @pytest.mark.parametrize('side', ['inlet', 'outlet'])
@@ -154,7 +251,7 @@ def test_multisegment_minor_reconciles_fittings_transitions_and_one_tank_boundar
     # belongs to its downstream segment, and each tank boundary occurs once.
     expected_transitions = (0, (1 - 0.1 / 0.2) ** 2 * heads[0],
                             0.4 * (1 - 0.15 / 0.2) * heads[2])
-    expected_boundaries = ((0.4 * heads[0], 0, 0) if side == 'inlet'
+    expected_boundaries = ((0.5 * heads[0], 0, 0) if side == 'inlet'
                            else (0, 0, heads[2]))
     expected_minor = []
     for index, segment in enumerate(result.segments):

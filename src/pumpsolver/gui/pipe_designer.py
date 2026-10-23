@@ -31,6 +31,7 @@ class RegexDelegate(QStyledItemDelegate):
         model.setData(index, editor.text(), Qt.EditRole)
 
 class LossesCal(QDialog):
+    SEGMENT_COLUMNS = ('Segment Length (m)', 'Segment Diameter (cm)')
     totalLosses = QtCore.pyqtSignal(float)
     designCommitted = QtCore.pyqtSignal(object)
     designerEnabled = QtCore.pyqtSignal(bool)
@@ -99,7 +100,61 @@ class LossesCal(QDialog):
         self.ui.lineEditFlowrate.setValidator(self.validator)
         self.ui.comboBoxRoughness.lineEdit().setValidator(self.validator)
         self.ui.comboBoxTransitionEquation.currentIndexChanged.connect(self.updateImage)
+        coefficient_validator = QRegExpValidator(QRegExp(
+            r'^[+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$'), self)
+        for editor in (self.ui.lineEditEntranceCoefficient, self.ui.lineEditExitCoefficient):
+            editor.setValidator(coefficient_validator)
+            editor.textChanged.connect(self.schedule_calculation)
+        self.ui.checkBoxEntranceLoss.toggled.connect(self._boundary_changed)
+        self.ui.checkBoxExitLoss.toggled.connect(self._boundary_changed)
+        self.ui.pushButtonBoundaryInfo.clicked.connect(self.openBoundaryInfo)
+        self.set_boundary_settings(PipeDesign.for_side(self.side))
         self.updateImage(self.ui.comboBoxTransitionEquation.currentIndex())
+
+    def set_boundary_settings(self, design):
+        """Restore a draft's independent entrance and exit settings."""
+        data = design.to_legacy()
+        with self._blocked_widgets(
+                self.ui.checkBoxEntranceLoss, self.ui.checkBoxExitLoss,
+                self.ui.lineEditEntranceCoefficient, self.ui.lineEditExitCoefficient):
+            self.ui.checkBoxEntranceLoss.setChecked(data['entrance_enabled'])
+            self.ui.lineEditEntranceCoefficient.setText(data['entrance_coefficient'])
+            self.ui.checkBoxExitLoss.setChecked(data['exit_enabled'])
+            self.ui.lineEditExitCoefficient.setText(data['exit_coefficient'])
+        self._boundary_changed()
+
+    def _boundary_changed(self):
+        enabled = self.ui.checkBoxLossesCal.isChecked()
+        for checkbox, editor in (
+                (self.ui.checkBoxEntranceLoss, self.ui.lineEditEntranceCoefficient),
+                (self.ui.checkBoxExitLoss, self.ui.lineEditExitCoefficient)):
+            checkbox.setEnabled(enabled)
+            editor.setEnabled(enabled and checkbox.isChecked())
+        self.schedule_calculation()
+
+    def _boundary_settings(self):
+        settings = {
+            'entrance_enabled': self.ui.checkBoxEntranceLoss.isChecked(),
+            'entrance_coefficient': self.ui.lineEditEntranceCoefficient.text(),
+            'exit_enabled': self.ui.checkBoxExitLoss.isChecked(),
+            'exit_coefficient': self.ui.lineEditExitCoefficient.text(),
+        }
+        for key in ('entrance_coefficient', 'exit_coefficient'):
+            try:
+                value = float(settings[key])
+            except (ValueError, OverflowError):
+                value = float('nan')
+            if not isfinite(value) or value < 0:
+                raise ValueError(f'{key.replace("_", " ").title()} must be a finite number of zero or greater.')
+        return settings
+
+    def openBoundaryInfo(self):
+        from .boundary_info_dialog import BoundaryLossInfo
+        if getattr(self, 'boundary_info', None) is None:
+            self.boundary_info = BoundaryLossInfo(self)
+        self.boundary_info.show()
+        self.boundary_info.raise_()
+        self.boundary_info.activateWindow()
 
     def updateImage(self, index):
         image_paths = {0: ':/assets/moodyEq.png', 1: ':/assets/RJSPigott.png'}
@@ -136,7 +191,7 @@ class LossesCal(QDialog):
 
     def _capture_segments(self):
         table = self.ui.tableWidgetPipeSegment
-        self.stored_segments = {f'Line Segment {row + 1}, {table.horizontalHeaderItem(column).text()}': table.item(row, column).text() if table.item(row, column) else '' for row in range(table.rowCount()) for column in range(table.columnCount())}
+        self.stored_segments = {f'Line Segment {row + 1}, {name}': table.item(row, column).text() if table.item(row, column) else '' for row in range(table.rowCount()) for column, name in enumerate(self.SEGMENT_COLUMNS)}
 
     def _capture_current_tables(self):
         focused = self.focusWidget()
@@ -191,9 +246,9 @@ class LossesCal(QDialog):
 
     def label_instructions(self):
         if self.side == 'inlet':
-            self.ui.labelinstructions.setText('Specify pipe lengths where the diameter changes. The first segment is the suction nossle that starts at the storage tank. Subsequent pipes connect to the pipe that preceeds it the last segment is the suction nossle that ends at the pump inlet (suction side).')
+            self.ui.labelinstructions.setText('Order segments from the supply end toward the pump inlet. Add a segment at each diameter change. Set entrance and exit losses in the panel on the right.')
         elif self.side == 'outlet':
-            self.ui.labelinstructions.setText('Specify pipe lengths where the diameter changes. The first segment connects to the pump outlet. Subsequent pipes connect to the pipe that preceeds it,                                              the last segment is the discharge nossle that ends at the outlet storage tank.')
+            self.ui.labelinstructions.setText('Order segments from the pump outlet toward the receiving end. Add a segment at each diameter change. Set entrance and exit losses in the panel on the right.')
 
     def openHelp(self):
         from .help_dialog import Help
@@ -247,7 +302,7 @@ class LossesCal(QDialog):
         selected = table.selectedIndexes()
         selected_row = selected[0].row() if selected else None
         cells = []
-        columns = {table.horizontalHeaderItem(index).text(): index for index in range(table.columnCount())}
+        columns = {name: index for index, name in enumerate(self.SEGMENT_COLUMNS)}
         for key, value in self.stored_segments.items():
             row_header, column_name = key.split(', ', 1)
             cells.append((int(row_header.split()[-1]) - 1, columns[column_name], value))
@@ -308,20 +363,29 @@ class LossesCal(QDialog):
         self.storeViscosity = self.ui.lineEditViscosity.text()
         self.storeDensity = self.ui.lineEditDensity.text()
         self.storeVolumetric = self.ui.lineEditFlowrate.text()
-        signature = (tuple(sorted(self.stored_segments.items())), tuple((tuple(sorted(item.items())) for item in self.list_fittings_by_segment)), tuple((tuple(sorted(item.items())) for item in self.lineRoughnessList)), self.storeViscosity, self.storeDensity, self.storeVolumetric, self.ui.comboBoxTransitionEquation.currentText(), self.side, self.ui.checkBoxLossesCal.isChecked())
+        boundary_signature = (self.ui.checkBoxEntranceLoss.isChecked(),
+                              self.ui.lineEditEntranceCoefficient.text(),
+                              self.ui.checkBoxExitLoss.isChecked(),
+                              self.ui.lineEditExitCoefficient.text())
+        signature = (tuple(sorted(self.stored_segments.items())), tuple((tuple(sorted(item.items())) for item in self.list_fittings_by_segment)), tuple((tuple(sorted(item.items())) for item in self.lineRoughnessList)), self.storeViscosity, self.storeDensity, self.storeVolumetric, self.ui.comboBoxTransitionEquation.currentText(), self.side, self.ui.checkBoxLossesCal.isChecked(), boundary_signature)
         if signature == self._calculation_signature and self._last_result is not None:
             self._render_selected_result()
             return self._last_result
         self._calculation_signature = signature
         if not self.ui.checkBoxLossesCal.isChecked():
             self._last_result = None
+            self._render_selected_result()
+            self._render_boundary_result()
+            self.ui.labelOverallSummary.clear()
             self.ui.pushButtonClose.setEnabled(True)
+            self.ui.pushButtonClose.setToolTip('')
             return None
         try:
-            result = self.calculator.calculate(self.stored_segments, self.list_fittings_by_segment, self.lineRoughnessList, self.storeViscosity, self.storeDensity, self.storeVolumetric, side=self.side, transition_equation=self.ui.comboBoxTransitionEquation.currentText())
-        except CalculationError as error:
+            result = self.calculator.calculate(self.stored_segments, self.list_fittings_by_segment, self.lineRoughnessList, self.storeViscosity, self.storeDensity, self.storeVolumetric, side=self.side, transition_equation=self.ui.comboBoxTransitionEquation.currentText(), **self._boundary_settings())
+        except (CalculationError, ValueError) as error:
             self._last_result = None
             self._render_selected_result()
+            self._render_boundary_result()
             self.ui.labelOverallSummary.clear()
             self.ui.pushButtonClose.setEnabled(False)
             self.ui.pushButtonClose.setToolTip(str(error))
@@ -331,19 +395,27 @@ class LossesCal(QDialog):
         self.ui.pushButtonClose.setEnabled(True)
         self.ui.pushButtonClose.setToolTip('')
         self._render_selected_result()
-        boundary = 'tank entrance' if result.side == 'inlet' else 'tank exit'
+        self._render_boundary_result()
         self.ui.labelOverallSummary.setText(
             f'All segments: major {result.major_loss:#.6g} m + minor {result.minor_loss:#.6g} m '
             f'= total {result.total_loss:#.6g} m.\n'
             f'Minor: fittings {result.fittings_loss:#.6g} m; diameter changes {result.transition_loss:#.6g} m; '
-            f'{boundary} {result.boundary_loss:#.6g} m (assumed).\n'
+            f'entrance {result.entrance_loss:#.6g} m; exit {result.exit_loss:#.6g} m.\n'
             f'Length {result.total_length:#.6g} m; {result.contractions} contractions; {result.expansions} expansions.')
         self.ui.labelOverallSummary.setToolTip(
             'Close saves the total for all segments to Properties. Minor losses include fittings, '
-            'diameter changes and the entrance from an infinitely large supply tank (inlet) '
-            'or exit into an infinitely large receiving tank (outlet).')
+            'diameter changes and the entrance/exit losses enabled in this design. '
+            'Entrance uses the first segment velocity; exit uses the last segment velocity.')
         self.totalLosses.emit(result.total_loss)
         return result
+
+    def _render_boundary_result(self):
+        for editor, name in ((self.ui.lineEditEntranceLoss, 'entrance_loss'),
+                             (self.ui.lineEditExitLoss, 'exit_loss')):
+            if self._last_result is None:
+                editor.clear()
+            else:
+                editor.setText(f'{getattr(self._last_result, name):#.6g}')
 
     def _render_selected_result(self):
         widgets = (self.ui.lineEditDarcys, self.ui.lineEditRelativeRough, self.ui.lineEditReynolds, self.ui.lineEditFlowType, self.ui.lineEditVelocity, self.ui.lineEditMinorLosses, self.ui.lineEditMajorLosses)
@@ -360,7 +432,8 @@ class LossesCal(QDialog):
         self.ui.lineEditMinorLosses.setToolTip(
             f'Fittings: {result.fittings_loss:#.6g} m\n'
             f'Diameter change: {result.transition_loss:#.6g} m\n'
-            f'Tank entrance/exit: {result.boundary_loss:#.6g} m\n'
+            f'Entrance: {result.entrance_loss:#.6g} m\n'
+            f'Exit: {result.exit_loss:#.6g} m\n'
             f'Segment total (major + minor): {result.total_loss:#.6g} m')
         values = (result.friction_factor, result.relative_roughness, result.reynolds, result.flow_type, result.velocity, result.minor_loss, result.major_loss)
         for widget, value in zip(widgets, values):
@@ -368,6 +441,8 @@ class LossesCal(QDialog):
 
     def closeEvent(self, event):
         self._calculation_timer.stop()
+        if getattr(self, 'boundary_info', None) is not None:
+            self.boundary_info.close()
         super().closeEvent(event)
 
     def save_LineRoughness(self):
@@ -436,6 +511,7 @@ class LossesCal(QDialog):
         self.ui.tableWidgetFittings.setItemDelegateForColumn(1, regex_delegate)
 
     def disableVarious(self):
+        self._boundary_changed()
         self.designerEnabled.emit(self.ui.checkBoxLossesCal.isChecked())
         if self.ui.checkBoxLossesCal.isChecked() == False:
             self.ui.tableWidgetFittings.setDisabled(True)
@@ -491,7 +567,8 @@ class LossesCal(QDialog):
             'roughness': self.lineRoughnessList,
             'viscosity': self.storeViscosity,
             'transition_equation': self.ui.comboBoxTransitionEquation.currentText(),
-        })
+            **self._boundary_settings(),
+        }, side=self.side)
         enabled = self.ui.checkBoxLossesCal.isChecked()
         diameter = None
         if enabled and design.segments:
@@ -544,26 +621,7 @@ class LossesCal(QDialog):
         self.restore_lineRoughness()
 
     def save_table_data_Segment(self):
-        sender = self.sender()
-        self.stored_segments = {}
-        for row in range(self.ui.tableWidgetPipeSegment.rowCount()):
-            try:
-                row_header = self.ui.tableWidgetPipeSegment.verticalHeaderItem(row).text()
-            except AttributeError:
-                return
-            else:
-                for col in range(self.ui.tableWidgetPipeSegment.columnCount()):
-                    item = self.ui.tableWidgetPipeSegment.item(row, col)
-                    if item is not None:
-                        column_name = self.ui.tableWidgetPipeSegment.horizontalHeaderItem(col).text()
-                        key = f'{row_header}, {column_name}'
-                        self.stored_segments[key] = item.text()
-                    else:
-                        column_name = self.ui.tableWidgetPipeSegment.horizontalHeaderItem(col).text()
-                        key = f'{row_header}, {column_name}'
-                        self.stored_segments[key] = ''
-        if self.ui.tableWidgetPipeSegment.rowCount() == 0:
-            self.stored_segments = {}
+        self._capture_segments()
         self.save_diameter()
         self.schedule_calculation()
 

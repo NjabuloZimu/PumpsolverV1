@@ -6,12 +6,17 @@ from the existing generated `Ui_*` classes because their original Designer
 files were absent. They are editable replacements, not byte-for-byte copies of
 those lost source files.
 
+`boundary_info_dialog.ui` is a newly authored reference popup. The pipe designer
+also has an intentional third column for independent entrance and exit controls;
+its existing table dimensions and fonts remain unchanged.
+
 Recovery used Qt Designer's `QFormBuilder` serialization, removed Qt's internal
 runtime widgets and state, and restored the original explicit properties,
 fonts, image references, table headers, combo-box items, tab order and signal
 connections from the generated code. `legacy_layout_snapshot.json` records the
 authored control names, geometry, explicit font settings, image sizes, table
-configuration and widget properties for all ten forms. Platform-inherited font
+configuration and widget properties for the ten recovered forms, including the
+intentional pipe-designer extension. Platform-inherited font
 defaults are deliberately excluded. The About form's preview title is generic;
 the handwritten About controller adds the current application version.
 

@@ -18,7 +18,7 @@ class Properties(QDialog):
         if side not in ('inlet', 'outlet'):
             raise ValueError('Pipe side must be inlet or outlet.')
         self.side = side
-        self.design = PipeDesign()
+        self.design = PipeDesign.for_side(side)
         self.designerStatus = bool(designerStatus)
         self.ui = Ui_propertiesDialog()
         self.ui.setupUi(self)
@@ -43,9 +43,9 @@ class Properties(QDialog):
         self.design = design
 
     def lossesData(self, stored_segments, list_fittings_by_segment, lineRoughnessList, viscosity):
-        self.design = PipeDesign.from_legacy({'segments': stored_segments,
+        self.design = PipeDesign.from_legacy({**self.design.to_legacy(), 'segments': stored_segments,
             'fittings': list_fittings_by_segment, 'roughness': lineRoughnessList,
-            'viscosity': viscosity, 'transition_equation': self.design.transition_equation})
+            'viscosity': viscosity}, side=self.side)
 
     def _accept_design(self, update):
         self.design = update.design
@@ -71,6 +71,7 @@ class Properties(QDialog):
         window.ui.lineEditFlowrate.setText(self.ui.lineEditVol.text())
         window.ui.lineEditViscosity.setText(data['viscosity'])
         window.ui.comboBoxTransitionEquation.setCurrentText(data['transition_equation'])
+        window.set_boundary_settings(self.design)
         window.previously_stored_data(data['segments'], data['fittings'], data['roughness'])
         window.designCommitted.connect(self._accept_design)
         window.show()

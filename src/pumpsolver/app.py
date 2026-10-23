@@ -24,6 +24,7 @@ def _smoke_test(window):
     from .gui.about_dialog import About
     from .gui.help_dialog import Help
     from .gui.info_dialogs import Info1, Info2, Info3
+    from .gui.boundary_info_dialog import BoundaryLossInfo
     from .persistence.csv_io import write_project, read_project
 
     aliases = [':/assets/moodyEq.png', ':/assets/RJSPigott.png',
@@ -47,7 +48,8 @@ def _smoke_test(window):
     data['inlet'].update(segments=segments, roughness=roughness, viscosity='1')
     window.restore_project(data)
     dialogs = [LossesCal('Pipe Designer', side='inlet'), Properties('Pipe Properties', False, side='inlet'),
-               MotorProp(), SolvePage(data['parameters']), About(), Help(), Info1(), Info2(), Info3()]
+               MotorProp(), SolvePage(data['parameters']), About(), Help(), Info1(), Info2(), Info3(),
+               BoundaryLossInfo()]
     try:
         if len(dialogs[0].findChildren(QTableWidget)) != 2:
             raise RuntimeError('The pipe designer contains duplicate tables.')
@@ -67,10 +69,24 @@ def _smoke_test(window):
                           + float(designer.ui.lineEditMinorLosses.text()))
         if not isclose(displayed_loss, pipe_result.total_loss, rel_tol=1e-5):
             raise RuntimeError('The displayed major and minor losses do not reconcile.')
+        designer.ui.lineEditEntranceCoefficient.setText('0.2')
+        designer.ui.checkBoxExitLoss.setChecked(True)
+        designer.ui.lineEditExitCoefficient.setText('0.75')
+        pipe_result = designer.flush_calculation()
+        velocity_head = pipe_result.segments[0].velocity ** 2 / (2 * 9.80665)
+        if not (isclose(pipe_result.entrance_loss, 0.2 * velocity_head)
+                and isclose(pipe_result.exit_loss, 0.75 * velocity_head)):
+            raise RuntimeError('Edited entrance and exit settings did not reach the calculation.')
         designer.designCommitted.connect(dialogs[1]._accept_design)
         designer.ui.pushButtonClose.click()
         if not isclose(float(dialogs[1].ui.lineEditLosses.text()), pipe_result.total_loss, rel_tol=1e-5):
             raise RuntimeError('The complete designer loss was not copied to Properties.')
+        dialogs[1].dataCommitted.connect(window._accept_properties)
+        dialogs[1].ui.pushButtonApply.click()
+        if not (window.state.inlet.exit_enabled
+                and window.state.inlet.entrance_coefficient == 0.2
+                and window.state.inlet.exit_coefficient == 0.75):
+            raise RuntimeError('Boundary settings were not committed to the project.')
         with TemporaryDirectory(prefix='pumpsolver-smoke-') as folder:
             path = Path(folder)/'project.csv'
             write_project(path, window.project_state())
@@ -79,7 +95,7 @@ def _smoke_test(window):
         return {'version': __version__, 'frozen': bool(getattr(sys, 'frozen', False)),
                 'resources': True, 'csv_roundtrip': True, 'calculations': True,
                 'designer_tables': 2, 'pump_head_m': solution.solved_value,
-                'designer_headers': True, 'loss_reconciliation': True,
+                'designer_headers': True, 'loss_reconciliation': True, 'boundary_settings': True,
                 'pipe_loss_m': pipe_result.total_loss, 'dialogs': len(dialogs)}
     finally:
         for dialog in dialogs:

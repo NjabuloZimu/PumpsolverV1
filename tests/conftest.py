@@ -44,6 +44,8 @@ def project_state():
                 {"Line Segment": 2, "Segment Roughness": "0.045"},
             ],
             "viscosity": "1.005", "transition_equation": "R.J.S Pigott",
+            "entrance_enabled": True, "entrance_coefficient": "0.5",
+            "exit_enabled": False, "exit_coefficient": "1.0",
         },
         "outlet": {
             "segments": {"Line Segment 1, Segment Length (m)": "20",
@@ -51,5 +53,7 @@ def project_state():
             "fittings": [],
             "roughness": [{"Line Segment": 1, "Segment Roughness": ""}],
             "viscosity": "", "transition_equation": "Moody",
+            "entrance_enabled": False, "entrance_coefficient": "0.5",
+            "exit_enabled": True, "exit_coefficient": "1.0",
         },
     }

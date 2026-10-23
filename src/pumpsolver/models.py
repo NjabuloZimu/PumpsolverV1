@@ -22,6 +22,8 @@ PARAMETER_FIELDS = {
 }
 BOOLEAN_FIELDS = ('designer_status_in', 'designer_status_out')
 TRANSITION_EQUATIONS = ('Moody', 'R.J.S Pigott')
+BOUNDARY_BOOLEAN_FIELDS = ('entrance_enabled', 'exit_enabled')
+BOUNDARY_COEFFICIENT_FIELDS = ('entrance_coefficient', 'exit_coefficient')
 
 
 def _numeric(value, factor=1.0):
@@ -44,6 +46,15 @@ def _boolean(value):
     if text not in ('true', 'false'):
         raise ValueError('Designer states must be True or False.')
     return text == 'true'
+
+
+def _coefficient(value):
+    if isinstance(value, bool):
+        raise ValueError('Boundary loss coefficients must be finite nonnegative numbers.')
+    number, text = _numeric(value)
+    if number is None or number < 0:
+        raise ValueError('Boundary loss coefficients must be finite nonnegative numbers.')
+    return number, text
 
 
 def _display(value, factor=1.0, original=None, missing=''):
@@ -124,12 +135,33 @@ class Segment:
 @dataclass(frozen=True)
 class PipeDesign:
     segments: tuple[Segment, ...] = ()
-    viscosity_pa_s: float | None = None
+    viscosity_pa_s: float | None = 0.00089
     transition_equation: str = 'Moody'
-    _viscosity_display: tuple | None = field(default=None, repr=False, compare=False)
+    entrance_enabled: bool = True
+    entrance_coefficient: float = 0.5
+    exit_enabled: bool = False
+    exit_coefficient: float = 1.0
+    _viscosity_display: tuple | None = field(default=(0.00089, '0.89'), repr=False, compare=False)
+    _entrance_display: tuple | None = field(default=(0.5, '0.5'), repr=False, compare=False)
+    _exit_display: tuple | None = field(default=(1.0, '1.0'), repr=False, compare=False)
+
+    def __post_init__(self):
+        for name in BOUNDARY_BOOLEAN_FIELDS:
+            if not isinstance(getattr(self, name), bool):
+                raise ValueError('Boundary enabled states must be True or False.')
+        for name in BOUNDARY_COEFFICIENT_FIELDS:
+            value, _ = _coefficient(getattr(self, name))
+            object.__setattr__(self, name, value)
 
     @classmethod
-    def from_legacy(cls, data):
+    def for_side(cls, side):
+        if side not in ('inlet', 'outlet'):
+            raise ValueError('Pipe side must be inlet or outlet.')
+        return cls(entrance_enabled=side == 'inlet', exit_enabled=side == 'outlet')
+
+    @classmethod
+    def from_legacy(cls, data, *, side='inlet'):
+        defaults = cls.for_side(side)
         grouped = {}
         for key, value in data.get('segments', {}).items():
             match = re.fullmatch(r'Line Segment ([1-9][0-9]*), (Segment Length \(m\)|Segment Diameter \(cm\))', key)
@@ -183,11 +215,21 @@ class PipeDesign:
                 {'length': (length, length_text), 'diameter': (diameter, diameter_text),
                  'roughness': (rough, rough_text)},
             ))
-        viscosity, viscosity_text = _numeric(data.get('viscosity', ''), 0.001)
+        viscosity, viscosity_text = _numeric(data.get('viscosity', '0.89'), 0.001)
         transition = data.get('transition_equation', 'Moody')
         if transition not in TRANSITION_EQUATIONS:
             raise ValueError('Unknown transition equation.')
-        return cls(tuple(segments), viscosity, transition, (viscosity, viscosity_text))
+        entrance_enabled = _boolean(data.get('entrance_enabled', defaults.entrance_enabled))
+        exit_enabled = _boolean(data.get('exit_enabled', defaults.exit_enabled))
+        entrance, entrance_text = _coefficient(data.get('entrance_coefficient', '0.5'))
+        exit_coefficient, exit_text = _coefficient(data.get('exit_coefficient', '1.0'))
+        return cls(
+            segments=tuple(segments), viscosity_pa_s=viscosity, transition_equation=transition,
+            entrance_enabled=entrance_enabled, entrance_coefficient=entrance,
+            exit_enabled=exit_enabled, exit_coefficient=exit_coefficient,
+            _viscosity_display=(viscosity, viscosity_text),
+            _entrance_display=(entrance, entrance_text), _exit_display=(exit_coefficient, exit_text),
+        )
 
     def to_legacy(self):
         segments, fittings, roughness = {}, [], []
@@ -206,21 +248,26 @@ class PipeDesign:
                 roughness.append({'Line Segment': segment.number, 'Segment Roughness': value})
         return {'segments': segments, 'fittings': fittings, 'roughness': roughness,
                 'viscosity': _display(self.viscosity_pa_s, 0.001, self._viscosity_display),
-                'transition_equation': self.transition_equation}
+                'transition_equation': self.transition_equation,
+                'entrance_enabled': self.entrance_enabled,
+                'entrance_coefficient': _display(self.entrance_coefficient, original=self._entrance_display),
+                'exit_enabled': self.exit_enabled,
+                'exit_coefficient': _display(self.exit_coefficient, original=self._exit_display)}
 
 
 @dataclass(frozen=True)
 class ProjectState:
     parameters: PumpInputs = field(default_factory=PumpInputs)
-    inlet: PipeDesign = field(default_factory=PipeDesign)
-    outlet: PipeDesign = field(default_factory=PipeDesign)
+    inlet: PipeDesign = field(default_factory=lambda: PipeDesign.for_side('inlet'))
+    outlet: PipeDesign = field(default_factory=lambda: PipeDesign.for_side('outlet'))
 
     @classmethod
     def from_legacy(cls, state):
         if set(state) != {'parameters', 'inlet', 'outlet'}:
             raise ValueError('A project requires parameters, inlet, and outlet sections.')
         return cls(PumpInputs.from_legacy(state['parameters']),
-                   PipeDesign.from_legacy(state['inlet']), PipeDesign.from_legacy(state['outlet']))
+                   PipeDesign.from_legacy(state['inlet'], side='inlet'),
+                   PipeDesign.from_legacy(state['outlet'], side='outlet'))
 
     def to_legacy(self):
         return {'parameters': self.parameters.to_legacy(),

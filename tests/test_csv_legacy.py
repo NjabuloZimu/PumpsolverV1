@@ -20,7 +20,9 @@ def test_old_key_value_project_restores_false_boolean(tmp_path, project_state):
     assert restored["parameters"]["designer_status_in"] is False
     for side in ("inlet", "outlet"):
         assert restored[side] == {"segments": {}, "fittings": [], "roughness": [],
-                                  "viscosity": "", "transition_equation": "Moody"}
+                                  "viscosity": "0.89", "transition_equation": "Moody",
+                                  "entrance_enabled": side == "inlet", "entrance_coefficient": "0.5",
+                                  "exit_enabled": side == "outlet", "exit_coefficient": "1.0"}
     converted = tmp_path / "converted.csv"
     csv_io.write_project(converted, restored)
     assert csv_io.read_project(converted) == restored
@@ -86,3 +88,37 @@ def test_old_boolean_garbage_is_rejected(tmp_path, project_state):
     _write(path, [["Key", "Value"], *parameters.items()])
     with pytest.raises(ValueError):
         csv_io.read_project(path)
+
+
+def test_old_project_missing_boundary_rows_receives_side_defaults_without_changing_saved_losses(tmp_path, project_state):
+    path = tmp_path / "old-boundary-settings.csv"
+    csv_io.write_project(path, project_state)
+    with path.open(encoding="utf-8-sig", newline="") as handle:
+        rows = list(csv.reader(handle))
+    rows = [row for row in rows if row[0] != "settings" or row[4] not in csv_io.BOUNDARY_SETTINGS]
+    _write(path, rows)
+    restored = csv_io.read_project(path)
+    assert restored == project_state
+    assert restored["parameters"]["in_loss"] == "0.1"
+    assert restored["parameters"]["out_loss"] == "1.2"
+    assert restored["inlet"]["viscosity"] == "1.005"
+    assert restored["outlet"]["viscosity"] == ""
+    csv_io.write_project(path, restored)
+    assert csv_io.read_project(path) == restored
+
+
+def test_old_project_missing_all_settings_defaults_viscosity_and_each_boundary_side(tmp_path, project_state):
+    path = tmp_path / "old-no-settings.csv"
+    csv_io.write_project(path, project_state)
+    with path.open(encoding="utf-8-sig", newline="") as handle:
+        rows = list(csv.reader(handle))
+    _write(path, [row for row in rows if row[0] != "settings"])
+    restored = csv_io.read_project(path)
+    assert restored["parameters"] == project_state["parameters"]
+    for side in ("inlet", "outlet"):
+        assert restored[side]["viscosity"] == "0.89"
+        assert restored[side]["transition_equation"] == "Moody"
+        assert restored[side]["entrance_enabled"] is (side == "inlet")
+        assert restored[side]["exit_enabled"] is (side == "outlet")
+        assert restored[side]["entrance_coefficient"] == "0.5"
+        assert restored[side]["exit_coefficient"] == "1.0"

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BoundaryLossInfo</class>
+ <widget class="QDialog" name="BoundaryLossInfo">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>780</width>
+    <height>660</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Entrance and exit loss coefficients</string>
+  </property>
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
+  <widget class="QTextBrowser" name="textBrowserBoundaryInfo">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>740</width>
+     <height>580</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+   <property name="openExternalLinks">
+    <bool>true</bool>
+   </property>
+   <property name="html">
+    <string>&lt;html&gt;&lt;body&gt;
+&lt;h2&gt;Entrance and exit losses&lt;/h2&gt;
+&lt;p&gt;Use the entrance term where liquid moves from a tank into the first pipe segment. Use the exit term where the last pipe segment discharges into a large tank. Each end can be included independently.&lt;/p&gt;
+&lt;h3&gt;Equations and SI units&lt;/h3&gt;
+&lt;p&gt;&lt;b&gt;h&lt;sub&gt;L&lt;/sub&gt; = K V&lt;sup&gt;2&lt;/sup&gt; / (2g)&lt;/b&gt;&lt;br/&gt;&lt;b&gt;Δp = ρ g h&lt;sub&gt;L&lt;/sub&gt; = K ρ V&lt;sup&gt;2&lt;/sup&gt; / 2&lt;/b&gt;&lt;/p&gt;
+&lt;table cellspacing="4"&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;Symbol&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Meaning / unit&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;h&lt;sub&gt;L&lt;/sub&gt;&lt;/td&gt;&lt;td&gt;Loss of head, m&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Δp&lt;/td&gt;&lt;td&gt;Pressure loss, Pa&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;K&lt;/td&gt;&lt;td&gt;Loss coefficient, dimensionless&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;V&lt;/td&gt;&lt;td&gt;Mean pipe velocity, m/s&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;g&lt;/td&gt;&lt;td&gt;Gravitational acceleration, m/s²&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;ρ&lt;/td&gt;&lt;td&gt;Liquid density, kg/m³&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;p&gt;&lt;b&gt;Reference velocity matters.&lt;/b&gt; Entrance uses the first segment's mean velocity; exit uses the last segment's mean velocity. In each case V = Q/A and A = πD²/4, with Q in m³/s and internal diameter D in m. Select a coefficient defined using that same velocity basis.&lt;/p&gt;
+&lt;h3&gt;Indicative entrance coefficients&lt;/h3&gt;
+&lt;table border="1" cellspacing="0" cellpadding="5"&gt;&lt;tr&gt;&lt;th&gt;Entrance geometry&lt;/th&gt;&lt;th&gt;K&lt;/th&gt;&lt;th&gt;Interpretation&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Sharp-edged, flush pipe entrance&lt;/td&gt;&lt;td&gt;≈ 0.5&lt;/td&gt;&lt;td&gt;Application default.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Rounded entrance&lt;/td&gt;&lt;td&gt;≈ 0.02–0.2&lt;/td&gt;&lt;td&gt;Depends on rounding radius and geometry.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Inward-projecting / Borda-type entrance&lt;/td&gt;&lt;td&gt;≈ 0.78–0.8&lt;/td&gt;&lt;td&gt;Crane-style approximate guide; other methods depend on wall thickness and projection.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Bevelled or rounded culvert entrance&lt;/td&gt;&lt;td&gt;≈ 0.2&lt;/td&gt;&lt;td&gt;For the corresponding HEC entrance arrangements.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Square-edged culvert / parallel-wingwall arrangements&lt;/td&gt;&lt;td&gt;≈ 0.5–0.7&lt;/td&gt;&lt;td&gt;Geometry-specific cases, not a universal pipe value.&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;h3&gt;Exit into a large tank&lt;/h3&gt;
+&lt;p&gt;&lt;b&gt;K ≈ 1.0&lt;/b&gt; is the default for pipe discharge into a large tank, using the velocity in the last pipe segment.&lt;/p&gt;
+&lt;p&gt;These coefficients are starting estimates. Match the actual edge shape, rounding, projection and flow conditions to an appropriate measured or published coefficient. Culvert recommendations apply to their stated arrangements. Avoid counting a boundary loss again if it has already been included elsewhere in the model.&lt;/p&gt;
+&lt;h3&gt;References&lt;/h3&gt;
+&lt;ul&gt;&lt;li&gt;&lt;a href="https://innovationspace.ansys.com/courses/wp-content/uploads/sites/5/2020/09/Lesson-4-Minor-Losses-in-Pipes-and-Ducts-Handout.pdf"&gt;Ansys: Minor Losses in Pipes and Ducts&lt;/a&gt; — K-factor model, reference velocities, entrance and tank-exit examples.&lt;/li&gt;&lt;li&gt;&lt;a href="https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.1/modeling-culverts/culvert-data-and-coefficients/entrance-loss-coefficient"&gt;USACE HEC-RAS: Entrance Loss Coefficient&lt;/a&gt; — culvert-specific entrance guidance.&lt;/li&gt;&lt;li&gt;&lt;a href="https://fluids.readthedocs.io/fluids.fittings.html#fluids.fittings.entrance_distance"&gt;Fluids documentation: projecting entrances&lt;/a&gt; — comparison of methods, including the Crane K = 0.78 case.&lt;/li&gt;&lt;/ul&gt;
+&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonClose">
+   <property name="geometry">
+    <rect>
+     <x>685</x>
+     <y>620</y>
+     <width>75</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+   <property name="default">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>textBrowserBoundaryInfo</tabstop>
+  <tabstop>pushButtonClose</tabstop>
+ </tabstops>
+ <resources />
+ <connections />
+</ui>

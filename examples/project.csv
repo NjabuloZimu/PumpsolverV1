@@ -19,6 +19,10 @@ parameters,,,,designer_status_in,False,
 parameters,,,,designer_status_out,True,
 settings,inlet,,,viscosity,1.005,cP
 settings,inlet,,,transition_equation,R.J.S Pigott,
+settings,inlet,,,entrance_enabled,True,
+settings,inlet,,,entrance_coefficient,0.5,
+settings,inlet,,,exit_enabled,False,
+settings,inlet,,,exit_coefficient,1.0,
 segments,inlet,1,,Segment Length (m),2.5,m
 segments,inlet,1,,Segment Diameter (cm),10,cm
 segments,inlet,2,,Segment Length (m),3,m
@@ -33,6 +37,10 @@ roughness,inlet,1,,Segment Roughness,Smooth Pipe,mm
 roughness,inlet,2,,Segment Roughness,0.045,mm
 settings,outlet,,,viscosity,1.005,cP
 settings,outlet,,,transition_equation,Moody,
+settings,outlet,,,entrance_enabled,False,
+settings,outlet,,,entrance_coefficient,0.5,
+settings,outlet,,,exit_enabled,True,
+settings,outlet,,,exit_coefficient,1.0,
 segments,outlet,1,,Segment Length (m),20,m
 segments,outlet,1,,Segment Diameter (cm),8,cm
 roughness,outlet,1,,Segment Roughness,0.045,mm

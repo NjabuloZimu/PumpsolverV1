@@ -35,14 +35,16 @@ def test_visible_losses_reconcile_through_designer_properties_and_csv(
             {'Line Segment': number, 'Fitting 1, Fitting Type': 'Valve', 'Fitting 1, Loss Factor': '0.3'}
             for number in range(1, count + 1)],
         'viscosity': '0.89', 'transition_equation': 'Moody',
+        'entrance_enabled': side == 'inlet', 'entrance_coefficient': '0.5',
+        'exit_enabled': side == 'outlet', 'exit_coefficient': '1.0',
     }
     state[side] = design
     expected = PipeLossCalculator(side=side).calculate(
         segments, design['fittings'], design['roughness'], '0.89', '998', flow)
     if side == 'inlet' and count == 1:
         assert expected.major_loss == pytest.approx(2.940567330)
-        assert expected.minor_loss == pytest.approx(20.271602038)
-        assert expected.total_loss == pytest.approx(23.212169369)
+        assert expected.minor_loss == pytest.approx(25.339502548)
+        assert expected.total_loss == pytest.approx(28.280069878)
 
     errors = []
     monkeypatch.setattr(QMessageBox, 'critical', lambda *args: errors.append(args[2]))

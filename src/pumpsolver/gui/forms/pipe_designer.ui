@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>LineLossesDesigner</class>
  <widget class="QDialog" name="LineLossesDesigner">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>940</width>
-    <height>778</height>
-   </rect>
-  </property>
   <property name="modal">
    <bool>true</bool>
   </property>
@@ -33,14 +25,6 @@
    </property>
   </widget>
   <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>330</x>
-     <y>750</y>
-     <width>321</width>
-     <height>25</height>
-    </rect>
-   </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="bottomMargin">
      <number>0</number>
@@ -65,6 +49,14 @@
      </widget>
     </item>
    </layout>
+   <property name="geometry">
+    <rect>
+     <x>465</x>
+     <y>750</y>
+     <width>321</width>
+     <height>25</height>
+    </rect>
+   </property>
   </widget>
   <widget class="QGroupBox" name="groupBox_4">
    <property name="geometry">
@@ -90,14 +82,17 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="text">
+     <string>0.89</string>
+    </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>51</width>
-      <height>16</height>
+      <width>140</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -114,7 +109,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Centipoise</string>
+     <string>cP</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEditDensity">
@@ -145,7 +140,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kg/m&lt;span style=" vertical-align:super;"&gt;3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;kg/m&lt;span style=" vertical-align:super;"&gt;3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_15">
@@ -153,8 +148,8 @@
      <rect>
       <x>10</x>
       <y>60</y>
-      <width>47</width>
-      <height>16</height>
+      <width>140</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -166,12 +161,12 @@
      <rect>
       <x>10</x>
       <y>90</y>
-      <width>101</width>
-      <height>16</height>
+      <width>140</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Volumetric Flowrate:</string>
+     <string>Volumetric flow:</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEditFlowrate">
@@ -510,7 +505,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Transition Equation</string>
+     <string>Equation:</string>
     </property>
    </widget>
   </widget>
@@ -534,8 +529,8 @@
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>391</width>
-      <height>51</height>
+      <width>360</width>
+      <height>54</height>
      </rect>
     </property>
     <property name="text">
@@ -594,7 +589,7 @@
      <number>49</number>
     </attribute>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>147</number>
+     <number>130</number>
     </attribute>
     <attribute name="horizontalHeaderHighlightSections">
      <bool>true</bool>
@@ -627,19 +622,19 @@
      <bool>false</bool>
     </attribute>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>147</number>
+     <number>130</number>
     </attribute>
     <attribute name="horizontalHeaderMinimumSectionSize">
      <number>49</number>
     </attribute>
     <column>
      <property name="text">
-      <string>Segment Length (m)</string>
+      <string>Length (m)</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>Segment Diameter (cm)</string>
+      <string>Diameter (cm)</string>
      </property>
     </column>
    </widget>
@@ -812,7 +807,7 @@
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>60</y>
+      <y>48</y>
       <width>25</width>
       <height>19</height>
      </rect>
@@ -842,12 +837,12 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>131</width>
+      <width>120</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Roughness Parameter,  k:</string>
+     <string>Roughness k:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
@@ -855,7 +850,7 @@
      <rect>
       <x>290</x>
       <y>30</y>
-      <width>21</width>
+      <width>31</width>
       <height>16</height>
      </rect>
     </property>
@@ -1041,12 +1036,12 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>121</width>
-      <height>16</height>
+      <width>155</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Darcy's Friction Factor:</string>
+     <string>Darcy friction factor:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_7">
@@ -1054,12 +1049,12 @@
      <rect>
       <x>10</x>
       <y>60</y>
-      <width>141</width>
+      <width>155</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Relative Pipe Roughness k/d:</string>
+     <string>Relative roughness k/D:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_8">
@@ -1085,7 +1080,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Reynold's Number:</string>
+     <string>Reynolds number:</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEditReynolds">
@@ -1137,7 +1132,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Cross Sectional Velocity:</string>
+     <string>Velocity:</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEditVelocity">
@@ -1158,7 +1153,7 @@
      <rect>
       <x>290</x>
       <y>150</y>
-      <width>21</width>
+      <width>31</width>
       <height>16</height>
      </rect>
     </property>
@@ -1272,14 +1267,6 @@
    </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_7">
-   <property name="geometry">
-    <rect>
-     <x>490</x>
-     <y>630</y>
-     <width>441</width>
-     <height>111</height>
-    </rect>
-   </property>
    <property name="title">
     <string>Overall Results</string>
    </property>
@@ -1292,19 +1279,351 @@
       <pointsize>8</pointsize>
      </font>
     </property>
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>421</width>
-      <height>81</height>
-     </rect>
-    </property>
     <property name="text">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="toolTip">
      <string>m</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>731</width>
+      <height>81</height>
+     </rect>
+    </property>
+   </widget>
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>630</y>
+     <width>751</width>
+     <height>111</height>
+    </rect>
+   </property>
+  </widget>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1260</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <widget class="QGroupBox" name="groupBoxBoundaryLosses">
+   <property name="geometry">
+    <rect>
+     <x>950</x>
+     <y>40</y>
+     <width>291</width>
+     <height>581</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Entrance / exit losses</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <widget class="QLabel" name="labelBoundaryDescription">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>24</y>
+      <width>220</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tank connections at the first and last pipe segments.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonBoundaryInfo">
+    <property name="geometry">
+     <rect>
+      <x>245</x>
+      <y>24</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string />
+    </property>
+    <property name="toolTip">
+     <string>Entrance and exit equations, reference velocities and coefficient guidance</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <property name="icon">
+     <iconset resource="../assets/assets.qrc">
+      <normaloff>:/Buttons/Info.png</normaloff>
+     </iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBoxEntranceBoundary">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>271</width>
+      <height>180</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Entrance</string>
+    </property>
+    <widget class="QCheckBox" name="checkBoxEntranceLoss">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>24</y>
+       <width>245</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Include entrance loss</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelEntranceConnection">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>50</y>
+       <width>245</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Tank → first pipe segment</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelEntranceCoefficient">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>80</y>
+       <width>140</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Coefficient K (–):</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEditEntranceCoefficient">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>78</y>
+       <width>94</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>0.5</string>
+     </property>
+     <property name="toolTip">
+      <string>Dimensionless loss coefficient referenced to the first segment velocity</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelEntranceLoss">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>114</y>
+       <width>140</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Head loss (m):</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEditEntranceLoss">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>112</y>
+       <width>94</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>—</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelEntranceReference">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>148</y>
+       <width>245</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Reference: first-segment velocity</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBoxExitBoundary">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>290</y>
+      <width>271</width>
+      <height>180</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Exit</string>
+    </property>
+    <widget class="QCheckBox" name="checkBoxExitLoss">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>24</y>
+       <width>245</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Include exit loss</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelExitConnection">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>50</y>
+       <width>245</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Last pipe segment → tank</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelExitCoefficient">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>80</y>
+       <width>140</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Coefficient K (–):</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEditExitCoefficient">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>78</y>
+       <width>94</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>1.0</string>
+     </property>
+     <property name="toolTip">
+      <string>Dimensionless loss coefficient referenced to the last segment velocity</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelExitLoss">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>114</y>
+       <width>140</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Head loss (m):</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEditExitLoss">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>112</y>
+       <width>94</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>—</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelExitReference">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>148</y>
+       <width>245</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Reference: last-segment velocity</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="labelBoundaryEquationSummary">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>492</y>
+      <width>267</width>
+      <height>64</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;p&gt;h&lt;sub&gt;L&lt;/sub&gt; = K V&lt;sup&gt;2&lt;/sup&gt; / (2g)&lt;/p&gt;&lt;p&gt;Enable each tank connection independently.&lt;/p&gt;</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>

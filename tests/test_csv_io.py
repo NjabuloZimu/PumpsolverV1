@@ -68,7 +68,7 @@ def test_project_with_all_unspecified_values_and_empty_designers(tmp_path, proje
         for key in state["parameters"]
     }
     for side in ("inlet", "outlet"):
-        state[side] = {"segments": {}, "fittings": [], "roughness": [],
+        state[side] = {**state[side], "segments": {}, "fittings": [], "roughness": [],
                        "viscosity": "", "transition_equation": "Moody"}
     path = tmp_path / "empty-project.csv"
     csv_io.write_project(path, state)
@@ -237,3 +237,64 @@ def test_legacy_safety_exception_does_not_allow_other_wrong_units(tmp_path, proj
     _write_rows(path, rows)
     with pytest.raises(ValueError, match="expected unit"):
         csv_io.read_project(path)
+
+
+def test_project_boundary_settings_roundtrip_independently_with_scalar_cells(tmp_path, project_state):
+    project_state["inlet"].update(entrance_enabled=False, exit_enabled=True,
+                                  entrance_coefficient="0.12345678901234567890", exit_coefficient="2.5000")
+    project_state["outlet"].update(entrance_enabled=True, exit_enabled=False,
+                                   entrance_coefficient="0", exit_coefficient="1.1250")
+    path = tmp_path / "boundaries.csv"
+    csv_io.write_project(path, project_state)
+    rows = _read_rows(path)
+    boundaries = [row for row in rows[1:] if row[0] == "settings" and row[4] in csv_io.BOUNDARY_SETTINGS]
+    assert len(boundaries) == 8
+    assert all(row[2:4] == ["", ""] and row[6] == "" for row in boundaries)
+    assert csv_io.read_project(path) == project_state
+
+
+@pytest.mark.parametrize("parameter,value", [
+    ("entrance_coefficient", ""), ("exit_coefficient", "-0.1"),
+    ("entrance_coefficient", "nan"), ("exit_coefficient", "inf"),
+    ("entrance_enabled", "maybe"), ("exit_enabled", "1"),
+    ("exit_enabled", ""),
+])
+def test_project_rejects_invalid_boundary_setting_values(tmp_path, project_state, parameter, value):
+    path = tmp_path / "invalid-boundary.csv"
+    csv_io.write_project(path, project_state)
+    rows = _read_rows(path)
+    for row in rows[1:]:
+        if row[0] == "settings" and row[1] == "inlet" and row[4] == parameter:
+            row[5] = value
+    _write_rows(path, rows)
+    with pytest.raises(ValueError, match="CSV line"):
+        csv_io.read_project(path)
+
+
+@pytest.mark.parametrize("parameter", ["entrance_enabled", "entrance_coefficient", "exit_enabled", "exit_coefficient"])
+@pytest.mark.parametrize("mutation", ["duplicate", "wrong_unit"])
+def test_project_rejects_duplicate_boundary_settings_and_wrong_units(tmp_path, project_state, parameter, mutation):
+    path = tmp_path / "invalid-boundary-schema.csv"
+    csv_io.write_project(path, project_state)
+    rows = _read_rows(path)
+    row = next(row for row in rows[1:] if row[0] == "settings" and row[1] == "outlet" and row[4] == parameter)
+    if mutation == "duplicate":
+        rows.append(row.copy())
+    else:
+        row[6] = "m"
+    _write_rows(path, rows)
+    with pytest.raises(ValueError, match="CSV line"):
+        csv_io.read_project(path)
+
+
+@pytest.mark.parametrize("parameter,value", [
+    ("entrance_coefficient", ""), ("exit_coefficient", "-1"),
+    ("exit_coefficient", "Infinity"), ("entrance_enabled", "yes"),
+])
+def test_invalid_boundary_export_preserves_existing_file(tmp_path, project_state, parameter, value):
+    path = tmp_path / "existing-boundary.csv"
+    path.write_text("previous export", encoding="utf-8")
+    project_state["outlet"][parameter] = value
+    with pytest.raises(ValueError):
+        csv_io.write_project(path, project_state)
+    assert path.read_text(encoding="utf-8") == "previous export"

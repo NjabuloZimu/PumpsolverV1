@@ -2809,6 +2809,16 @@
         "windowModality",
         "windowTitle"
       ],
+      "checkBoxEntranceLoss": [
+        "checked",
+        "geometry",
+        "text"
+      ],
+      "checkBoxExitLoss": [
+        "checked",
+        "geometry",
+        "text"
+      ],
       "checkBoxLossesCal": [
         "geometry",
         "objectName",
@@ -2830,6 +2840,20 @@
       "groupBox": [
         "geometry",
         "objectName",
+        "title"
+      ],
+      "groupBoxBoundaryLosses": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "title"
+      ],
+      "groupBoxEntranceBoundary": [
+        "geometry",
+        "title"
+      ],
+      "groupBoxExitBoundary": [
+        "geometry",
         "title"
       ],
       "groupBox_2": [
@@ -2867,14 +2891,60 @@
         "contentsMargins",
         "objectName"
       ],
+      "labelBoundaryDescription": [
+        "geometry",
+        "text",
+        "wordWrap"
+      ],
       "labelBoundaryEquation": [
         "geometry",
         "objectName",
         "text"
       ],
+      "labelBoundaryEquationSummary": [
+        "geometry",
+        "text",
+        "wordWrap"
+      ],
       "labelBoundaryEquation_2": [
         "geometry",
         "objectName",
+        "text"
+      ],
+      "labelEntranceCoefficient": [
+        "geometry",
+        "text"
+      ],
+      "labelEntranceConnection": [
+        "geometry",
+        "text"
+      ],
+      "labelEntranceLoss": [
+        "geometry",
+        "text"
+      ],
+      "labelEntranceReference": [
+        "font",
+        "font:pointSize",
+        "geometry",
+        "text"
+      ],
+      "labelExitCoefficient": [
+        "geometry",
+        "text"
+      ],
+      "labelExitConnection": [
+        "geometry",
+        "text"
+      ],
+      "labelExitLoss": [
+        "geometry",
+        "text"
+      ],
+      "labelExitReference": [
+        "font",
+        "font:pointSize",
+        "geometry",
         "text"
       ],
       "labelOverallSummary": [
@@ -3019,6 +3089,26 @@
         "geometry",
         "objectName"
       ],
+      "lineEditEntranceCoefficient": [
+        "geometry",
+        "text",
+        "toolTip"
+      ],
+      "lineEditEntranceLoss": [
+        "geometry",
+        "placeholderText",
+        "readOnly"
+      ],
+      "lineEditExitCoefficient": [
+        "geometry",
+        "text",
+        "toolTip"
+      ],
+      "lineEditExitLoss": [
+        "geometry",
+        "placeholderText",
+        "readOnly"
+      ],
       "lineEditFlowType": [
         "enabled",
         "geometry",
@@ -3057,7 +3147,8 @@
       "lineEditViscosity": [
         "enabled",
         "geometry",
-        "objectName"
+        "objectName",
+        "text"
       ],
       "pushButtonAddFitting": [
         "cursor",
@@ -3078,6 +3169,14 @@
         "iconSize",
         "objectName",
         "text"
+      ],
+      "pushButtonBoundaryInfo": [
+        "flat",
+        "geometry",
+        "icon",
+        "iconSize",
+        "text",
+        "toolTip"
       ],
       "pushButtonClose": [
         "enabled",
@@ -3227,8 +3326,8 @@
         "geometry": [
           0,
           0,
-          940,
-          778
+          1260,
+          800
         ],
         "name": "LineLossesDesigner",
         "parent": "",
@@ -3238,6 +3337,38 @@
           "windowModality": 2,
           "windowTitle": "Dialog"
         }
+      },
+      "checkBoxEntranceLoss": {
+        "class": "QCheckBox",
+        "geometry": [
+          12,
+          24,
+          245,
+          20
+        ],
+        "name": "checkBoxEntranceLoss",
+        "parent": "groupBoxEntranceBoundary",
+        "state": {
+          "checked": true,
+          "text": "Include entrance loss"
+        },
+        "text": "Include entrance loss"
+      },
+      "checkBoxExitLoss": {
+        "class": "QCheckBox",
+        "geometry": [
+          12,
+          24,
+          245,
+          20
+        ],
+        "name": "checkBoxExitLoss",
+        "parent": "groupBoxExitBoundary",
+        "state": {
+          "checked": false,
+          "text": "Include exit loss"
+        },
+        "text": "Include exit loss"
       },
       "checkBoxLossesCal": {
         "class": "QCheckBox",
@@ -3310,6 +3441,54 @@
           "title": "Pipe Expansions / Contractions"
         },
         "title": "Pipe Expansions / Contractions"
+      },
+      "groupBoxBoundaryLosses": {
+        "class": "QGroupBox",
+        "font": {
+          "pointSize": 9.0
+        },
+        "geometry": [
+          950,
+          40,
+          291,
+          581
+        ],
+        "name": "groupBoxBoundaryLosses",
+        "parent": "LineLossesDesigner",
+        "state": {
+          "title": "Entrance / exit losses"
+        },
+        "title": "Entrance / exit losses"
+      },
+      "groupBoxEntranceBoundary": {
+        "class": "QGroupBox",
+        "geometry": [
+          10,
+          90,
+          271,
+          180
+        ],
+        "name": "groupBoxEntranceBoundary",
+        "parent": "groupBoxBoundaryLosses",
+        "state": {
+          "title": "Entrance"
+        },
+        "title": "Entrance"
+      },
+      "groupBoxExitBoundary": {
+        "class": "QGroupBox",
+        "geometry": [
+          10,
+          290,
+          271,
+          180
+        ],
+        "name": "groupBoxExitBoundary",
+        "parent": "groupBoxBoundaryLosses",
+        "state": {
+          "title": "Exit"
+        },
+        "title": "Exit"
       },
       "groupBox_2": {
         "class": "QGroupBox",
@@ -3397,7 +3576,7 @@
         "geometry": [
           490,
           630,
-          441,
+          751,
           111
         ],
         "name": "groupBox_7",
@@ -3412,6 +3591,24 @@
         "class": "QHBoxLayout",
         "name": "horizontalLayout",
         "parent": "layoutWidget"
+      },
+      "labelBoundaryDescription": {
+        "class": "QLabel",
+        "geometry": [
+          12,
+          24,
+          220,
+          48
+        ],
+        "name": "labelBoundaryDescription",
+        "parent": "groupBoxBoundaryLosses",
+        "pixmapSize": null,
+        "state": {
+          "text": "Tank connections at the first and last pipe segments.",
+          "wordWrap": true
+        },
+        "text": "Tank connections at the first and last pipe segments.",
+        "wordWrap": true
       },
       "labelBoundaryEquation": {
         "class": "QLabel",
@@ -3430,6 +3627,24 @@
         },
         "text": "Transition Equation"
       },
+      "labelBoundaryEquationSummary": {
+        "class": "QLabel",
+        "geometry": [
+          12,
+          492,
+          267,
+          64
+        ],
+        "name": "labelBoundaryEquationSummary",
+        "parent": "groupBoxBoundaryLosses",
+        "pixmapSize": null,
+        "state": {
+          "text": "<p>h<sub>L</sub> = K V<sup>2</sup> / (2g)</p><p>Enable each tank connection independently.</p>",
+          "wordWrap": true
+        },
+        "text": "<p>h<sub>L</sub> = K V<sup>2</sup> / (2g)</p><p>Enable each tank connection independently.</p>",
+        "wordWrap": true
+      },
       "labelBoundaryEquation_2": {
         "class": "QLabel",
         "geometry": [
@@ -3443,9 +3658,143 @@
         "pixmapSize": null,
         "state": {
           "objectName": "labelBoundaryEquation_2",
-          "text": "Transition Equation"
+          "text": "Equation:"
         },
-        "text": "Transition Equation"
+        "text": "Equation:"
+      },
+      "labelEntranceCoefficient": {
+        "class": "QLabel",
+        "geometry": [
+          12,
+          80,
+          140,
+          20
+        ],
+        "name": "labelEntranceCoefficient",
+        "parent": "groupBoxEntranceBoundary",
+        "pixmapSize": null,
+        "state": {
+          "text": "Coefficient K (–):"
+        },
+        "text": "Coefficient K (–):"
+      },
+      "labelEntranceConnection": {
+        "class": "QLabel",
+        "geometry": [
+          12,
+          50,
+          245,
+          20
+        ],
+        "name": "labelEntranceConnection",
+        "parent": "groupBoxEntranceBoundary",
+        "pixmapSize": null,
+        "state": {
+          "text": "Tank → first pipe segment"
+        },
+        "text": "Tank → first pipe segment"
+      },
+      "labelEntranceLoss": {
+        "class": "QLabel",
+        "geometry": [
+          12,
+          114,
+          140,
+          20
+        ],
+        "name": "labelEntranceLoss",
+        "parent": "groupBoxEntranceBoundary",
+        "pixmapSize": null,
+        "state": {
+          "text": "Head loss (m):"
+        },
+        "text": "Head loss (m):"
+      },
+      "labelEntranceReference": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 8.0
+        },
+        "geometry": [
+          12,
+          148,
+          245,
+          18
+        ],
+        "name": "labelEntranceReference",
+        "parent": "groupBoxEntranceBoundary",
+        "pixmapSize": null,
+        "state": {
+          "text": "Reference: first-segment velocity"
+        },
+        "text": "Reference: first-segment velocity"
+      },
+      "labelExitCoefficient": {
+        "class": "QLabel",
+        "geometry": [
+          12,
+          80,
+          140,
+          20
+        ],
+        "name": "labelExitCoefficient",
+        "parent": "groupBoxExitBoundary",
+        "pixmapSize": null,
+        "state": {
+          "text": "Coefficient K (–):"
+        },
+        "text": "Coefficient K (–):"
+      },
+      "labelExitConnection": {
+        "class": "QLabel",
+        "geometry": [
+          12,
+          50,
+          245,
+          20
+        ],
+        "name": "labelExitConnection",
+        "parent": "groupBoxExitBoundary",
+        "pixmapSize": null,
+        "state": {
+          "text": "Last pipe segment → tank"
+        },
+        "text": "Last pipe segment → tank"
+      },
+      "labelExitLoss": {
+        "class": "QLabel",
+        "geometry": [
+          12,
+          114,
+          140,
+          20
+        ],
+        "name": "labelExitLoss",
+        "parent": "groupBoxExitBoundary",
+        "pixmapSize": null,
+        "state": {
+          "text": "Head loss (m):"
+        },
+        "text": "Head loss (m):"
+      },
+      "labelExitReference": {
+        "class": "QLabel",
+        "font": {
+          "pointSize": 8.0
+        },
+        "geometry": [
+          12,
+          148,
+          245,
+          18
+        ],
+        "name": "labelExitReference",
+        "parent": "groupBoxExitBoundary",
+        "pixmapSize": null,
+        "state": {
+          "text": "Reference: last-segment velocity"
+        },
+        "text": "Reference: last-segment velocity"
       },
       "labelOverallSummary": {
         "class": "QLabel",
@@ -3455,7 +3804,7 @@
         "geometry": [
           10,
           20,
-          421,
+          731,
           81
         ],
         "name": "labelOverallSummary",
@@ -3484,9 +3833,9 @@
         "pixmapSize": null,
         "state": {
           "objectName": "label_10",
-          "text": "Reynold's Number:"
+          "text": "Reynolds number:"
         },
-        "text": "Reynold's Number:"
+        "text": "Reynolds number:"
       },
       "label_11": {
         "class": "QLabel",
@@ -3518,16 +3867,16 @@
         "pixmapSize": null,
         "state": {
           "objectName": "label_12",
-          "text": "Cross Sectional Velocity:"
+          "text": "Velocity:"
         },
-        "text": "Cross Sectional Velocity:"
+        "text": "Velocity:"
       },
       "label_13": {
         "class": "QLabel",
         "geometry": [
           290,
           150,
-          21,
+          31,
           16
         ],
         "name": "label_13",
@@ -3555,17 +3904,17 @@
         "pixmapSize": null,
         "state": {
           "objectName": "label_14",
-          "text": "<html><head/><body><p>Kg/m<span style=\" vertical-align:super;\">3</span></p></body></html>"
+          "text": "<html><head/><body><p>kg/m<span style=\" vertical-align:super;\">3</span></p></body></html>"
         },
-        "text": "<html><head/><body><p>Kg/m<span style=\" vertical-align:super;\">3</span></p></body></html>"
+        "text": "<html><head/><body><p>kg/m<span style=\" vertical-align:super;\">3</span></p></body></html>"
       },
       "label_15": {
         "class": "QLabel",
         "geometry": [
           10,
           60,
-          47,
-          16
+          140,
+          21
         ],
         "name": "label_15",
         "parent": "groupBox_4",
@@ -3581,17 +3930,17 @@
         "geometry": [
           10,
           90,
-          101,
-          16
+          140,
+          21
         ],
         "name": "label_16",
         "parent": "groupBox_4",
         "pixmapSize": null,
         "state": {
           "objectName": "label_16",
-          "text": "Volumetric Flowrate:"
+          "text": "Volumetric flow:"
         },
-        "text": "Volumetric Flowrate:"
+        "text": "Volumetric flow:"
       },
       "label_17": {
         "class": "QLabel",
@@ -3720,8 +4069,8 @@
         "geometry": [
           10,
           30,
-          51,
-          16
+          140,
+          21
         ],
         "name": "label_3",
         "parent": "groupBox_4",
@@ -3737,17 +4086,17 @@
         "geometry": [
           10,
           30,
-          121,
-          16
+          155,
+          21
         ],
         "name": "label_4",
         "parent": "groupBox_6",
         "pixmapSize": null,
         "state": {
           "objectName": "label_4",
-          "text": "Darcy's Friction Factor:"
+          "text": "Darcy friction factor:"
         },
-        "text": "Darcy's Friction Factor:"
+        "text": "Darcy friction factor:"
       },
       "label_5": {
         "class": "QLabel",
@@ -3762,16 +4111,16 @@
         "pixmapSize": null,
         "state": {
           "objectName": "label_5",
-          "text": "Centipoise"
+          "text": "cP"
         },
-        "text": "Centipoise"
+        "text": "cP"
       },
       "label_6": {
         "class": "QLabel",
         "geometry": [
           290,
           30,
-          21,
+          31,
           16
         ],
         "name": "label_6",
@@ -3788,7 +4137,7 @@
         "geometry": [
           10,
           60,
-          141,
+          155,
           21
         ],
         "name": "label_7",
@@ -3796,9 +4145,9 @@
         "pixmapSize": null,
         "state": {
           "objectName": "label_7",
-          "text": "Relative Pipe Roughness k/d:"
+          "text": "Relative roughness k/D:"
         },
-        "text": "Relative Pipe Roughness k/d:"
+        "text": "Relative roughness k/D:"
       },
       "label_8": {
         "class": "QLabel",
@@ -3822,7 +4171,7 @@
         "geometry": [
           10,
           30,
-          131,
+          120,
           21
         ],
         "name": "label_9",
@@ -3830,17 +4179,17 @@
         "pixmapSize": null,
         "state": {
           "objectName": "label_9",
-          "text": "Roughness Parameter,  k:"
+          "text": "Roughness k:"
         },
-        "text": "Roughness Parameter,  k:"
+        "text": "Roughness k:"
       },
       "labelinstructions": {
         "class": "QLabel",
         "geometry": [
           20,
           20,
-          391,
-          51
+          360,
+          54
         ],
         "name": "labelinstructions",
         "parent": "groupBox",
@@ -3857,7 +4206,7 @@
       "layoutWidget": {
         "class": "QWidget",
         "geometry": [
-          330,
+          465,
           750,
           321,
           25
@@ -3899,6 +4248,70 @@
         "state": {
           "enabled": false,
           "objectName": "lineEditDensity"
+        },
+        "text": ""
+      },
+      "lineEditEntranceCoefficient": {
+        "class": "QLineEdit",
+        "geometry": [
+          160,
+          78,
+          94,
+          22
+        ],
+        "name": "lineEditEntranceCoefficient",
+        "parent": "groupBoxEntranceBoundary",
+        "state": {
+          "text": "0.5",
+          "toolTip": "Dimensionless loss coefficient referenced to the first segment velocity"
+        },
+        "text": "0.5"
+      },
+      "lineEditEntranceLoss": {
+        "class": "QLineEdit",
+        "geometry": [
+          160,
+          112,
+          94,
+          22
+        ],
+        "name": "lineEditEntranceLoss",
+        "parent": "groupBoxEntranceBoundary",
+        "state": {
+          "placeholderText": "—",
+          "readOnly": true
+        },
+        "text": ""
+      },
+      "lineEditExitCoefficient": {
+        "class": "QLineEdit",
+        "geometry": [
+          160,
+          78,
+          94,
+          22
+        ],
+        "name": "lineEditExitCoefficient",
+        "parent": "groupBoxExitBoundary",
+        "state": {
+          "text": "1.0",
+          "toolTip": "Dimensionless loss coefficient referenced to the last segment velocity"
+        },
+        "text": "1.0"
+      },
+      "lineEditExitLoss": {
+        "class": "QLineEdit",
+        "geometry": [
+          160,
+          112,
+          94,
+          22
+        ],
+        "name": "lineEditExitLoss",
+        "parent": "groupBoxExitBoundary",
+        "state": {
+          "placeholderText": "—",
+          "readOnly": true
         },
         "text": ""
       },
@@ -4026,9 +4439,10 @@
         "parent": "groupBox_4",
         "state": {
           "enabled": false,
-          "objectName": "lineEditViscosity"
+          "objectName": "lineEditViscosity",
+          "text": "0.89"
         },
-        "text": ""
+        "text": "0.89"
       },
       "pushButtonAddFitting": {
         "class": "QPushButton",
@@ -4083,6 +4497,32 @@
           ],
           "objectName": "pushButtonAddSegment",
           "text": ""
+        },
+        "text": ""
+      },
+      "pushButtonBoundaryInfo": {
+        "class": "QPushButton",
+        "geometry": [
+          245,
+          24,
+          31,
+          31
+        ],
+        "iconSize": [
+          32,
+          32
+        ],
+        "name": "pushButtonBoundaryInfo",
+        "parent": "groupBoxBoundaryLosses",
+        "state": {
+          "flat": true,
+          "icon": true,
+          "iconSize": [
+            32,
+            32
+          ],
+          "text": "",
+          "toolTip": "Entrance and exit equations, reference velocities and coefficient guidance"
         },
         "text": ""
       },
@@ -4464,11 +4904,11 @@
         },
         "table": {
           "columns": 2,
-          "headerDefault": 147,
+          "headerDefault": 130,
           "headerMinimum": 49,
           "headers": [
-            "Segment Length (m)",
-            "Segment Diameter (cm)"
+            "Length (m)",
+            "Diameter (cm)"
           ],
           "horizontalHeaderHidden": false,
           "rows": 0,
@@ -4479,7 +4919,7 @@
         "class": "QToolButton",
         "geometry": [
           390,
-          60,
+          48,
           25,
           19
         ],

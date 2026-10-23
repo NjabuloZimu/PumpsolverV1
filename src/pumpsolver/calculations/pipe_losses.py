@@ -1,8 +1,8 @@
 """Pipe physics without Qt. Design inputs use cm, m, mm, cP and m3/h.
 
 Unit conversion is local; neither input collections nor instance settings are
-changed by a calculation. Correlations and infinite-tank assumptions are the
-application's existing ones, with the documented indexing/call defects fixed.
+changed by a calculation. Pipe transition correlations remain the application's
+existing ones; entrance and exit losses use independently selected coefficients.
 """
 
 from dataclasses import dataclass
@@ -19,7 +19,7 @@ class CalculationError(ValueError):
 def _number(value, name, *, positive=False, nonnegative=False):
     try:
         number = float(value)
-    except (TypeError, ValueError) as error:
+    except (TypeError, ValueError, OverflowError) as error:
         raise CalculationError(f"{name} must be a number.") from error
     if not isfinite(number):
         raise CalculationError(f"{name} must be finite.")
@@ -43,7 +43,12 @@ class SegmentLossResult:
     major_loss: float
     fittings_loss: float
     transition_loss: float
-    boundary_loss: float
+    entrance_loss: float
+    exit_loss: float
+
+    @property
+    def boundary_loss(self):
+        return self.entrance_loss + self.exit_loss
 
     @property
     def minor_loss(self):
@@ -91,6 +96,14 @@ class PipeLossResult:
     def boundary_loss(self):
         return sum(item.boundary_loss for item in self.segments)
 
+    @property
+    def entrance_loss(self):
+        return sum(item.entrance_loss for item in self.segments)
+
+    @property
+    def exit_loss(self):
+        return sum(item.exit_loss for item in self.segments)
+
 
 class PipeLossCalculator:
     """Explicit pipe side and equation; instance helper viscosity is in Pa.s."""
@@ -111,6 +124,14 @@ class PipeLossCalculator:
         if equation not in ("Moody", "R.J.S Pigott"):
             raise CalculationError("Choose Moody or R.J.S Pigott for the transition equation.")
         return equation
+
+    @staticmethod
+    def _boundary_enabled(value, default, name):
+        if value is None:
+            return default
+        if not isinstance(value, bool):
+            raise CalculationError(f'{name} must be True or False.')
+        return value
 
     @staticmethod
     def con_exp_fit_loss(coeff, velocity):
@@ -228,9 +249,15 @@ class PipeLossCalculator:
         return result
 
     def calculate(self, segments, fittings, roughness, viscosity, density, volumetric,
-                  *, side=None, transition_equation=None):
+                  *, side=None, transition_equation=None,
+                  entrance_enabled=None, entrance_coefficient=0.5,
+                  exit_enabled=None, exit_coefficient=1.0):
         pipe_side = self._side(self.side if side is None else side)
         equation = self._equation(self.transition_equation if transition_equation is None else transition_equation)
+        use_entrance = self._boundary_enabled(entrance_enabled, pipe_side == 'inlet', 'Entrance enabled')
+        use_exit = self._boundary_enabled(exit_enabled, pipe_side == 'outlet', 'Exit enabled')
+        entrance_k = _number(entrance_coefficient, 'Entrance coefficient', nonnegative=True)
+        exit_k = _number(exit_coefficient, 'Exit coefficient', nonnegative=True)
         dynamic_viscosity = _number(viscosity, "Viscosity (cP)", positive=True) / 1000
         fluid_density = _number(density, "Density (kg/m3)", positive=True)
         flow = _number(volumetric, "Flow rate (m3/h)", nonnegative=True) / 3600
@@ -262,7 +289,7 @@ class PipeLossCalculator:
             absolute_roughness = roughness_by_segment[index]
             relative_roughness = self.relativeRoughness(absolute_roughness, diameter)
             friction = self.darcy_friction_factor(reynolds, relative_roughness, absolute_roughness, equation)
-            transition_loss = boundary_loss = 0.0
+            transition_loss = entrance_loss = exit_loss = 0.0
             if position > 0:
                 previous_diameter = pipes[position - 1][2]
                 if diameter > previous_diameter:
@@ -273,15 +300,16 @@ class PipeLossCalculator:
                     contractions += 1
                     transition_loss = self.con_exp_fit_loss(
                         self.contraction_coeff(diameter, previous_diameter, reynolds), velocity)
-            # No negative-index wrap from an outlet's first to last segment.
-            if pipe_side == "inlet" and position == 0:
-                boundary_loss = self.con_exp_fit_loss(0.1 if reynolds < 2100 else 0.4, velocity)
-            elif pipe_side == "outlet" and position == len(pipes) - 1:
-                boundary_loss = self.con_exp_fit_loss(1.0, velocity)
+            # Entrance and exit are independent; both apply once when a single
+            # segment is simultaneously the first and last segment.
+            if use_entrance and position == 0:
+                entrance_loss = self.con_exp_fit_loss(entrance_k, velocity)
+            if use_exit and position == len(pipes) - 1:
+                exit_loss = self.con_exp_fit_loss(exit_k, velocity)
             results.append(SegmentLossResult(
                 index, length, diameter, velocity, reynolds, relative_roughness, friction,
                 self._flow_type(reynolds, relative_roughness, absolute_roughness, equation),
                 self.darcy_loss_cal(friction, velocity, length, diameter),
                 self.con_exp_fit_loss(fitting_coefficients.get(index, 0.0), velocity),
-                transition_loss, boundary_loss))
+                transition_loss, entrance_loss, exit_loss))
         return PipeLossResult(pipe_side, equation, tuple(results), contractions, expansions)

@@ -55,11 +55,11 @@ The `safety` CSV key represents an additive safety-head allowance in metres in t
 
 The calculation modules import without Qt and can be exercised independently of the desktop application. Pipe calculations return structured results; the pipe designer owns its UI once and displays those results.
 
-The designer shows the selected segment's major pipe-friction loss and complete minor loss (fittings, diameter changes, and the assumed tank entrance or exit). The overall panel sums every segment and shows major + minor = total; **Close** copies that total to Properties. This classification follows the [Hydraulic Institute's loss definitions](https://datatool.pumps.org/pump-fundamentals/sys-curves).
+The designer shows the selected segment's major pipe-friction loss and complete minor loss (fittings, diameter changes, and enabled entrance/exit losses). A dedicated panel shows entrance and exit switches, editable dimensionless K coefficients, and each end's calculated head loss in metres. The overall panel sums every segment and shows major + minor = total; **Close** copies that total to Properties. This classification follows the [Hydraulic Institute's loss definitions](https://datatool.pumps.org/pump-fundamentals/sys-curves).
 
 ## Editing and saving data
 
-Use **File > Save** to export a complete project as CSV and **File > Open** to restore it. A project includes main inputs/results plus both designers' segments, fittings, roughness, viscosity, transition equation and enabled state. A disabled designer's data is preserved.
+Use **File > Save** to export a complete project as CSV and **File > Open** to restore it. A project includes main inputs/results plus both designers' segments, fittings, roughness, viscosity, transition equation, entrance/exit coefficients and switches, and enabled state. A disabled designer's data is preserved.
 
 The pipe designer's three import/export button pairs use separate segment, fitting and roughness CSV tables. Columns have a fixed order and each cell contains one editable value. Text containing commas or quotes is quoted normally. Files are UTF-8 CSV with a header and a BOM for spreadsheet compatibility.
 
@@ -143,7 +143,11 @@ The calculation extraction includes targeted corrections to the existing impleme
 - Laminar flow uses `64/Re` for rough as well as smooth pipes, and zero flow produces zero loss.
 - Complete calculations reject invalid geometry, viscosity or density with a clear input error; units are converted locally without modifying saved inputs.
 
-The existing Moody/R.J.S. Pigott correlation choices, contraction/expansion coefficient formulas and tank-boundary assumptions are retained. The inlet includes an entrance loss (`K = 0.1` for laminar flow, otherwise `0.4`); the outlet includes a final exit loss (`K = 1`). These assumptions should match the system being analysed. The designer does not yet offer selectable tank-boundary models, slurry/particle models or a general unit-conversion interface.
+The existing Moody/R.J.S. Pigott correlation choices and contraction/expansion coefficient formulas are retained. New designs start with viscosity **0.89 cP**. Entrance and exit losses use **hL = K V²/(2g)**: entrance uses the first segment's velocity, exit the last segment's velocity. The inlet defaults to entrance on / exit off; the outlet defaults to entrance off / exit on. Default coefficients are **K = 0.5** for entrance and **K = 1.0** for exit. Both switches are independent and coefficients accept finite values of zero or greater, including scientific notation.
+
+The new information icon explains the equation, pressure-drop equivalent, velocity references, approximate entrance coefficients for different geometries, and exit into a large tank. It links the [USACE HEC entrance guidance](https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.1/modeling-culverts/culvert-data-and-coefficients/entrance-loss-coefficient), [Ansys minor-loss handout](https://innovationspace.ansys.com/courses/wp-content/uploads/sites/5/2020/09/Lesson-4-Minor-Losses-in-Pipes-and-Ducts-Handout.pdf), and [Fluids correlation documentation](https://fluids.readthedocs.io/fluids.fittings.html#fluids.fittings.entrance_distance). Select coefficients and enabled boundaries for the actual geometry; the guide values are approximations. Avoid adding the same entrance or exit again as a fitting. The designer does not offer slurry/particle models or a general unit-conversion interface.
+
+Older CSV files without entrance/exit settings receive these new defaults; their saved main losses remain unchanged until recalculation. For earlier inlet boundary results, enter the previous coefficient explicitly (0.1 for laminar flow or 0.4 otherwise). An explicitly saved viscosity, including a blank unfinished value, is preserved.
 
 ## Version and author
 

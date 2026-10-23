@@ -103,7 +103,7 @@ def test_recovered_forms_preserve_authored_controls(qt_app, module_name):
 
 def test_all_forms_and_resource_sources_are_in_repository():
     forms = list((GUI / "forms").glob("*.ui"))
-    assert len(forms) == 10
+    assert len(forms) == 11
     for form in forms:
         source = ET.parse(form)
         for include in source.findall(".//resources/include"):
@@ -161,6 +161,37 @@ def test_windows_application_icon_loads_at_packaging_sizes(qt_app):
     assert not icon.pixmap(256, 256).isNull()
 
 
+def test_boundary_sidebar_preserves_existing_tables_and_independent_controls(qt_app):
+    from pumpsolver.gui.generated.ui_pipe_designer import Ui_LineLossesDesigner
+
+    window = QDialog()
+    ui = Ui_LineLossesDesigner()
+    ui.setupUi(window)
+    try:
+        assert (window.width(), window.height()) == (1260, 800)
+        assert ui.tableWidgetFittings.size() == QSize(321, 241)
+        assert ui.tableWidgetPipeSegment.size() == QSize(391, 321)
+        assert not ui.labelinstructions.geometry().intersects(ui.toolButtonHelp.geometry())
+        assert ui.label_5.text() == "cP"
+        assert ui.groupBoxBoundaryLosses.x() > ui.groupBox_5.geometry().right()
+        assert window.rect().contains(ui.groupBoxBoundaryLosses.geometry())
+        assert ui.lineEditViscosity.text() == "0.89"
+        assert ui.lineEditEntranceCoefficient.text() == "0.5"
+        assert ui.lineEditExitCoefficient.text() == "1.0"
+        assert ui.lineEditEntranceLoss.isReadOnly()
+        assert ui.lineEditExitLoss.isReadOnly()
+        assert not ui.pushButtonBoundaryInfo.icon().isNull()
+        entrance, exit_ = ui.checkBoxEntranceLoss, ui.checkBoxExitLoss
+        assert entrance.isChecked() and not exit_.isChecked()
+        exit_.click()
+        assert entrance.isChecked() and exit_.isChecked()
+        entrance.click()
+        assert not entrance.isChecked() and exit_.isChecked()
+    finally:
+        window.close()
+        window.deleteLater()
+
+
 @pytest.mark.parametrize("populated", [False, True])
 def test_designer_headings_and_units_remain_visible_after_open_and_reopen(qt_app, project_state, populated):
     from pumpsolver.gui.pipe_designer import LossesCal
@@ -179,7 +210,7 @@ def test_designer_headings_and_units_remain_visible_after_open_and_reopen(qt_app
                 segments.selectRow(0)
                 qt_app.processEvents()
             for table, headings, size in (
-                (segments, ["Segment Length (m)", "Segment Diameter (cm)"], (391, 321)),
+                (segments, ["Length (m)", "Diameter (cm)"], (391, 321)),
                 (fittings, ["Fitting Type", "Loss Factor"], (321, 241)),
             ):
                 assert [table.horizontalHeaderItem(i).text() for i in range(2)] == headings

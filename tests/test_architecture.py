@@ -78,7 +78,8 @@ def test_source_launcher_runs_resources_csv_and_calculations_from_another_direct
     assert report["designer_tables"] == 2
     assert report["designer_headers"] is True
     assert report["loss_reconciliation"] is True
-    assert report["dialogs"] == 9
+    assert report["dialogs"] == 10
+    assert report["boundary_settings"] is True
     assert report["pump_head_m"] == pytest.approx(25.25)
     assert report["pipe_loss_m"] > 0
 
@@ -135,6 +136,8 @@ def _active_inlet_state(project_state):
         'fittings': [],
         'roughness': [{'Line Segment': 1, 'Segment Roughness': 'Smooth Pipe'}],
         'viscosity': '1', 'transition_equation': 'Moody',
+        'entrance_enabled': True, 'entrance_coefficient': '0.5',
+        'exit_enabled': False, 'exit_coefficient': '1.0',
     }
     return state
 

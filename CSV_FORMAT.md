@@ -14,6 +14,10 @@ parameters,,,,in_dia,10,cm
 parameters,,,,designer_status_in,False,
 settings,inlet,,,viscosity,1.005,cP
 settings,inlet,,,transition_equation,Moody,
+settings,inlet,,,entrance_enabled,True,
+settings,inlet,,,entrance_coefficient,0.5,
+settings,inlet,,,exit_enabled,False,
+settings,inlet,,,exit_coefficient,1.0,
 segments,inlet,1,,Segment Length (m),2.5,m
 segments,inlet,1,,Segment Diameter (cm),10,cm
 fittings,inlet,1,1,Fitting Type,"Valve, open",
@@ -39,7 +43,20 @@ The `parameters` section requires these fields:
 | `gravity` | Gravitational acceleration | m/s^2 |
 | `designer_status_in`, `designer_status_out` | Designer enabled state | `True` or `False`, empty unit |
 
-Main numeric values may be `Unspecified` or blank; blanks restore as `Unspecified`. Designer numeric values may be blank for an unfinished design. Numbers must be finite. Boolean text accepts `True`/`False` in any letter case. The two sides retain their own viscosity (`cP`) and transition equation (`Moody` or `R.J.S Pigott`); omitted settings default to blank viscosity and `Moody`. Empty designs are represented by the absence of their segment, fitting, and roughness rows.
+Main numeric values may be `Unspecified` or blank; blanks restore as `Unspecified`. Designer geometry and fluid values may be blank for an unfinished design. Numbers must be finite. Boolean text accepts `True`/`False` in any letter case. Empty designs are represented by the absence of their segment, fitting, and roughness rows.
+
+Each side retains these independent `settings` rows:
+
+| Parameter | Value | Unit | Default when omitted |
+| --- | --- | --- | --- |
+| `viscosity` | Dynamic viscosity | `cP` | `0.89` |
+| `transition_equation` | `Moody` or `R.J.S Pigott` | empty | `Moody` |
+| `entrance_enabled` | `True` or `False` | empty | inlet `True`, outlet `False` |
+| `entrance_coefficient` | Finite number, zero or greater | empty (dimensionless) | `0.5` |
+| `exit_enabled` | `True` or `False` | empty | inlet `False`, outlet `True` |
+| `exit_coefficient` | Finite number, zero or greater | empty (dimensionless) | `1.0` |
+
+Coefficients are required numbers when their rows are present, even when switched off; their values remain saved for later use. An explicitly blank saved viscosity stays blank. Older projects without the new settings receive the defaults above. Opening a file preserves saved main loss values; recalculating in the designer uses the restored settings and may change losses from older calculations. Earlier versions assumed inlet K = 0.1 for laminar flow or 0.4 otherwise. Enter that coefficient explicitly to reproduce those earlier boundary losses.
 
 The `safety` value is an additive head allowance in metres in the pump and NPSH equations. Earlier project CSV files with an empty `Unit` cell for `safety` remain readable; new exports write `m` without changing the value. All other unit requirements remain strict.
 
