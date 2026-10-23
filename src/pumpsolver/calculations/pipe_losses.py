@@ -46,8 +46,13 @@ class SegmentLossResult:
     boundary_loss: float
 
     @property
+    def minor_loss(self):
+        """All local losses: fittings, diameter changes, and tank boundaries."""
+        return self.fittings_loss + self.transition_loss + self.boundary_loss
+
+    @property
     def total_loss(self):
-        return self.major_loss + self.fittings_loss + self.transition_loss + self.boundary_loss
+        return self.major_loss + self.minor_loss
 
 
 @dataclass(frozen=True)
@@ -69,6 +74,10 @@ class PipeLossResult:
     @property
     def major_loss(self):
         return sum(item.major_loss for item in self.segments)
+
+    @property
+    def minor_loss(self):
+        return sum(item.minor_loss for item in self.segments)
 
     @property
     def fittings_loss(self):

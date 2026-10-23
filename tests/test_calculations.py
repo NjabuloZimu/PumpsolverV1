@@ -116,7 +116,63 @@ def test_zero_flow_has_zero_losses_instead_of_dividing_by_reynolds():
     result = PipeLossCalculator().calculate(
         *pipe_inputs(), viscosity=1, density=1000, volumetric=0)
     assert result.total_loss == 0
+    assert result.minor_loss == result.segments[0].minor_loss == 0
     assert result.segments[0].flow_type == 'No flow'
+
+
+def test_screenshot_single_pipe_minor_includes_entrance_and_reconciles_total():
+    # User's one-metre, 12-cm inlet: existing smooth-pipe correlation and
+    # infinitely-large-tank entrance coefficient K=0.4 remain unchanged.
+    result = PipeLossCalculator(side='inlet').calculate(
+        *pipe_inputs((12,), (1,)), viscosity=0.89, density=998, volumetric=1283.64298)
+    segment = result.segments[0]
+    assert segment.major_loss == pytest.approx(2.9405673301426964, rel=1e-12)
+    assert segment.fittings_loss == segment.transition_loss == 0
+    assert segment.boundary_loss == pytest.approx(20.271602038465968, rel=1e-12)
+    assert segment.minor_loss == pytest.approx(20.271602038465968, rel=1e-12)
+    assert segment.total_loss == pytest.approx(23.212169368608663, rel=1e-12)
+    assert result.minor_loss == segment.minor_loss
+    assert result.total_loss == pytest.approx(result.major_loss + result.minor_loss)
+
+
+@pytest.mark.parametrize('side', ['inlet', 'outlet'])
+@pytest.mark.parametrize('flow', [36, 0])
+def test_multisegment_minor_reconciles_fittings_transitions_and_one_tank_boundary(side, flow):
+    segments, _, roughness = pipe_inputs((10, 20, 15), (3, 5, 7))
+    coefficients = (0.3, 0.7, 0.2)
+    fittings = [
+        {'Line Segment': number, 'Fitting 1, Fitting Type': 'Valve',
+         'Fitting 1, Loss Factor': str(coefficient)}
+        for number, coefficient in enumerate(coefficients, 1)
+    ]
+    result = PipeLossCalculator(side=side).calculate(
+        segments, fittings, roughness, viscosity=1, density=1000, volumetric=flow)
+    diameters = (0.1, 0.2, 0.15)
+    velocities = [flow / 3600 / (pi * diameter ** 2 / 4) for diameter in diameters]
+    heads = [velocity ** 2 / (2 * GRAVITY) for velocity in velocities]
+    # Retain the existing expansion/contraction correlations; a transition
+    # belongs to its downstream segment, and each tank boundary occurs once.
+    expected_transitions = (0, (1 - 0.1 / 0.2) ** 2 * heads[0],
+                            0.4 * (1 - 0.15 / 0.2) * heads[2])
+    expected_boundaries = ((0.4 * heads[0], 0, 0) if side == 'inlet'
+                           else (0, 0, heads[2]))
+    expected_minor = []
+    for index, segment in enumerate(result.segments):
+        fitting_loss = coefficients[index] * heads[index]
+        minor = fitting_loss + expected_transitions[index] + expected_boundaries[index]
+        expected_minor.append(minor)
+        assert segment.fittings_loss == pytest.approx(fitting_loss)
+        assert segment.transition_loss == pytest.approx(expected_transitions[index])
+        assert segment.boundary_loss == pytest.approx(expected_boundaries[index])
+        assert segment.minor_loss == pytest.approx(minor)
+        assert segment.total_loss == pytest.approx(segment.major_loss + minor)
+    assert result.minor_loss == pytest.approx(sum(expected_minor))
+    assert result.minor_loss == pytest.approx(
+        result.fittings_loss + result.transition_loss + result.boundary_loss)
+    assert result.total_loss == pytest.approx(result.major_loss + result.minor_loss)
+    assert result.total_loss == pytest.approx(sum(segment.total_loss for segment in result.segments))
+    if flow == 0:
+        assert result.major_loss == result.minor_loss == result.total_loss == 0
 
 
 @pytest.mark.parametrize('change', ['viscosity', 'diameter', 'roughness', 'fitting'])

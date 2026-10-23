@@ -55,6 +55,8 @@ The `safety` CSV key represents an additive safety-head allowance in metres in t
 
 The calculation modules import without Qt and can be exercised independently of the desktop application. Pipe calculations return structured results; the pipe designer owns its UI once and displays those results.
 
+The designer shows the selected segment's major pipe-friction loss and complete minor loss (fittings, diameter changes, and the assumed tank entrance or exit). The overall panel sums every segment and shows major + minor = total; **Close** copies that total to Properties. This classification follows the [Hydraulic Institute's loss definitions](https://datatool.pumps.org/pump-fundamentals/sys-curves).
+
 ## Editing and saving data
 
 Use **File > Save** to export a complete project as CSV and **File > Open** to restore it. A project includes main inputs/results plus both designers' segments, fittings, roughness, viscosity, transition equation and enabled state. A disabled designer's data is preserved.

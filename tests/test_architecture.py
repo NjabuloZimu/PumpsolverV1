@@ -76,6 +76,8 @@ def test_source_launcher_runs_resources_csv_and_calculations_from_another_direct
     assert report["csv_roundtrip"] is True
     assert report["calculations"] is True
     assert report["designer_tables"] == 2
+    assert report["designer_headers"] is True
+    assert report["loss_reconciliation"] is True
     assert report["dialogs"] == 9
     assert report["pump_head_m"] == pytest.approx(25.25)
     assert report["pipe_loss_m"] > 0

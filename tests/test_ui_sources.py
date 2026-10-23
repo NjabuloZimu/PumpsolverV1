@@ -2,6 +2,7 @@
 
 import importlib
 import importlib.util
+import copy
 import json
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -74,6 +75,10 @@ def _snapshot(ui, window, properties):
                                 for i in range(obj.columnCount())],
                     "headerDefault": obj.horizontalHeader().defaultSectionSize(),
                     "headerMinimum": obj.horizontalHeader().minimumSectionSize(),
+                    # Parent visibility is false during setupUi; isHidden()
+                    # records whether a header was explicitly hidden instead.
+                    "horizontalHeaderHidden": obj.horizontalHeader().isHidden(),
+                    "verticalHeaderHidden": obj.verticalHeader().isHidden(),
                 }
             if hasattr(obj, "pixmap"):
                 pixmap = obj.pixmap()
@@ -154,3 +159,43 @@ def test_windows_application_icon_loads_at_packaging_sizes(qt_app):
     assert not icon.isNull()
     assert {size.width() for size in icon.availableSizes()} == {16, 32, 48, 64, 128, 256}
     assert not icon.pixmap(256, 256).isNull()
+
+
+@pytest.mark.parametrize("populated", [False, True])
+def test_designer_headings_and_units_remain_visible_after_open_and_reopen(qt_app, project_state, populated):
+    from pumpsolver.gui.pipe_designer import LossesCal
+
+    for _ in range(2):
+        window = LossesCal("Inlet Pipe Fittings Losses Designer", side="inlet")
+        try:
+            if populated:
+                design = copy.deepcopy(project_state["inlet"])
+                window.previously_stored_data(design["segments"], design["fittings"], design["roughness"])
+            window.show()
+            qt_app.processEvents()
+            segments = window.ui.tableWidgetPipeSegment
+            fittings = window.ui.tableWidgetFittings
+            if populated:
+                segments.selectRow(0)
+                qt_app.processEvents()
+            for table, headings, size in (
+                (segments, ["Segment Length (m)", "Segment Diameter (cm)"], (391, 321)),
+                (fittings, ["Fitting Type", "Loss Factor"], (321, 241)),
+            ):
+                assert [table.horizontalHeaderItem(i).text() for i in range(2)] == headings
+                assert table.horizontalHeader().isVisible()
+                assert table.horizontalHeader().height() > 0
+                assert not table.verticalHeader().isHidden()
+                assert (table.width(), table.height()) == size
+                if populated:
+                    assert table.rowCount() > 0
+                    assert table.verticalHeader().isVisible()
+                    assert table.verticalHeader().width() > 0
+            window.hide()
+            window.show()
+            qt_app.processEvents()
+            assert segments.horizontalHeader().isVisible()
+            assert fittings.horizontalHeader().isVisible()
+        finally:
+            window.close()
+            window.deleteLater()

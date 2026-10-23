@@ -4429,7 +4429,9 @@
             "Fitting Type",
             "Loss Factor"
           ],
-          "rows": 0
+          "horizontalHeaderHidden": false,
+          "rows": 0,
+          "verticalHeaderHidden": false
         }
       },
       "tableWidgetPipeSegment": {
@@ -4468,7 +4470,9 @@
             "Segment Length (m)",
             "Segment Diameter (cm)"
           ],
-          "rows": 0
+          "horizontalHeaderHidden": false,
+          "rows": 0,
+          "verticalHeaderHidden": false
         }
       },
       "toolButtonHelp": {

@@ -264,7 +264,7 @@
      <number>0</number>
     </property>
     <attribute name="horizontalHeaderVisible">
-     <bool>false</bool>
+     <bool>true</bool>
     </attribute>
     <attribute name="horizontalHeaderCascadingSectionResizes">
      <bool>false</bool>
@@ -285,7 +285,7 @@
      <bool>false</bool>
     </attribute>
     <attribute name="verticalHeaderVisible">
-     <bool>false</bool>
+     <bool>true</bool>
     </attribute>
     <attribute name="verticalHeaderCascadingSectionResizes">
      <bool>false</bool>
@@ -585,7 +585,7 @@
      </size>
     </property>
     <attribute name="horizontalHeaderVisible">
-     <bool>false</bool>
+     <bool>true</bool>
     </attribute>
     <attribute name="horizontalHeaderCascadingSectionResizes">
      <bool>false</bool>
@@ -606,7 +606,7 @@
      <bool>false</bool>
     </attribute>
     <attribute name="verticalHeaderVisible">
-     <bool>false</bool>
+     <bool>true</bool>
     </attribute>
     <attribute name="verticalHeaderCascadingSectionResizes">
      <bool>false</bool>

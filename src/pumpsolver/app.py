@@ -12,8 +12,9 @@ from .version import __version__
 def _smoke_test(window):
     """Exercise actual UI, resources, calculations, and CSV in a frozen build."""
     from tempfile import TemporaryDirectory
+    from math import isclose
     from PyQt5.QtCore import QFile
-    from PyQt5.QtWidgets import QTableWidget
+    from PyQt5.QtWidgets import QApplication, QTableWidget
     from .calculations.pipe_losses import PipeLossCalculator
     from .calculations.pump import solve_pump
     from .gui.pipe_designer import LossesCal
@@ -50,6 +51,26 @@ def _smoke_test(window):
     try:
         if len(dialogs[0].findChildren(QTableWidget)) != 2:
             raise RuntimeError('The pipe designer contains duplicate tables.')
+        designer = dialogs[0]
+        designer.ui.lineEditDensity.setText('1000')
+        designer.ui.lineEditFlowrate.setText('36')
+        designer.ui.lineEditViscosity.setText('1')
+        designer.previously_stored_data(segments, [], roughness)
+        designer.ui.tableWidgetPipeSegment.selectRow(0)
+        designer.show()
+        QApplication.instance().processEvents()
+        for table in (designer.ui.tableWidgetPipeSegment, designer.ui.tableWidgetFittings):
+            if not table.horizontalHeader().isVisible():
+                raise RuntimeError('The designer table headings are hidden.')
+        designer.flush_calculation()
+        displayed_loss = (float(designer.ui.lineEditMajorLosses.text())
+                          + float(designer.ui.lineEditMinorLosses.text()))
+        if not isclose(displayed_loss, pipe_result.total_loss, rel_tol=1e-5):
+            raise RuntimeError('The displayed major and minor losses do not reconcile.')
+        designer.designCommitted.connect(dialogs[1]._accept_design)
+        designer.ui.pushButtonClose.click()
+        if not isclose(float(dialogs[1].ui.lineEditLosses.text()), pipe_result.total_loss, rel_tol=1e-5):
+            raise RuntimeError('The complete designer loss was not copied to Properties.')
         with TemporaryDirectory(prefix='pumpsolver-smoke-') as folder:
             path = Path(folder)/'project.csv'
             write_project(path, window.project_state())
@@ -58,6 +79,7 @@ def _smoke_test(window):
         return {'version': __version__, 'frozen': bool(getattr(sys, 'frozen', False)),
                 'resources': True, 'csv_roundtrip': True, 'calculations': True,
                 'designer_tables': 2, 'pump_head_m': solution.solved_value,
+                'designer_headers': True, 'loss_reconciliation': True,
                 'pipe_loss_m': pipe_result.total_loss, 'dialogs': len(dialogs)}
     finally:
         for dialog in dialogs:

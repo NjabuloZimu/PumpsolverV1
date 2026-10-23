@@ -43,6 +43,7 @@ class LossesCal(QDialog):
         self.ui = Ui_LineLossesDesigner()
         self.ui.setupUi(self)
         center_window_contents(self)
+        self.ui.groupBox_7.setTitle('Overall Results (all segments)')
         self.setWindowTitle(instanceName)
         self.side = PipeLossCalculator._side(side)
         self.calculator = PipeLossCalculator(side=self.side)
@@ -330,8 +331,17 @@ class LossesCal(QDialog):
         self.ui.pushButtonClose.setEnabled(True)
         self.ui.pushButtonClose.setToolTip('')
         self._render_selected_result()
-        boundary = 'suction entrance' if result.side == 'inlet' else 'discharge exit'
-        self.ui.labelOverallSummary.setText(f'{result.contractions} contractions and {result.expansions} expansions. Pipe length: {result.total_length:#.6g} m. Fitting losses: {result.fittings_loss:#.6g} m; pipe transition losses: {result.transition_loss:#.6g} m; major losses: {result.major_loss:#.6g} m. Assuming an infinitely large tank, {boundary} loss: {result.boundary_loss:#.6g} m. Total head losses: {result.total_loss:#.6g} m.')
+        boundary = 'tank entrance' if result.side == 'inlet' else 'tank exit'
+        self.ui.labelOverallSummary.setText(
+            f'All segments: major {result.major_loss:#.6g} m + minor {result.minor_loss:#.6g} m '
+            f'= total {result.total_loss:#.6g} m.\n'
+            f'Minor: fittings {result.fittings_loss:#.6g} m; diameter changes {result.transition_loss:#.6g} m; '
+            f'{boundary} {result.boundary_loss:#.6g} m (assumed).\n'
+            f'Length {result.total_length:#.6g} m; {result.contractions} contractions; {result.expansions} expansions.')
+        self.ui.labelOverallSummary.setToolTip(
+            'Close saves the total for all segments to Properties. Minor losses include fittings, '
+            'diameter changes and the entrance from an infinitely large supply tank (inlet) '
+            'or exit into an infinitely large receiving tank (outlet).')
         self.totalLosses.emit(result.total_loss)
         return result
 
@@ -341,10 +351,18 @@ class LossesCal(QDialog):
         number = selected[0].row() + 1 if selected else None
         result = next((item for item in self._last_result.segments if item.line_segment == number), None) if self._last_result else None
         if result is None:
+            self.ui.groupBox_6.setTitle('Selected Segment Results')
+            self.ui.lineEditMinorLosses.setToolTip('')
             for widget in widgets:
                 widget.clear()
             return
-        values = (result.friction_factor, result.relative_roughness, result.reynolds, result.flow_type, result.velocity, result.fittings_loss, result.major_loss)
+        self.ui.groupBox_6.setTitle(f'Segment {result.line_segment} Results')
+        self.ui.lineEditMinorLosses.setToolTip(
+            f'Fittings: {result.fittings_loss:#.6g} m\n'
+            f'Diameter change: {result.transition_loss:#.6g} m\n'
+            f'Tank entrance/exit: {result.boundary_loss:#.6g} m\n'
+            f'Segment total (major + minor): {result.total_loss:#.6g} m')
+        values = (result.friction_factor, result.relative_roughness, result.reynolds, result.flow_type, result.velocity, result.minor_loss, result.major_loss)
         for widget, value in zip(widgets, values):
             widget.setText(value if isinstance(value, str) else format(value, '#.6g'))
 
