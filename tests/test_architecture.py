@@ -78,7 +78,8 @@ def test_source_launcher_runs_resources_csv_and_calculations_from_another_direct
     assert report["designer_tables"] == 2
     assert report["designer_headers"] is True
     assert report["loss_reconciliation"] is True
-    assert report["dialogs"] == 10
+    assert report["dialogs"] == 11
+    assert report["parametric_plot"] is True
     assert report["boundary_settings"] is True
     assert report["pump_head_m"] == pytest.approx(25.25)
     assert report["pipe_loss_m"] > 0
@@ -89,6 +90,9 @@ def test_main_model_is_authoritative_and_properties_apply_updates_si(qt_app, mon
     from pumpsolver.gui.main_window import MainWindow
     from pumpsolver.gui.properties_dialog import Properties
 
+    # This scenario exercises editable manual values; either active designer
+    # would deliberately lock the shared flow and density fields.
+    project_state['parameters']['designer_status_out'] = False
     window = MainWindow()
     properties = None
     try:
@@ -128,7 +132,7 @@ def _active_inlet_state(project_state):
     state = copy.deepcopy(project_state)
     state['parameters'].update(
         in_dia='10', in_loss='0.5', in_flow='36', out_flow='36',
-        in_dens='1000', out_dens='1000', designer_status_in=True,
+        in_dens='1000', out_dens='1000', designer_status_in=True, designer_status_out=False,
     )
     state['inlet'] = {
         'segments': {'Line Segment 1, Segment Length (m)': '10',

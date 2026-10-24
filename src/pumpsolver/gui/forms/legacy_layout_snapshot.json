@@ -281,10 +281,10 @@
         "state": {
           "alignment": 33,
           "objectName": "label_9",
-          "text": "4. Features coming soon... parametric studies, graph plotting, moody diagram plotting, solid-fluid particle phenomena and more..",
+          "text": "4. Features coming soon... Moody diagram plotting, solid-fluid particle phenomena and more.",
           "wordWrap": true
         },
-        "text": "4. Features coming soon... parametric studies, graph plotting, moody diagram plotting, solid-fluid particle phenomena and more..",
+        "text": "4. Features coming soon... Moody diagram plotting, solid-fluid particle phenomena and more.",
         "wordWrap": true
       },
       "pushButtonClose": {
@@ -1200,6 +1200,10 @@
       "layoutWidget_2": [
         "geometry",
         "objectName"
+      ],
+      "menuAnalysis": [
+        "objectName",
+        "title"
       ],
       "menuAbout_2": [
         "objectName",
@@ -2229,6 +2233,16 @@
         "state": {
           "objectName": "layoutWidget_2"
         }
+      },
+      "menuAnalysis": {
+        "class": "QMenu",
+        "name": "menuAnalysis",
+        "parent": "menubar",
+        "state": {
+          "objectName": "menuAnalysis",
+          "title": "Analysis"
+        },
+        "title": "Analysis"
       },
       "menuAbout_2": {
         "class": "QMenu",

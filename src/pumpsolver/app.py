@@ -11,12 +11,14 @@ from .version import __version__
 
 def _smoke_test(window):
     """Exercise actual UI, resources, calculations, and CSV in a frozen build."""
+    from dataclasses import replace
     from tempfile import TemporaryDirectory
-    from math import isclose
+    from math import isclose, isfinite
     from PyQt5.QtCore import QFile
     from PyQt5.QtWidgets import QApplication, QTableWidget
     from .calculations.pipe_losses import PipeLossCalculator
     from .calculations.pump import solve_pump
+    from .calculations.parametric import PARAMETERS
     from .gui.pipe_designer import LossesCal
     from .gui.properties_dialog import Properties
     from .gui.motor_dialog import MotorProp
@@ -25,6 +27,7 @@ def _smoke_test(window):
     from .gui.help_dialog import Help
     from .gui.info_dialogs import Info1, Info2, Info3
     from .gui.boundary_info_dialog import BoundaryLossInfo
+    from .gui.parametric_dialog import ParametricStudyDialog
     from .persistence.csv_io import write_project, read_project
 
     aliases = [':/assets/moodyEq.png', ':/assets/RJSPigott.png',
@@ -47,9 +50,11 @@ def _smoke_test(window):
     pipe_result = PipeLossCalculator().calculate(segments, [], roughness, 1, 1000, 36)
     data['inlet'].update(segments=segments, roughness=roughness, viscosity='1')
     window.restore_project(data)
+    study_project = replace(window.state, parameters=replace(
+        window.state.parameters, designer_status_in=False, designer_status_out=False))
     dialogs = [LossesCal('Pipe Designer', side='inlet'), Properties('Pipe Properties', False, side='inlet'),
                MotorProp(), SolvePage(data['parameters']), About(), Help(), Info1(), Info2(), Info3(),
-               BoundaryLossInfo()]
+               BoundaryLossInfo(), ParametricStudyDialog(study_project)]
     try:
         if len(dialogs[0].findChildren(QTableWidget)) != 2:
             raise RuntimeError('The pipe designer contains duplicate tables.')
@@ -87,6 +92,26 @@ def _smoke_test(window):
                 and window.state.inlet.entrance_coefficient == 0.2
                 and window.state.inlet.exit_coefficient == 0.75):
             raise RuntimeError('Boundary settings were not committed to the project.')
+        study = dialogs[-1]
+        study.independent_combo.setCurrentIndex(study.independent_combo.findData('flow'))
+        study.dependent_combo.setCurrentIndex(study.dependent_combo.findData('power'))
+        study.start_edit.setText('0')
+        study.stop_edit.setText('72')
+        study.points_spin.setValue(3)
+        study.show()
+        study.run_study()
+        study.canvas.draw()
+        QApplication.instance().processEvents()
+        curves = study.axes.get_lines()
+        if study.result is None or len(curves) != 1:
+            raise RuntimeError('The parametric study did not plot its calculated curve.')
+        if any(len(values) != 3 or not all(isfinite(float(value)) for value in values)
+               for values in (curves[0].get_xdata(), curves[0].get_ydata())):
+            raise RuntimeError('The parametric plot does not contain three finite response points.')
+        if any(PARAMETERS[key].label not in label or PARAMETERS[key].unit not in label
+               for key, label in (('flow', study.axes.get_xlabel()),
+                                  ('power', study.axes.get_ylabel()))):
+            raise RuntimeError('The parametric plot axis labels do not match the selected variables.')
         with TemporaryDirectory(prefix='pumpsolver-smoke-') as folder:
             path = Path(folder)/'project.csv'
             write_project(path, window.project_state())
@@ -96,7 +121,7 @@ def _smoke_test(window):
                 'resources': True, 'csv_roundtrip': True, 'calculations': True,
                 'designer_tables': 2, 'pump_head_m': solution.solved_value,
                 'designer_headers': True, 'loss_reconciliation': True, 'boundary_settings': True,
-                'pipe_loss_m': pipe_result.total_loss, 'dialogs': len(dialogs)}
+                'pipe_loss_m': pipe_result.total_loss, 'dialogs': len(dialogs), 'parametric_plot': True}
     finally:
         for dialog in dialogs:
             dialog.close()

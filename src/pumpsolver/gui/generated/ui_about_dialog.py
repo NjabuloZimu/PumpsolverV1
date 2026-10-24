@@ -87,6 +87,6 @@ class Ui_about(object):
         self.label_6.setText(_translate("about", "Creator: Njabulo Zimu"))
         self.label_7.setText(_translate("about", "Visit Creators LinkIn: "))
         self.labelLink.setText(_translate("about", " https://www.linkedin.com/in/njabulo-zimu-07366b192"))
-        self.label_9.setText(_translate("about", "4. Features coming soon... parametric studies, graph plotting, moody diagram plotting, solid-fluid particle phenomena and more.."))
+        self.label_9.setText(_translate("about", "4. Features coming soon... Moody diagram plotting, solid-fluid particle phenomena and more."))
         self.pushButtonClose.setText(_translate("about", "Close"))
 from . import resources_rc

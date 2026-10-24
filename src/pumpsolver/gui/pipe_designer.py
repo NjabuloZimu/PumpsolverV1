@@ -110,6 +110,14 @@ class LossesCal(QDialog):
         self.ui.pushButtonBoundaryInfo.clicked.connect(self.openBoundaryInfo)
         self.set_boundary_settings(PipeDesign.for_side(self.side))
         self.updateImage(self.ui.comboBoxTransitionEquation.currentIndex())
+        self.ui.checkBoxLossesCal.toggled.connect(self._refresh_fluid_controls)
+        self._refresh_fluid_controls()
+
+    def _refresh_fluid_controls(self):
+        """Shared fluid values belong to the whole active design, not one segment."""
+        active = self.ui.checkBoxLossesCal.isChecked()
+        for editor in (self.ui.lineEditDensity, self.ui.lineEditFlowrate):
+            editor.setEnabled(active)
 
     def set_boundary_settings(self, design):
         """Restore a draft's independent entrance and exit settings."""
@@ -529,6 +537,7 @@ class LossesCal(QDialog):
             self.ui.comboBoxRoughness.setDisabled(False)
             self.ui.lineEditViscosity.setDisabled(False)
             self.ui.lineEditFlowrate.setDisabled(False)
+        self._refresh_fluid_controls()
         self.schedule_calculation()
 
     def saveandclose(self):
@@ -616,6 +625,7 @@ class LossesCal(QDialog):
         active = bool(selected) and self.ui.checkBoxLossesCal.isChecked()
         for widget in (self.ui.tableWidgetFittings, self.ui.comboBoxRoughness, self.ui.lineEditViscosity, self.ui.pushButtonAddFitting, self.ui.pushButtonDeleteFitting, self.ui.lineEditDensity, self.ui.lineEditFlowrate):
             widget.setEnabled(active)
+        self._refresh_fluid_controls()
         self.previous_row = selected[0].row() + 1 if selected else None
         self.restore_table_data_fittings()
         self.restore_lineRoughness()

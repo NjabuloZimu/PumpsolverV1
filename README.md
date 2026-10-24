@@ -1,6 +1,6 @@
 # Process Pump and Pipe Losses Solver
 
-**Version 2.1.0** is a PyQt5 desktop application for pump-head, pipe-friction and net positive suction head available (NPSHa) calculations. It includes inlet and outlet pipe designers and editable CSV import/export for complete projects and individual design tables.
+**Version 2.1.0** is a PyQt5 desktop application for pump-head, pipe-friction and net positive suction head available (NPSHa) calculations. It includes inlet and outlet pipe designers, plotted parametric studies and editable CSV import/export for complete projects and individual design tables.
 
 Developed by Njabulo Zimu as part of CS50P. [Video demonstration](https://youtu.be/MTGeXIs2tOM).
 
@@ -16,7 +16,7 @@ python -m pip install -e ".[dev,build]"
 python launch.py
 ```
 
-The `dev` extra installs pytest; `build` installs PyInstaller. For application use alone, install with `python -m pip install -e .`. Runtime dependencies are **PyQt5 and SymPy**. Pipe calculations and the Colebrook solver use Python's standard library; NumPy and SciPy are no longer required.
+The `dev` extra installs pytest; `build` installs PyInstaller. For application use alone, install with `python -m pip install -e .`. Runtime dependencies are **PyQt5, SymPy and Matplotlib**. Matplotlib also installs NumPy for plotting. Pipe calculations and the Colebrook solver use Python's standard library; SciPy is not required.
 
 All startup routes use the same `pumpsolver.app.main` function:
 
@@ -40,6 +40,7 @@ Application code lives under `src/pumpsolver`. The main window owns one typed `P
 | `src/pumpsolver/models.py` | Immutable `ProjectState`, `PumpInputs`, `PipeDesign`, `Segment` and `Fitting` data models, with display/CSV adapters. |
 | `src/pumpsolver/calculations/pipe_losses.py` | Qt-free pipe losses, friction factors and per-segment results. |
 | `src/pumpsolver/calculations/pump.py` | Qt-free pump balance, NPSHa and NPSH comparison calculations. |
+| `src/pumpsolver/calculations/parametric.py` | Qt-free range and stepped studies with per-point pipe-loss recalculation. |
 | `src/pumpsolver/gui/*.py` | Handwritten window/dialog controllers and the centred-canvas resize helper. |
 | `src/pumpsolver/gui/forms/*.ui` | Editable Qt Designer source forms, including recovered forms retained for future editing. |
 | `src/pumpsolver/gui/generated/` | Generated UI classes and compiled Qt resources. Regenerate these files from their sources. |
@@ -67,9 +68,19 @@ Save spreadsheet edits as **CSV UTF-8 (comma delimited)**, keeping the documente
 
 See [CSV_FORMAT.md](CSV_FORMAT.md) for columns, units, validation rules and legacy behaviour, and [examples/](examples/) for complete editable files.
 
+## Parametric studies
+
+Open **Analysis > Parametric study** to calculate and plot a response in a separate window. Select one independent variable for the horizontal axis and one dependent value for the vertical axis, then enter the range endpoints and number of points. Points include both endpoints: 0 to 72 with 3 points evaluates 0, 36 and 72. Each selector and plot axis identifies its display unit, including m³/h for flowrate, kg/m³ for density, % for efficiency and m for available head and head losses. The legacy CSV key `power` represents **Available Head (m)** in this application's balance.
+
+Enable **Step parametric** to add a family of curves. Choose a different input to hold constant for a complete sweep, and enter its held values separated by commas. For example, sweep flowrate, plot available head, and step efficiency through `60, 70, 80`. Each curve evaluates the full flowrate range at one efficiency; the legend identifies that held value. The main project and its saved inputs remain unchanged by a study.
+
+Every active inlet or outlet losses calculator recalculates its major, minor and boundary losses at every point using that point's flowrate and density. To select a direct calculated loss output, activate the relevant losses calculator and provide a complete pipe design first. A combined loss output requires both calculators. Manual loss values remain constant where a calculator is inactive. Shared flowrate and density are locked in both Properties dialogs while a calculator is active. Edit them in either active pipe designer; saving updates the shared project inputs and recalculates all active designs. Parametric studies can also vary these inputs while recalculating both active designs.
+
+The embedded Matplotlib plot supports the usual toolbar controls for pan, zoom and saving the figure. **Export results CSV** saves the numerical points and each curve's held value. These curves describe the pump requirement or system response predicted by the entered geometry, fluid properties and chosen assumptions. They do not establish a manufacturer's pump performance curve: changing efficiency alone does not supply the pump head-versus-flow data needed to reproduce a chart of impeller curves and efficiency contours.
+
 ## Resizing the interface
 
-The main window and dialogs keep controls, fonts, tables, icons and images at their designed sizes. Content stays centred horizontally and vertically while the window changes size. Empty space is used first when shrinking; once the content no longer fits, it is clipped equally on opposite sides. There is no scaling, rearrangement or automatic scrolling.
+The main window and existing authored-form dialogs keep controls, fonts, tables, icons and images at their designed sizes. Content stays centred horizontally and vertically while the window changes size. Empty space is used first when shrinking; once the content no longer fits, it is clipped equally on opposite sides. There is no scaling, rearrangement or automatic scrolling in those forms. The parametric-study dialog uses layouts so its embedded plotting canvas grows with the window.
 
 The main screen needs approximately **1061 × 603 Qt logical pixels of content area**, plus the menu, status bar and operating-system frame, to show all its controls. Dialogs have their own content sizes. Display scaling changes how these logical dimensions fit on a physical screen.
 
@@ -111,7 +122,7 @@ The launcher exposes the same automated smoke path used by executable verificati
 python launch.py --smoke-test .artifacts/source-smoke.json
 ```
 
-It opens the application components, checks resources, a CSV round trip and reference calculations, writes a JSON result and exits.
+It opens the application components, checks resources, a CSV round trip, reference calculations and an embedded three-point parametric plot, writes a JSON result and exits.
 
 ## Build a Windows executable
 
@@ -131,7 +142,7 @@ python tools/build_executable.py --onefile --verify
 
 This produces `dist/PumpSolver.exe`. The single-file build extracts its bundled runtime when it starts.
 
-`--verify` launches the built application using the native Windows platform from an unrelated working directory and runs its resource, dialog, CSV and calculation smoke checks. A successful local build check should be followed by testing the copied distribution on a clean Windows machine before sharing it with users.
+`--verify` launches the built application using the native Windows platform from an unrelated working directory and runs its resource, dialog, CSV, calculation and embedded-plot smoke checks. The build collects Matplotlib's QtAgg backend and the existing PyQt5 framework. A successful local build check should be followed by testing the copied distribution on a clean Windows machine before sharing it with users.
 
 ## Engineering behaviour and assumptions
 

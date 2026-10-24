@@ -33,9 +33,13 @@ version_info = VSVersionInfo(
 a = Analysis(
     [str(root / 'launch.py')],
     pathex=[str(root / 'src')],
-    binaries=[], datas=[], hiddenimports=[], hookspath=[], hooksconfig={}, runtime_hooks=[],
+    binaries=[], datas=[], hiddenimports=[], hookspath=[],
+    # The plot is embedded in the existing PyQt5 application. Restrict backend
+    # collection so other GUI frameworks and their plugins are not bundled.
+    hooksconfig={'matplotlib': {'backends': ['QtAgg']}}, runtime_hooks=[],
     # SymPy has optional integrations; the application's solver needs none of these.
-    excludes=['numpy', 'scipy', 'matplotlib', 'IPython', 'pytest', '_pytest', 'pygments'],
+    excludes=['scipy', 'IPython', 'pytest', '_pytest', 'pygments',
+              'PyQt6', 'PySide2', 'PySide6'],
     noarchive=False, optimize=0,
 )
 pyz = PYZ(a.pure)

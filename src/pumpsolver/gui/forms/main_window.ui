@@ -1092,6 +1092,12 @@
     <addaction name="actionSave" />
     <addaction name="actionExit" />
    </widget>
+   <widget class="QMenu" name="menuAnalysis">
+    <property name="title">
+     <string>Analysis</string>
+    </property>
+    <addaction name="actionParametric_Study" />
+   </widget>
    <widget class="QMenu" name="menuAbout_2">
     <property name="title">
      <string>About</string>
@@ -1099,6 +1105,7 @@
     <addaction name="actionAuthor" />
    </widget>
    <addaction name="menuFile" />
+   <addaction name="menuAnalysis" />
    <addaction name="menuAbout_2" />
   </widget>
   <action name="actionOpen">
@@ -1127,7 +1134,7 @@
   </action>
   <action name="actionParametric_Study">
    <property name="text">
-    <string>Parametric Study</string>
+    <string>Parametric study</string>
    </property>
   </action>
   <action name="actionPlot_Study">

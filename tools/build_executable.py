@@ -32,7 +32,7 @@ def check_bundled_sources(executable):
     from PyInstaller.archive.readers import CArchiveReader
 
     archive = CArchiveReader(str(executable)).open_embedded_archive('PYZ.pyz')
-    unwanted = {name.split('.')[0] for name in archive.toc} & {'numpy', 'scipy', 'pytest', '_pytest'}
+    unwanted = {name.split('.')[0] for name in archive.toc} & {'scipy', 'pytest', '_pytest'}
     if unwanted:
         raise RuntimeError(f'Unexpected bundled dependencies: {sorted(unwanted)}')
 

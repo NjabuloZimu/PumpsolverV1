@@ -103,7 +103,7 @@ def test_recovered_forms_preserve_authored_controls(qt_app, module_name):
 
 def test_all_forms_and_resource_sources_are_in_repository():
     forms = list((GUI / "forms").glob("*.ui"))
-    assert len(forms) == 11
+    assert len(forms) == 12
     for form in forms:
         source = ET.parse(form)
         for include in source.findall(".//resources/include"):

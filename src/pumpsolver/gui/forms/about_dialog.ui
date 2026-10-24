@@ -193,7 +193,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>4. Features coming soon... parametric studies, graph plotting, moody diagram plotting, solid-fluid particle phenomena and more..</string>
+    <string>4. Features coming soon... Moody diagram plotting, solid-fluid particle phenomena and more.</string>
    </property>
    <property name="wordWrap">
     <bool>true</bool>

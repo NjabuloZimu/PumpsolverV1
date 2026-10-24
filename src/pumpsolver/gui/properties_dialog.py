@@ -13,11 +13,15 @@ class Properties(QDialog):
     EDITORS = {'dia': 'lineEditDia', 'head': 'lineEditHead', 'loss': 'lineEditLosses',
                'flow': 'lineEditVol', 'dens': 'lineEditDensity', 'press': 'lineEditPressure'}
 
-    def __init__(self, diaLogName, designerStatus, *, side='inlet'):
+    def __init__(self, diaLogName, designerStatus, *, side='inlet', shared_values_locked=False,
+                 commit_handler=None):
         super().__init__()
         if side not in ('inlet', 'outlet'):
             raise ValueError('Pipe side must be inlet or outlet.')
         self.side = side
+        self.shared_values_locked = bool(shared_values_locked)
+        self.shared_values_from_designer = False
+        self.commit_handler = commit_handler
         self.design = PipeDesign.for_side(side)
         self.designerStatus = bool(designerStatus)
         self.ui = Ui_propertiesDialog()
@@ -36,6 +40,8 @@ class Properties(QDialog):
             editor = getattr(self.ui, name)
             editor.setValidator(signed if key in ('head', 'press') else positive)
             editor.textEdited.connect(self.enablesave)
+            if key in ('flow', 'dens'):
+                editor.textEdited.connect(self._shared_value_edited)
         self.lineEditLosses(self.designerStatus)
         self.disablesave()
 
@@ -51,12 +57,16 @@ class Properties(QDialog):
         self.design = update.design
         self.ui.lineEditDensity.setText(update.density)
         self.ui.lineEditVol.setText(update.flow)
+        self.shared_values_from_designer = True
         if update.diameter is not None:
             self.ui.lineEditDia.setText(update.diameter)
         if update.total_losses is not None:
             self.ui.lineEditLosses.setText(f'{update.total_losses:#.6g}')
         self.lineEditLosses(update.enabled)
         self.enablesave()
+
+    def _shared_value_edited(self):
+        self.shared_values_from_designer = False
 
     def opendesigner(self, designerStatus):
         from .pipe_designer import LossesCal
@@ -65,7 +75,8 @@ class Properties(QDialog):
         if not data['segments'] and self.ui.lineEditDia.text() and designerStatus:
             data['segments'] = {'Line Segment 1, Segment Length (m)': '1',
                                 'Line Segment 1, Segment Diameter (cm)': self.ui.lineEditDia.text()}
-        window = LossesCal(f'{self.side.title()} Pipe Fittings Losses Designer', designerStatus, side=self.side)
+        window = LossesCal(f'{self.side.title()} Pipe Fittings Losses Designer', designerStatus,
+                           side=self.side)
         self.sub_window_designer = window
         window.ui.lineEditDensity.setText(self.ui.lineEditDensity.text())
         window.ui.lineEditFlowrate.setText(self.ui.lineEditVol.text())
@@ -78,9 +89,33 @@ class Properties(QDialog):
 
     def lineEditLosses(self, status):
         self.designerStatus = bool(status)
-        for name in ('lineEditLosses', 'lineEditDensity', 'lineEditVol', 'lineEditDia'):
+        for name in ('lineEditLosses', 'lineEditDia'):
             getattr(self.ui, name).setDisabled(self.designerStatus)
+        self._refresh_shared_value_controls()
         self.ui.labelLossesUnits.setText('m')
+
+    def set_shared_values_locked(self, locked):
+        """Keep shared fluid inputs fixed while the other pipe uses calculated losses."""
+        self.shared_values_locked = bool(locked)
+        self._refresh_shared_value_controls()
+
+    def _refresh_shared_value_controls(self):
+        if self.shared_values_locked:
+            other = 'outlet' if self.side == 'inlet' else 'inlet'
+            explanation = (
+                f'Flow rate and density are shared by both pipes. The {other} losses calculator '
+                'is active. Open a fittings losses designer to change these values and '
+                'recalculate active pipe losses.')
+        elif self.designerStatus:
+            explanation = (
+                'Flow rate and density are controlled by this pipe\'s active losses calculator. '
+                'Open the losses designer to change them.')
+        else:
+            explanation = ''
+        for name in ('lineEditDensity', 'lineEditVol'):
+            editor = getattr(self.ui, name)
+            editor.setDisabled(self.designerStatus or self.shared_values_locked)
+            editor.setToolTip(explanation)
 
     def data(self, designerStatus=None):
         if designerStatus is not None:
@@ -97,8 +132,13 @@ class Properties(QDialog):
         except ValueError:
             QMessageBox.critical(self, 'Invalid Input', 'Enter complete numeric values or leave fields empty.')
             return False
-        self.dataCommitted.emit(PipePropertiesUpdate(self.side,
-            {key: data[key] for key in self.EDITORS}, self.design, self.designerStatus))
+        update = PipePropertiesUpdate(self.side,
+            {key: data[key] for key in self.EDITORS}, self.design, self.designerStatus,
+            shared_values_from_designer=self.shared_values_from_designer)
+        if self.commit_handler is not None and self.commit_handler(update) is False:
+            self.enablesave()
+            return False
+        self.dataCommitted.emit(update)
         self.disablesave()
         return True
 

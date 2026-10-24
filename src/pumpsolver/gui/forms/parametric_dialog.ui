@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ParametricStudyDialog</class>
+ <widget class="QDialog" name="ParametricStudyDialog">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>1120</width><height>820</height></rect></property>
+  <property name="minimumSize"><size><width>880</width><height>660</height></size></property>
+  <property name="font"><font><pointsize>10</pointsize></font></property>
+  <property name="windowTitle"><string>Parametric study</string></property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing"><number>10</number></property>
+   <property name="leftMargin"><number>16</number></property>
+   <property name="topMargin"><number>16</number></property>
+   <property name="rightMargin"><number>16</number></property>
+   <property name="bottomMargin"><number>16</number></property>
+   <item><widget class="QLabel" name="introLabel">
+    <property name="text"><string>Vary one input and calculate the system response using the current project settings.</string></property>
+    <property name="wordWrap"><bool>true</bool></property>
+   </widget></item>
+   <item><layout class="QHBoxLayout" name="settingsLayout">
+    <property name="spacing"><number>12</number></property>
+    <item><widget class="QGroupBox" name="inputGroup">
+     <property name="title"><string>Independent variable · X axis</string></property>
+     <layout class="QFormLayout" name="inputLayout">
+      <item row="0" column="0"><widget class="QLabel" name="inputLabel"><property name="text"><string>Variable</string></property><property name="buddy"><cstring>independentCombo</cstring></property></widget></item>
+      <item row="0" column="1"><widget class="QComboBox" name="independentCombo"/></item>
+      <item row="1" column="0"><widget class="QLabel" name="startLabel"><property name="text"><string>Start</string></property><property name="buddy"><cstring>startEdit</cstring></property></widget></item>
+      <item row="1" column="1"><widget class="QLineEdit" name="startEdit"/></item>
+      <item row="2" column="0"><widget class="QLabel" name="stopLabel"><property name="text"><string>End</string></property><property name="buddy"><cstring>stopEdit</cstring></property></widget></item>
+      <item row="2" column="1"><widget class="QLineEdit" name="stopEdit"/></item>
+      <item row="3" column="0"><widget class="QLabel" name="pointsLabel"><property name="text"><string>Step points</string></property><property name="buddy"><cstring>pointsSpin</cstring></property></widget></item>
+      <item row="3" column="1"><widget class="QSpinBox" name="pointsSpin"><property name="minimum"><number>2</number></property><property name="maximum"><number>10000</number></property><property name="value"><number>51</number></property></widget></item>
+      <item row="4" column="0" colspan="2"><widget class="QLabel" name="pointsHint"><property name="text"><string>Points include both ends of the range.</string></property><property name="wordWrap"><bool>true</bool></property></widget></item>
+     </layout>
+    </widget></item>
+    <item><layout class="QVBoxLayout" name="outputStepLayout">
+     <item><widget class="QGroupBox" name="outputGroup">
+      <property name="title"><string>Dependent value · Y axis</string></property>
+      <layout class="QVBoxLayout" name="outputLayout">
+       <item><widget class="QComboBox" name="dependentCombo"/></item>
+       <item><widget class="QLabel" name="outputHint"><property name="text"><string>The selected output is calculated at every point.</string></property><property name="wordWrap"><bool>true</bool></property></widget></item>
+      </layout>
+     </widget></item>
+     <item><widget class="QGroupBox" name="stepGroup">
+      <property name="title"><string>Step parametric</string></property>
+      <layout class="QFormLayout" name="stepLayout">
+       <item row="0" column="0" colspan="2"><widget class="QCheckBox" name="stepCheck"><property name="text"><string>Hold a second variable for each full X sweep</string></property></widget></item>
+       <item row="1" column="0"><widget class="QLabel" name="stepLabel"><property name="text"><string>Variable</string></property><property name="buddy"><cstring>stepCombo</cstring></property></widget></item>
+       <item row="1" column="1"><widget class="QComboBox" name="stepCombo"/></item>
+       <item row="2" column="0"><widget class="QLabel" name="stepValuesLabel"><property name="text"><string>Held values</string></property><property name="buddy"><cstring>stepValuesEdit</cstring></property></widget></item>
+       <item row="2" column="1"><widget class="QLineEdit" name="stepValuesEdit"><property name="minimumSize"><size><width>170</width><height>0</height></size></property><property name="text"><string>60, 70, 80</string></property><property name="placeholderText"><string>Comma-separated values, e.g. 60, 70, 80</string></property></widget></item>
+      </layout>
+     </widget></item>
+    </layout></item>
+   </layout></item>
+   <item><widget class="QLabel" name="lossesLabel"><property name="text"><string>Active loss calculators are recalculated at every point. Manual losses remain fixed.</string></property><property name="wordWrap"><bool>true</bool></property></widget></item>
+   <item><layout class="QHBoxLayout" name="actionLayout" stretch="0,0,1">
+    <item><widget class="QPushButton" name="runButton"><property name="text"><string>Run study</string></property><property name="default"><bool>true</bool></property></widget></item>
+    <item><widget class="QPushButton" name="exportButton"><property name="enabled"><bool>false</bool></property><property name="text"><string>Export results CSV</string></property></widget></item>
+    <item><widget class="QLabel" name="statusLabel"><property name="text"><string>Choose the variables and range, then run the study.</string></property><property name="wordWrap"><bool>true</bool></property></widget></item>
+   </layout></item>
+   <item><widget class="QWidget" name="plotContainer" native="true">
+    <property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Expanding"><horstretch>1</horstretch><verstretch>1</verstretch></sizepolicy></property>
+    <layout class="QVBoxLayout" name="plotLayout"><property name="spacing"><number>0</number></property><property name="leftMargin"><number>0</number></property><property name="topMargin"><number>0</number></property><property name="rightMargin"><number>0</number></property><property name="bottomMargin"><number>0</number></property></layout>
+   </widget></item>
+   <item><layout class="QHBoxLayout" name="footerLayout" stretch="1,0">
+    <item><widget class="QLabel" name="modelLabel"><property name="text"><string>System response uses the existing pump balance. Manufacturer performance contours require pump test data.</string></property><property name="wordWrap"><bool>true</bool></property></widget></item>
+    <item><widget class="QPushButton" name="closeButton"><property name="text"><string>Close</string></property></widget></item>
+   </layout></item>
+  </layout>
+ </widget>
+ <tabstops><tabstop>independentCombo</tabstop><tabstop>startEdit</tabstop><tabstop>stopEdit</tabstop><tabstop>pointsSpin</tabstop><tabstop>dependentCombo</tabstop><tabstop>stepCheck</tabstop><tabstop>stepCombo</tabstop><tabstop>stepValuesEdit</tabstop><tabstop>runButton</tabstop><tabstop>exportButton</tabstop><tabstop>closeButton</tabstop></tabstops>
+ <resources/>
+ <connections/>
+</ui>

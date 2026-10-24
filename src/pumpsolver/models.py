@@ -282,6 +282,7 @@ class PipePropertiesUpdate:
     values: dict[str, str]
     design: PipeDesign
     enabled: bool
+    shared_values_from_designer: bool = False
 
 
 @dataclass(frozen=True)

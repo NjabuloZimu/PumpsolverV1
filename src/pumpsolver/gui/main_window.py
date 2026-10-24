@@ -48,6 +48,7 @@ class MainWindow(QMainWindow):
         self.ui.actionOpen.triggered.connect(self.importCSV)
         self.ui.actionExit.triggered.connect(QApplication.closeAllWindows)
         self.ui.actionAuthor.triggered.connect(self.open_window_about)
+        self.ui.actionParametric_Study.triggered.connect(self.open_parametric_study)
         self.windows.append(self)
 
     def _render(self):
@@ -94,12 +95,20 @@ class MainWindow(QMainWindow):
         self.sub_window = About()
         self.sub_window.open()
 
+    def open_parametric_study(self):
+        from .parametric_dialog import ParametricStudyDialog
+        self.sub_window = ParametricStudyDialog(self.state, self)
+        self.sub_window.open()
+
     def show_sub_window_properties(self, identifier, designerStatus):
         from .properties_dialog import Properties
         side = 'inlet' if identifier == 'Inlet' else 'outlet'
         suffix = 'in' if side == 'inlet' else 'out'
         values = self.state.parameters.to_legacy()
-        window = Properties(f'{identifier} Properties', designerStatus, side=side)
+        opposite = 'out' if side == 'inlet' else 'in'
+        window = Properties(f'{identifier} Properties', designerStatus, side=side,
+                            shared_values_locked=values[f'designer_status_{opposite}'],
+                            commit_handler=self._accept_properties)
         self.sub_window = window
         for field, editor in (('dia', 'lineEditDia'), ('head', 'lineEditHead'),
                               ('loss', 'lineEditLosses'), ('flow', 'lineEditVol'),
@@ -108,19 +117,34 @@ class MainWindow(QMainWindow):
             getattr(window.ui, editor).setText('' if value == 'Unspecified' else value)
         window.ui.labelSuc.setText(f'{identifier} Suction Height')
         window.set_design(getattr(self.state, side))
-        window.dataCommitted.connect(self._accept_properties)
         window.exec_()
 
     def _accept_properties(self, update):
         values = self.state.parameters.to_legacy()
         suffix = 'in' if update.side == 'inlet' else 'out'
-        for field in ('dia', 'head', 'loss', 'flow', 'dens', 'press'):
+        opposite = 'out' if suffix == 'in' else 'in'
+        for field in ('dia', 'head', 'loss', 'press'):
             values[f'{suffix}_{field}'] = update.values[field]
-        for field in ('flow', 'dens'):
-            values[f'in_{field}'] = values[f'out_{field}'] = update.values[field]
+        if not values[f'designer_status_{opposite}'] or update.shared_values_from_designer:
+            for field in ('flow', 'dens'):
+                values[f'in_{field}'] = values[f'out_{field}'] = update.values[field]
         values[f'designer_status_{suffix}'] = update.enabled
-        self.state = replace(self.state, parameters=PumpInputs.from_legacy(values), **{update.side: update.design})
+        try:
+            candidate = replace(self.state, parameters=PumpInputs.from_legacy(values),
+                                **{update.side: update.design})
+            shared_fields = ('in_flow_m3_s', 'out_flow_m3_s',
+                             'in_density_kg_m3', 'out_density_kg_m3')
+            if any(getattr(candidate.parameters, field) != getattr(self.state.parameters, field)
+                   for field in shared_fields):
+                from pumpsolver.calculations.project import recalculate_active_losses
+                candidate = recalculate_active_losses(candidate)
+        except (ValueError, ArithmeticError) as error:
+            QMessageBox.critical(self, 'Unable to Update Pipe Properties',
+                                 f'The project was not changed.\n{error}')
+            return False
+        self.state = candidate
         self._render()
+        return True
 
     def _accept_results(self, parameters):
         self.state = replace(self.state, parameters=parameters)
